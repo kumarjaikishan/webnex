@@ -1,0 +1,237 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::selection { background: #7C6CFB; color: #06060B; }
+body { 
+  -webkit-font-smoothing: antialiased;
+  background-color: #06060B;
+  color: #F3F2FA;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #7C6CFB;
+  outline-offset: 2px;
+}
+
+.font-handwriting {
+  font-family: 'Caveat', cursive, sans-serif;
+}
+
+/* Custom sleek dark theme scrollbar for Webnex Labs */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #06060B;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #232333;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7C6CFB;
+}
+
+/* Firefox custom scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #232333 #06060B;
+}
+
+/* Marquee for the "trusted by" strip */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 28s linear infinite;
+}
+.marquee-wrap:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .marquee-track { animation: none; }
+}
+
+/* ==========================================================
+   PRINT MEDIA STYLES FOR WEBNEX LABS DOCUMENTS & PDF SAVING
+   SUPPORTING DUAL PRINT MODES (LIGHT PDF & DARK PDF)
+   ========================================================== */
+@media print {
+  /* 1. Page margin and size setup for 1-page fit */
+  @page {
+    size: A4 portrait;
+    margin: 8mm 12mm;
+  }
+
+  /* 2. HIDE React #root background app completely so ONLY the portal modal prints (1 PAGE) */
+  #root {
+    display: none !important;
+  }
+
+  /* Hide navigation, header, footer, buttons, forms, and action bars */
+  header, footer, aside, nav, button, input, form, select, .no-print, .printable-document-actions {
+    display: none !important;
+  }
+
+  /* 3. Base reset for modal portals */
+  .printable-modal-portal {
+    position: static !important;
+    inset: auto !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    backdrop-filter: none !important;
+    transform: none !important;
+  }
+
+  .printable-document {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 12px 16px !important;
+    margin: 0 !important;
+    page-break-inside: avoid !important;
+    page-break-after: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .printable-document * {
+    visibility: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* --------------------------------------------------------
+     THEME 1: LIGHT PDF PRINT MODE (☀️ Clean Light Paper)
+     -------------------------------------------------------- */
+  body:has(.print-theme-light) html,
+  body:has(.print-theme-light) {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  .printable-modal-portal:has(.print-theme-light) {
+    background-color: #ffffff !important;
+  }
+
+  .print-theme-light {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  .print-theme-light * {
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+  }
+
+  .print-theme-light .bg-panel,
+  .print-theme-light .bg-void,
+  .print-theme-light .bg-void\/50,
+  .print-theme-light .bg-void\/40,
+  .print-theme-light div[class*="bg-void"],
+  .print-theme-light div[class*="bg-panel"] {
+    background-color: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+  }
+
+  .print-theme-light .text-mist,
+  .print-theme-light .text-\[10px\] {
+    color: #475569 !important;
+    font-weight: 600 !important;
+  }
+
+  .print-theme-light .text-paper {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+  }
+
+  .print-theme-light .text-cyan {
+    color: #0284c7 !important;
+    font-weight: 700 !important;
+  }
+
+  .print-theme-light table th {
+    background-color: #f1f5f9 !important;
+    color: #334155 !important;
+    font-weight: 700 !important;
+    border-bottom: 2px solid #cbd5e1 !important;
+  }
+
+  .print-theme-light div.text-cyan {
+    color: #0369a1 !important;
+    background-color: #e0f2fe !important;
+  }
+
+  /* --------------------------------------------------------
+     THEME 2: DARK PDF PRINT MODE (🌙 High-Tech Dark Studio)
+     -------------------------------------------------------- */
+  body:has(.print-theme-dark) html,
+  body:has(.print-theme-dark) {
+    background-color: #06060b !important;
+    color: #f3f2fa !important;
+  }
+
+  .printable-modal-portal:has(.print-theme-dark) {
+    background-color: #06060b !important;
+  }
+
+  .print-theme-dark {
+    background-color: #06060b !important;
+    color: #f3f2fa !important;
+  }
+
+  .print-theme-dark * {
+    color: #f3f2fa !important;
+    border-color: #232333 !important;
+  }
+
+  .print-theme-dark .bg-panel,
+  .print-theme-dark .bg-void,
+  .print-theme-dark .bg-void\/50,
+  .print-theme-dark .bg-void\/40,
+  .print-theme-dark div[class*="bg-void"],
+  .print-theme-dark div[class*="bg-panel"] {
+    background-color: #13131f !important;
+    border: 1px solid #232333 !important;
+    color: #f3f2fa !important;
+  }
+
+  .print-theme-dark .text-mist,
+  .print-theme-dark .text-\[10px\] {
+    color: #94a3b8 !important;
+  }
+
+  .print-theme-dark .text-paper {
+    color: #f3f2fa !important;
+  }
+
+  .print-theme-dark .text-cyan {
+    color: #38bdf8 !important;
+  }
+
+  .print-theme-dark table th {
+    background-color: #1a1a2e !important;
+    color: #94a3b8 !important;
+  }
+}

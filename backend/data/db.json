@@ -1,0 +1,152 @@
+{
+  "users": [
+    {
+      "id": "e1f66d20-0fb5-41ba-93be-309f149b0e6f",
+      "role": "admin",
+      "name": "Studio Admin",
+      "email": "jai@gmail.com",
+      "passwordHash": "$2a$10$MhC7ziy5V5z/MbtOl0jtWOaL/B9e83ven5l1w96BE60mskzW3UrBi",
+      "createdAt": "2026-08-04T10:05:56.414Z"
+    },
+    {
+      "id": "d0574d6b-4413-470c-ae52-0f0a337f26b0",
+      "role": "client",
+      "name": "kishan",
+      "email": "hey@gmail.com",
+      "passwordHash": "$2a$10$x8DBJSlrNEIP3q/LRoJa4u7uCY36abHIIz0ENp778i7OCpq5lugVi",
+      "createdAt": "2026-08-05T09:06:44.409Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": "d34ca352-e97c-40e4-9df5-4d015b719f5a",
+      "title": "Aster Bakery — E-commerce Rebuild",
+      "summary": "Headless storefront, 40% faster checkout, custom CMS for seasonal menus.",
+      "tags": [
+        "React",
+        "Node.js",
+        "Stripe"
+      ],
+      "coverColor": "#3A6B63",
+      "liveUrl": "",
+      "featured": true,
+      "order": 1
+    },
+    {
+      "id": "06d9658a-43f6-4235-af30-2688e70ea53a",
+      "title": "Northline Logistics — Ops Dashboard",
+      "summary": "Real-time fleet tracking dashboard replacing three spreadsheets.",
+      "tags": [
+        "React",
+        "WebSocket",
+        "PostgreSQL"
+      ],
+      "coverColor": "#E8A33D",
+      "liveUrl": "",
+      "featured": true,
+      "order": 2
+    },
+    {
+      "id": "6bc2919b-c536-434b-a196-568d3e1e84e5",
+      "title": "Fable & Co — Brand Portfolio",
+      "summary": "Design-forward marketing site with CMS-driven case studies.",
+      "tags": [
+        "Next.js",
+        "Sanity",
+        "Framer Motion"
+      ],
+      "coverColor": "#8B93A1",
+      "liveUrl": "",
+      "featured": false,
+      "order": 3
+    }
+  ],
+  "clients": [
+    {
+      "id": "d0574d6b-4413-470c-ae52-0f0a337f26b0",
+      "name": "kishan",
+      "email": "hey@gmail.com",
+      "company": "",
+      "notes": "",
+      "status": "active",
+      "createdAt": "2026-08-05T09:06:44.418Z"
+    }
+  ],
+  "contracts": [
+    {
+      "id": "4c02cbe9-02ff-4f0f-90c9-4ff4f7398e27",
+      "clientId": "d0574d6b-4413-470c-ae52-0f0a337f26b0",
+      "title": "master",
+      "scope": "",
+      "amount": 60000,
+      "status": "sent",
+      "issuedAt": "2026-08-05T09:07:00.708Z"
+    }
+  ],
+  "maintenance": [
+    {
+      "id": "5c124603-5ffb-4828-aa99-c2bc44973635",
+      "clientId": "d0574d6b-4413-470c-ae52-0f0a337f26b0",
+      "clientName": "kishan",
+      "clientEmail": "hey@gmail.com",
+      "planTitle": "Monthly Web Care & Support Plan",
+      "amount": 4050,
+      "cycle": "monthly",
+      "nextDueDate": "2026-09-04",
+      "lastInvoicedDate": "2026-08-05",
+      "notes": "Includes monthly security updates, automated backups, and 2 hours of feature support.",
+      "status": "active",
+      "createdAt": "2026-08-05T09:15:21.563Z"
+    }
+  ],
+  "reminders": [],
+  "notes": [],
+  "messages": [],
+  "invoices": [
+    {
+      "id": "0e199398-85ee-4774-a57a-9b8a1b1ec631",
+      "invoiceNumber": "INV-008452",
+      "clientName": "acme",
+      "clientEmail": "client@gmail.com",
+      "projectTitle": "full stack",
+      "items": [
+        {
+          "description": "Custom Web Application & UI/UX Development",
+          "quantity": 1,
+          "price": 1500
+        }
+      ],
+      "taxPercent": 0,
+      "subtotal": 1500,
+      "totalAmount": 1500,
+      "issueDate": "2026-08-05",
+      "dueDate": "2026-08-05",
+      "status": "Pending",
+      "notes": "Thank you for partnering with Webnex Labs! Payment is due within 14 days.",
+      "createdAt": "2026-08-05T08:53:28.452Z"
+    },
+    {
+      "id": "a931fdb9-9596-4c76-a5d5-18966fa74f66",
+      "invoiceNumber": "INV-MNT-350628-20",
+      "clientName": "kishan",
+      "clientEmail": "hey@gmail.com",
+      "projectTitle": "Monthly Web Care & Support Plan (monthly)",
+      "items": [
+        {
+          "description": "Monthly Web Care & Support Plan - monthly Service Fee",
+          "quantity": 1,
+          "price": 4050,
+          "amount": 4050
+        }
+      ],
+      "taxPercent": 0,
+      "subtotal": 4050,
+      "totalAmount": 4050,
+      "issueDate": "2026-08-05",
+      "dueDate": "2026-07-04",
+      "status": "Paid",
+      "notes": "Monthly maintenance invoice. Payment due upon receipt. Thank you for choosing Webnex Labs!",
+      "createdAt": "2026-08-05T09:15:50.628Z"
+    }
+  ]
+}

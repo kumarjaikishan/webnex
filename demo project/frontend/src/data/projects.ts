@@ -1,0 +1,40 @@
+import { Project } from "@/types";
+
+export const projects: Project[] = [
+  {
+    id: "proj-01",
+    slug: "battlefiesta",
+    title: "BattleFiesta",
+    tagline: "Esports Tournament Platform",
+    cover: "/projects/battlefiesta.jpg",
+    tags: ["Authentication", "Tournament Management", "Real-time Updates", "Responsive"],
+    problem: "The client needed a platform to run competitive esports tournaments with live bracket updates, but existing tools were rigid and didn't support custom formats.",
+    solution: "We built a full tournament management system with secure authentication, dynamic bracket generation, and real-time score updates across devices.",
+    technology: ["React", "Node.js", "MongoDB", "Socket.io", "TailwindCSS"],
+    businessImpact: "Enabled the client to run multiple simultaneous tournaments with zero manual bracket management, cutting admin time significantly.",
+  },
+  {
+    id: "proj-02",
+    slug: "employee-attendance-system",
+    title: "Employee Attendance Management System",
+    tagline: "Attendance & Workforce Tracking",
+    cover: "/projects/attendance.jpg",
+    tags: ["Attendance", "Role Based Access", "Dashboard", "Reports"],
+    problem: "Manual attendance tracking across departments led to errors, disputes, and slow payroll processing.",
+    solution: "We delivered a role-based attendance system with real-time check-in tracking, manager dashboards, and automated monthly reports.",
+    technology: ["React", "Express", "MongoDB", "JWT"],
+    businessImpact: "Reduced payroll processing time and eliminated attendance disputes with a transparent, auditable record for every employee.",
+  },
+  {
+    id: "proj-03",
+    slug: "expense-management-system",
+    title: "Expense Management System",
+    tagline: "Business Expense & Reporting Platform",
+    cover: "/projects/expense.jpg",
+    tags: ["Expense Tracking", "Analytics", "Reports", "Receipts"],
+    problem: "The client's team tracked expenses across spreadsheets and paper receipts, making audits slow and error-prone.",
+    solution: "We built a centralized platform for expense submission, receipt uploads, category analytics, and exportable reports.",
+    technology: ["React", "Node.js", "MongoDB", "Chart.js"],
+    businessImpact: "Gave finance teams real-time visibility into spending, reducing month-end reconciliation time significantly.",
+  },
+];
