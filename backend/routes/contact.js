@@ -7,16 +7,18 @@ const router = express.Router();
 
 // Public — the "Contact" form on the portfolio site
 router.post("/", (req, res) => {
-  const { name, email, subject, message } = req.body;
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: "Name, email and message are required." });
+  const { name, phone, email, businessType, subject, message } = req.body;
+  if (!name || (!phone && !email)) {
+    return res.status(400).json({ error: "Name and at least phone or email are required." });
   }
   db.insert("messages", {
     id: uuid(),
     name,
-    email,
+    phone: phone || "",
+    email: email || "",
+    businessType: businessType || "",
     subject: subject || "New Project Inquiry",
-    message,
+    message: message || "",
     receivedAt: new Date().toISOString(),
   });
   res.status(201).json({ ok: true });

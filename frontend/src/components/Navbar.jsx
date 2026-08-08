@@ -8,16 +8,22 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   return (
     <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-white/10 bg-void/15 backdrop-blur-md transition-all duration-300 shadow-lg">
-      <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link to="/" className="font-display text-lg tracking-tight flex items-center gap-2">
-          <span className="w-6 h-6 rounded-md bg-grad-primary shadow-md" />
-          Webnex <span className="bg-grad-primary bg-clip-text text-transparent">Labs</span>
+          <span className="w-7 h-7 rounded-lg bg-grad-primary shadow-md flex items-center justify-center font-bold text-void text-xs">
+            W
+          </span>
+          <span className="font-bold text-paper">
+            Webnex <span className="bg-grad-primary bg-clip-text text-transparent">Labs</span>
+          </span>
         </Link>
-        <div className="hidden md:flex items-center gap-8">
-          <a href="/#services" className="text-sm text-mist hover:text-paper transition-colors font-medium">Services</a>
-          <a href="/#about" className="text-sm text-mist hover:text-paper transition-colors font-medium">About</a>
+        <div className="hidden md:flex items-center gap-7">
+          <NavLink to="/services" className={navLink}>Services</NavLink>
+          <NavLink to="/pricing" className={navLink}>Pricing</NavLink>
           <NavLink to="/work" className={navLink}>Work</NavLink>
-          <a href="/#testimonials" className="text-sm text-mist hover:text-paper transition-colors font-medium">Testimonials</a>
+          <NavLink to="/faqs" className={navLink}>FAQs</NavLink>
+          <NavLink to="/blog" className={navLink}>Blog</NavLink>
+          <NavLink to="/about" className={navLink}>About</NavLink>
           <NavLink to="/contact" className={navLink}>Contact</NavLink>
         </div>
         <div className="flex items-center gap-4">

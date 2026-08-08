@@ -94,7 +94,8 @@ export default function Testimonials() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
-  const [cardStyle, setCardStyle] = useState("opaquePaper"); // "opaquePaper" | "glassSticky" | "darkGlass"
+  // Change default card style theme here: "opaquePaper" | "glassSticky" | "darkGlass"
+  const [cardStyle, setCardStyle] = useState("opaquePaper"); 
   const timerRef = useRef(null);
   const resetTimeoutRef = useRef(null);
 
@@ -150,40 +151,6 @@ export default function Testimonials() {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* CARD STYLE SWITCHER TOGGLE BAR (3 THEMES) */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-2">
-        <div className="inline-flex flex-wrap p-1 rounded-xl bg-panel border border-edge gap-1">
-          <button
-            onClick={() => setCardStyle("opaquePaper")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${cardStyle === "opaquePaper"
-                ? "bg-grad-primary text-void shadow-md"
-                : "text-mist hover:text-paper"
-              }`}
-          >
-            📝 Paper Sticky Notes
-          </button>
-          <button
-            onClick={() => setCardStyle("glassSticky")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${cardStyle === "glassSticky"
-                ? "bg-grad-primary text-void shadow-md"
-                : "text-mist hover:text-paper"
-              }`}
-          >
-            📌 Glass Sticky Notes
-          </button>
-          <button
-            onClick={() => setCardStyle("darkGlass")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${cardStyle === "darkGlass"
-                ? "bg-grad-primary text-void shadow-md"
-                : "text-mist hover:text-paper"
-              }`}
-          >
-            ✨ Dark Glass Cards
-          </button>
-        </div>
-
-
-      </div>
 
       {/* SLIDING HORIZONTAL TRACK CONTAINER */}
       <div className="overflow-hidden w-full py-4">

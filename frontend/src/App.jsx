@@ -3,12 +3,22 @@ import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import ParticleBackground from "./components/ParticleBackground.jsx";
+import ScrollRestoreManager from "./components/ScrollRestoreManager.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Home from "./pages/Home.jsx";
 import Work from "./pages/Work.jsx";
 import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import Login from "./pages/Login.jsx";
+import ServicesPage from "./pages/ServicesPage.jsx";
+import FAQsPage from "./pages/FAQsPage.jsx";
+import PortfolioPage from "./pages/PortfolioPage.jsx";
+import BlogPage from "./pages/BlogPage.jsx";
+import PricingPage from "./pages/PricingPage.jsx";
+import PrivacyPage from "./pages/PrivacyPage.jsx";
+import TermsPage from "./pages/TermsPage.jsx";
 
 import AdminLayout from "./pages/admin/AdminLayout.jsx";
 import Overview from "./pages/admin/Overview.jsx";
@@ -21,6 +31,7 @@ import Maintenance from "./pages/admin/Maintenance.jsx";
 import Reminders from "./pages/admin/Reminders.jsx";
 import Notes from "./pages/admin/Notes.jsx";
 import AdminProjects from "./pages/admin/Projects.jsx";
+import ContactInquiries from "./pages/admin/ContactInquiries.jsx";
 
 import ClientLayout from "./pages/client/ClientLayout.jsx";
 import ClientOverview from "./pages/client/ClientOverview.jsx";
@@ -28,6 +39,8 @@ import ClientOverview from "./pages/client/ClientOverview.jsx";
 export default function App() {
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden">
+      <ScrollRestoreManager />
+      <ToastContainer position="bottom-right" theme="dark" autoClose={4000} />
       {/* Full-Page Fixed Ambient Particle & 3D Halo Canvas */}
       <ParticleBackground />
 
@@ -36,13 +49,20 @@ export default function App() {
         <div className="flex-1 pt-16">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/work" element={<Work />} />
+            <Route path="/services" element={<ServicesPage />} />
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/faqs" element={<FAQsPage />} />
+            <Route path="/work" element={<PortfolioPage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
 
             <Route path="/admin" element={<ProtectedRoute role="admin"><AdminLayout /></ProtectedRoute>}>
               <Route index element={<Overview />} />
+              <Route path="inquiries" element={<ContactInquiries />} />
               <Route path="clients" element={<Clients />} />
               <Route path="clients/:id" element={<ClientDetail />} />
               <Route path="invoices" element={<Invoices />} />

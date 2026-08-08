@@ -11,6 +11,7 @@ export default function AdminLayout() {
       <aside className="space-y-1 bg-panel border border-edge p-4 rounded-2xl h-fit">
         <p className="font-mono text-xs text-cyan tracking-wider px-4 mb-3 uppercase">Webnex CRM</p>
         <NavLink to="/admin" end className={link}>Overview</NavLink>
+        <NavLink to="/admin/inquiries" className={link}>📩 Inquiries</NavLink>
         <NavLink to="/admin/clients" className={link}>Clients</NavLink>
         <NavLink to="/admin/invoices" className={link}>🧾 Invoices</NavLink>
         <NavLink to="/admin/contracts" className={link}>📄 Agreements</NavLink>

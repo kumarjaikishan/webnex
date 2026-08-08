@@ -7,6 +7,11 @@ import Testimonials from "../components/Testimonials.jsx";
 import StatCounter from "../components/StatCounter.jsx";
 import ParticleBackground from "../components/ParticleBackground.jsx";
 import ScrollReveal from "../components/ScrollReveal.jsx";
+import ServicesSection from "../components/ServicesSection.jsx";
+import WhyChooseUs from "../components/WhyChooseUs.jsx";
+import ProcessTimeline from "../components/ProcessTimeline.jsx";
+import FAQSection from "../components/FAQSection.jsx";
+import FeaturedWorkSection from "../components/FeaturedWorkSection.jsx";
 
 export default function Home() {
   const [projects, setProjects] = useState([]);
@@ -25,31 +30,30 @@ export default function Home() {
           <ScrollReveal direction="up" delay={50}>
             <span className="inline-flex items-center gap-2 rounded-full border border-edge bg-panel/90 backdrop-blur px-4 py-1.5 font-mono text-xs text-mist mb-8 shadow-lg">
               <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
-              Webnex Labs — Digital Studio & Software Engineering
+              Webnex Labs — Web Development &amp; Software Company
             </span>
           </ScrollReveal>
 
           <ScrollReveal direction="up" delay={150}>
-            <h1 className="font-display text-5xl md:text-7xl leading-[1.05] mb-6">
-              Turn your idea into a{" "}
-              <span className="bg-grad-primary bg-clip-text text-transparent">site that ships</span>
+            <h1 className="font-display text-4xl md:text-6xl leading-[1.08] mb-6">
+              Turn your business idea into a{" "}
+              <span className="bg-grad-primary bg-clip-text text-transparent">website that grows sales</span>
             </h1>
           </ScrollReveal>
 
           <ScrollReveal direction="up" delay={250}>
             <p className="text-mist text-lg max-w-xl mx-auto mb-10 leading-relaxed">
-              We design, build, and maintain fast, modern websites for growing
-              businesses and founders — with clear contracts and reliable ongoing engineering support.
+              We design, build, and manage fast websites, online stores, and software for local businesses, schools, clinics, and startups — with 100% honest pricing and full support.
             </p>
           </ScrollReveal>
 
           <ScrollReveal direction="up" delay={350}>
             <div className="flex items-center justify-center gap-4">
               <Link to="/contact" className="px-6 py-3 rounded-full bg-grad-primary text-void font-semibold hover:brightness-110 transition focus-ring shadow-lg">
-                Let's Talk
+                Talk to Us
               </Link>
               <Link to="/work" className="px-6 py-3 rounded-full border border-edge bg-panel/50 hover:border-mist/50 transition focus-ring">
-                View Our Work
+                See Our Projects
               </Link>
             </div>
           </ScrollReveal>
@@ -59,21 +63,21 @@ export default function Home() {
       <Marquee />
 
       {/* About / features, mirroring image + copy blocks */}
-      <section id="about" className="max-w-6xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-16 items-center">
+      <section id="about" className="max-w-7xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-16 items-center">
         <ScrollReveal direction="left" delay={100}>
           <div>
             <p className="font-mono text-xs text-cyan tracking-widest mb-4 uppercase font-semibold">ABOUT WEBNEX LABS</p>
             <h2 className="font-display text-3xl md:text-4xl mb-8">
-              Built for the long haul, not just launch day
+              We build websites that stay fast and trouble-free for years
             </h2>
             <div className="space-y-6">
               <div>
-                <h3 className="font-display text-lg mb-1 text-paper">Engineering that holds up</h3>
-                <p className="text-mist text-sm">Clean, documented code and sensible architecture — so your website is easy to scale and extend anytime.</p>
+                <h3 className="font-display text-lg mb-1 text-paper">Solid Work That Lasts</h3>
+                <p className="text-mist text-sm">Clean, high-quality coding so your website works smoothly on every mobile phone and never slows down.</p>
               </div>
               <div>
-                <h3 className="font-display text-lg mb-1 text-paper">A relationship, not a handoff</h3>
-                <p className="text-mist text-sm">Every client gets a maintenance plan, scheduled check-ins, and dedicated engineering support when you need it.</p>
+                <h3 className="font-display text-lg mb-1 text-paper">Complete Support After Launch</h3>
+                <p className="text-mist text-sm">We don't leave you after making the site. Every client gets regular maintenance, updates, and quick WhatsApp/call support whenever needed.</p>
               </div>
             </div>
           </div>
@@ -85,47 +89,34 @@ export default function Home() {
               <span className="w-3 h-3 rounded-full bg-red-400/70" />
               <span className="w-3 h-3 rounded-full bg-yellow-400/70" />
               <span className="w-3 h-3 rounded-full bg-cyan/70" />
-              <span className="ml-3 font-mono text-xs text-mist">client-status.log</span>
+              <span className="ml-3 font-mono text-xs text-mist">live-projects-status.log</span>
             </div>
             <div className="p-6 font-mono text-sm space-y-3">
-              <p className="text-cyan">$ status --clients</p>
-              <p className="text-paper/90">✓ Aster Bakery — maintenance up to date</p>
-              <p className="text-violet">! Northline Logistics — renewal due in 6 days</p>
-              <p className="text-paper/90">✓ Fable & Co — contract signed</p>
+              <p className="text-cyan">$ check-client-status --all</p>
+              <p className="text-paper/90">✓ Royal Sweets &amp; Bakery — Website Live &amp; Maintenance Active</p>
+              <p className="text-paper/90">✓ Apex Classes &amp; Academy — School ERP Deployed</p>
+              <p className="text-violet">! Sharma Logistics &amp; Transport — Renewal due in 5 days</p>
+              <p className="text-paper/90">✓ Lifecare Clinic &amp; Hospital — Contract Signed</p>
               <p className="text-mist">$ _</p>
             </div>
           </div>
         </ScrollReveal>
       </section>
 
-      {/* Portfolio Section with Staggered Scroll Reveal */}
-      <section id="services" className="max-w-6xl mx-auto px-6 py-16">
-        <ScrollReveal direction="up" delay={50}>
-          <p className="font-mono text-xs text-cyan tracking-widest mb-4 text-center uppercase font-semibold">PORTFOLIO</p>
-          <h2 className="font-display text-3xl md:text-4xl text-center mb-12">
-            Recent Projects & Engineering Work
-          </h2>
-        </ScrollReveal>
+      {/* Services Section from demo project */}
+      <ServicesSection limit={8} showHeader={true} showViewAllBtn={true} />
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {projects.map((p, idx) => (
-            <ScrollReveal key={p.id} direction="scale" delay={100 * (idx + 1)}>
-              <ProjectCard project={p} />
-            </ScrollReveal>
-          ))}
-        </div>
+      {/* Why Choose Us Section */}
+      <WhyChooseUs />
 
-        {projects.length > 0 && (
-          <ScrollReveal direction="up" delay={300}>
-            <div className="text-center mt-10">
-              <Link to="/work" className="font-mono text-sm text-cyan hover:underline">view all work →</Link>
-            </div>
-          </ScrollReveal>
-        )}
-      </section>
+      {/* Process Timeline Section */}
+      <ProcessTimeline />
+
+      {/* Featured Work Section */}
+      <FeaturedWorkSection limit={3} showHeader={true} showViewAllBtn={true} />
 
       {/* Testimonials */}
-      <section id="testimonials" className="max-w-6xl mx-auto px-6 py-16">
+      <section id="testimonials" className="max-w-7xl mx-auto px-6 py-16">
         <ScrollReveal direction="up" delay={100}>
           <p className="font-mono text-xs text-cyan tracking-widest mb-4 text-center uppercase font-semibold">TESTIMONIALS</p>
           <h2 className="font-display text-3xl md:text-4xl text-center mb-12">
@@ -136,7 +127,7 @@ export default function Home() {
       </section>
 
       {/* Stats with Staggered Scroll Reveal */}
-      <section className="max-w-6xl mx-auto px-6 py-20 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <section className="max-w-7xl mx-auto px-6 py-20 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
         <ScrollReveal direction="up" delay={100}>
           <StatCounter target={40} suffix="+" label="Projects shipped" />
         </ScrollReveal>
@@ -150,6 +141,9 @@ export default function Home() {
           <StatCounter target={6} suffix="yr" label="Engineering Excellence" />
         </ScrollReveal>
       </section>
+
+      {/* FAQ Section */}
+      <FAQSection />
 
       {/* CTA */}
       <section className="max-w-4xl mx-auto px-6 py-20 text-center">
