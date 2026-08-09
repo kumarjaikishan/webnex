@@ -65,40 +65,54 @@ function getInitialData() {
 }
 
 function readDB() {
+  const adminEmail = process.env.ADMIN_EMAIL || "jai@gmail.com";
+  const defaultAdminPassword = process.env.ADMIN_PASSWORD || "Jai@4880";
+  const defaultUser = {
+    id: uuid(),
+    role: "admin",
+    name: "Webnex Admin",
+    email: adminEmail,
+    passwordHash: bcrypt.hashSync(defaultAdminPassword, 10),
+    createdAt: new Date().toISOString(),
+  };
+
   if (!fs.existsSync(DB_PATH)) {
     const initial = getInitialData();
-    fs.writeFileSync(DB_PATH, JSON.stringify(initial, null, 2));
+    try {
+      fs.writeFileSync(DB_PATH, JSON.stringify(initial, null, 2));
+    } catch (err) {
+      console.warn("Could not write initial db.json (read-only environment):", err.message);
+    }
     return initial;
   }
   try {
     const content = fs.readFileSync(DB_PATH, "utf-8");
     const parsed = JSON.parse(content);
     // Ensure admin user exists in JSON DB
-    const adminEmail = process.env.ADMIN_EMAIL || "jai@gmail.com";
     if (!parsed.users || !parsed.users.some(u => u.email.toLowerCase() === adminEmail.toLowerCase())) {
       parsed.users = parsed.users || [];
-      parsed.users.push({
-        id: uuid(),
-        role: "admin",
-        name: "Webnex Admin",
-        email: adminEmail,
-        passwordHash: bcrypt.hashSync(process.env.ADMIN_PASSWORD || "Jai@4880", 10),
-        createdAt: new Date().toISOString(),
-      });
-      fs.writeFileSync(DB_PATH, JSON.stringify(parsed, null, 2));
+      parsed.users.push(defaultUser);
+      try {
+        fs.writeFileSync(DB_PATH, JSON.stringify(parsed, null, 2));
+      } catch (e) {
+        // Read-only filesystem ignore
+      }
     }
     return parsed;
   } catch (err) {
-    console.error("Error reading db.json, reinitializing...", err.message);
-    const initial = getInitialData();
-    fs.writeFileSync(DB_PATH, JSON.stringify(initial, null, 2));
-    return initial;
+    console.error("Error reading db.json, returning fallback initial data...", err.message);
+    return getInitialData();
   }
 }
 
 function writeDB(data) {
-  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+  try {
+    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+  } catch (err) {
+    console.warn("Could not persist to db.json (read-only filesystem):", err.message);
+  }
 }
+
 
 // MongoDB Connection Setup
 const mongoUri = process.env.db || process.env.MONGODB_URI || process.env.MONGO_URI;
