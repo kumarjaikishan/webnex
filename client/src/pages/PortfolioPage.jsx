@@ -57,7 +57,7 @@ export default function PortfolioPage() {
             <ScrollReveal key={project.id} direction="up" delay={40 * (idx % 6 + 1)}>
               <div className="h-full flex flex-col justify-between rounded-2xl border border-edge bg-panel/70 backdrop-blur overflow-hidden transition-all duration-300 hover:border-cyan/40 hover:bg-panel hover:-translate-y-1.5 shadow-2xl group">
                 <div className="p-7">
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
                     <span className="font-mono text-xs text-cyan uppercase tracking-wider font-semibold">
                       {project.tagline}
                     </span>
@@ -66,14 +66,23 @@ export default function PortfolioPage() {
                     </span>
                   </div>
 
+                  {project.badge && (
+                    <div className="mb-4">
+                      <span className="inline-block rounded-full bg-cyan/15 border border-cyan/40 px-3 py-1 font-mono text-[11px] font-bold text-cyan">
+                        ⚡ {project.badge}
+                      </span>
+                    </div>
+                  )}
+
                   <h2 className="font-display text-2xl font-bold text-paper group-hover:text-cyan transition-colors mb-4">
                     {project.title}
                   </h2>
 
+
                   <div className="space-y-3 text-sm leading-relaxed text-mist">
-                    <p><strong className="text-paper">Problem:</strong> {project.problem}</p>
-                    <p><strong className="text-paper">Solution:</strong> {project.solution}</p>
-                    <p className="text-cyan/90 font-medium"><strong className="text-paper">Impact:</strong> {project.businessImpact}</p>
+                    <p><strong className="text-paper">Problem & Need:</strong> {project.problem}</p>
+                    <p><strong className="text-paper">Platform Built:</strong> {project.solution}</p>
+                    <p className="text-cyan/90 font-medium"><strong className="text-paper">Impact & Reach:</strong> {project.businessImpact}</p>
                   </div>
                 </div>
 
@@ -85,7 +94,22 @@ export default function PortfolioPage() {
                       </span>
                     ))}
                   </div>
+
+                  {project.liveUrl && (
+                    <div className="mt-5">
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-full bg-grad-primary text-void font-bold text-xs hover:brightness-110 transition shadow-md"
+                      >
+                        Try {project.title} Live <ArrowUpRight size={14} />
+                      </a>
+                    </div>
+                  )}
+
                 </div>
+
               </div>
             </ScrollReveal>
           ))}

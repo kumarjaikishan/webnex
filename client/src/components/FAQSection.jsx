@@ -6,30 +6,31 @@ import ScrollReveal from "./ScrollReveal.jsx";
 const faqsList = [
   { 
     id: "f01", 
-    question: "Which areas does Webnex Labs serve?", 
-    answer: "We work with businesses locally across India as well as remote clients worldwide through structured online communication and milestone tracking." 
+    question: "Where is Webnex Labs located and which regions do you serve?", 
+    answer: "We work with clients across India as well as international clients worldwide. Everything is handled smoothly over WhatsApp, email, and Google Meet or Zoom calls." 
   },
   { 
     id: "f02", 
-    question: "Is Webnex Labs a full-stack digital software & website company?", 
-    answer: "Yes. Webnex Labs specializes in professional website development, custom ERPs, CRMs, inventory tools, and custom SaaS web applications." 
+    question: "What kind of services does Webnex Labs provide?", 
+    answer: "We offer end-to-end web development and software solutions. This includes business websites, online stores (e-commerce), admin dashboards, custom CRM/ERP tools, inventory management, and mobile-friendly web applications." 
   },
   { 
     id: "f03", 
-    question: "How much does a business website or custom system cost?", 
-    answer: "Pricing depends on project scope and features. We provide transparent estimates with zero hidden fees — contact us for a detailed project breakdown." 
+    question: "How much does a website or custom app cost?", 
+    answer: "Our starter websites begin at ₹7,999, while complete business websites start at ₹21,999. Enterprise portals start at ₹69,999 and full custom web apps at ₹1,29,999. The final price depends on how many pages and special features you need." 
   },
   { 
     id: "f04", 
-    question: "Do you offer fixed pricing?", 
-    answer: "We provide structured milestone pricing for each project stage. You'll receive a clear contract and quote before development begins." 
+    question: "Are there any hidden costs or surprise fees after we start?", 
+    answer: "No, absolutely zero hidden fees! Before we begin any work, we give you a clear project proposal with an exact fixed quote. You only pay what we agreed upon." 
   },
   { 
     id: "f05", 
-    question: "How long does it take to build a website or system?", 
-    answer: "A standard business website typically takes 2–4 weeks. Complex systems like ERPs or CRMs take 4–8 weeks depending on scope." 
+    question: "How many days will it take to launch my website?", 
+    answer: "A standard 5-to-10 page business website takes around 2 to 3 weeks. Custom web apps or advanced dashboards take about 4 to 6 weeks depending on complex features." 
   }
 ];
+
 
 export default function FAQSection() {
   const [openId, setOpenId] = useState("f03");

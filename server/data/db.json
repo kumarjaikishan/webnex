@@ -15,6 +15,14 @@
       "email": "hey@gmail.com",
       "passwordHash": "$2a$10$x8DBJSlrNEIP3q/LRoJa4u7uCY36abHIIz0ENp778i7OCpq5lugVi",
       "createdAt": "2026-08-05T09:06:44.409Z"
+    },
+    {
+      "id": "d3cd9d7e-b4bb-4a56-a46e-9bcf3d8d87d6",
+      "role": "admin",
+      "name": "Webnex Admin",
+      "email": "kumar.jaikishan0@gmail.com",
+      "passwordHash": "$2a$10$POqFIj/sczDNeC8mcORo1eY4ip49AEcUNHcZQKUOCWWaZPlrM25.W",
+      "createdAt": "2026-08-09T16:43:46.657Z"
     }
   ],
   "projects": [

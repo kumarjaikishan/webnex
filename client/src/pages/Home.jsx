@@ -28,24 +28,26 @@ export default function Home() {
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 pt-24 pb-20 text-center">
           <ScrollReveal direction="up" delay={50}>
-            <span className="inline-flex items-center gap-2 rounded-full border border-edge bg-panel/90 backdrop-blur px-4 py-1.5 font-mono text-xs text-mist mb-8 shadow-lg">
+            <span className="inline-flex items-center gap-2 rounded-full border border-edge bg-panel/90 backdrop-blur px-4 py-1.5 font-mono text-xs text-cyan mb-8 shadow-lg">
               <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
-              Webnex Labs — Web Development &amp; Software Company
+              WEBNEX LABS — FULL-STACK ENGINEERING STUDIO
             </span>
           </ScrollReveal>
 
-          <ScrollReveal direction="up" delay={150}>
-            <h1 className="font-display text-4xl md:text-6xl leading-[1.08] mb-6">
-              Turn your business idea into a{" "}
-              <span className="bg-grad-primary bg-clip-text text-transparent">website that grows sales</span>
+          <ScrollReveal direction="up" delay={100}>
+            <h1 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-7xl leading-[1.05] mb-8 font-bold tracking-tight">
+              You Have the Vision.{" "}
+              <span className="bg-grad-primary bg-clip-text text-transparent block mt-2">Let's Build Real Software.</span>
             </h1>
           </ScrollReveal>
 
-          <ScrollReveal direction="up" delay={250}>
-            <p className="text-mist text-lg max-w-xl mx-auto mb-10 leading-relaxed">
-              We design, build, and manage fast websites, online stores, and software for local businesses, schools, clinics, and startups — with 100% honest pricing and full support.
+          <ScrollReveal direction="up" delay={200}>
+            <p className="text-mist text-xl md:text-xl max-w-3xl mx-auto mb-12 leading-relaxed font-normal">
+              We turn complex business ideas into high-converting websites, custom ERPs, and scalable SaaS applications engineered to perform in the real world.
             </p>
           </ScrollReveal>
+
+
 
           <ScrollReveal direction="up" delay={350}>
             <div className="flex items-center justify-center gap-4">

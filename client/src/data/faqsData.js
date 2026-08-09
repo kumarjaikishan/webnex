@@ -1,21 +1,93 @@
 export const faqsData = [
-  { id: "f01", category: "General", question: "Which areas does Webnex Labs serve?", answer: "We work with businesses locally as well as remote clients across India and globally through online video calls, chat, and clear milestone management." },
-  { id: "f02", category: "General", question: "Is Webnex Labs a full-stack website development & software company?", answer: "Yes. Webnex Labs specializes in professional website development, custom ERPs, CRMs, inventory tools, and custom SaaS web applications." },
-  { id: "f03", category: "Pricing", question: "How much does a business website cost?", answer: "Pricing depends on project scope and features. We offer transparent pricing starting from basic business sites up to complex enterprise platforms — contact us for a full breakdown." },
-  { id: "f04", category: "Pricing", question: "Do you offer fixed pricing?", answer: "We provide starting prices and fixed milestone quotes after understanding your specific project requirements. Zero surprise fees." },
-  { id: "f05", category: "Timeline", question: "How long does it take to build a website?", answer: "A standard business website typically takes 2–4 weeks. Complex systems like ERPs or CRMs can take 4–8 weeks depending on scope." },
-  { id: "f06", category: "Timeline", question: "Can you deliver on a tight deadline?", answer: "In many cases, yes! Share your timeline during your initial inquiry and we'll let you know realistic delivery schedules." },
-  { id: "f07", category: "Process", question: "What is your website development process?", answer: "We follow eight stages: Discovery, Planning, Wireframing, Design, Development, Testing, Deployment and ongoing Support." },
-  { id: "f08", category: "Process", question: "Will I be involved during development?", answer: "Yes. You'll review wireframes and visual designs before development begins, and receive regular progress updates throughout the project." },
-  { id: "f09", category: "Services", question: "Do you build custom software, not just websites?", answer: "Yes. We build school ERPs, hospital management systems, CRMs, inventory systems and custom web applications alongside marketing websites." },
-  { id: "f10", category: "Services", question: "Can you redesign my existing website?", answer: "Yes. We modernize outdated websites while preserving your existing content and search engine rankings wherever possible." },
-  { id: "f11", category: "Services", question: "Do you provide domain and hosting setup?", answer: "Yes. We handle domain registration, SSL certificates, and hosting configuration so you don't have to manage technical setup yourself." },
-  { id: "f12", category: "SEO", question: "Will my website be SEO optimized?", answer: "Every website we build includes on-page SEO fundamentals — proper meta tags, fast load times, and mobile optimization for better search visibility." },
-  { id: "f13", category: "SEO", question: "Can you help my business rank on Google?", answer: "We implement local and technical SEO best practices including location-targeted content and structured schema data to help customers find you." },
-  { id: "f14", category: "Technical", question: "Will my website work on mobile phones?", answer: "Yes. Every website is built mobile-first and thoroughly tested across screen sizes before launch." },
-  { id: "f15", category: "Technical", question: "How fast will my website load?", answer: "We optimize images, code assets, and cloud servers to keep load times fast, boosting user experience and search rankings." },
-  { id: "f16", category: "Technical", question: "Is my website secure?", answer: "We follow industry security practices including HTTPS encryption, secure authentication, and regular updates to keep your application safe." },
-  { id: "f17", category: "Support", question: "Do you provide support after launch?", answer: "Yes. We offer ongoing maintenance plans covering updates, backups, security monitoring, and technical support after launch." },
-  { id: "f18", category: "Support", question: "What if I need changes after the website is live?", answer: "Minor updates are covered under your maintenance plan. Larger feature additions can be scoped and added whenever needed." },
-  { id: "f19", category: "Getting Started", question: "How do I get started with Webnex Labs?", answer: "Request a free quote through our contact page, and our team will reach out within 24 hours to discuss your project." }
+  { 
+    id: "f01", 
+    category: "General", 
+    question: "Where is Webnex Labs located and which regions do you serve?", 
+    answer: "We work with clients across India as well as international clients worldwide. Everything is handled smoothly over WhatsApp, email, and Google Meet or Zoom calls, so distance is never an issue." 
+  },
+  { 
+    id: "f02", 
+    category: "General", 
+    question: "What kind of services does Webnex Labs provide?", 
+    answer: "We offer end-to-end web development and software solutions. This includes business websites, online stores (e-commerce), admin dashboards, custom CRM/ERP tools, inventory management, and mobile-friendly web applications." 
+  },
+  { 
+    id: "f03", 
+    category: "Pricing", 
+    question: "How much does a website or custom app cost?", 
+    answer: "Our starter websites begin at ₹7,999, while complete business websites start at ₹21,999. Enterprise portals start at ₹69,999 and full custom web apps at ₹1,29,999. The final price depends on how many pages and special features you need." 
+  },
+  { 
+    id: "f04", 
+    category: "Pricing", 
+    question: "Are there any hidden costs or surprise fees after we start?", 
+    answer: "No, absolutely zero hidden fees! Before we begin any work, we give you a clear project proposal with an exact fixed quote. You only pay what we agreed upon." 
+  },
+  { 
+    id: "f05", 
+    category: "Pricing", 
+    question: "What is your payment structure for projects?", 
+    answer: "We split payments into simple milestone installments. Typically, we take a 50% advance to start work and the remaining 50% after the final preview is approved and ready to go live." 
+  },
+  { 
+    id: "f06", 
+    category: "Timeline", 
+    question: "How many days will it take to launch my website?", 
+    answer: "A standard 5-to-10 page business website takes around 2 to 3 weeks. Custom web apps or advanced dashboards take about 4 to 6 weeks depending on complex features." 
+  },
+  { 
+    id: "f07", 
+    category: "Timeline", 
+    question: "What if I need my website delivered urgently?", 
+    answer: "We offer express delivery for urgent launches! Tell us your target date during our initial call, and we will prioritize your project schedule." 
+  },
+  { 
+    id: "f08", 
+    category: "Process", 
+    question: "How does the project process work step-by-step?", 
+    answer: "First, we discuss your goals and requirements. Next, we share design mockups for your approval. Once you like the design, we code the website, test it carefully, and deploy it live to the web." 
+  },
+  { 
+    id: "f09", 
+    category: "Process", 
+    question: "Will I get to see and approve the design before it goes live?", 
+    answer: "Yes, definitely! We share live preview links at every stage so you can review and give feedback before anything goes public." 
+  },
+  { 
+    id: "f10", 
+    category: "Services", 
+    question: "Can you redesign or update my existing old website?", 
+    answer: "Yes! We can revamp your existing website with a modern, fresh look and faster loading speeds while keeping your existing domain, content, and Google search rankings safe." 
+  },
+  { 
+    id: "f11", 
+    category: "Services", 
+    question: "Do you help with domain name, SSL certificate, and hosting setup?", 
+    answer: "Yes! We handle the entire technical setup for you — domain connection, free SSL (green padlock security), and fast cloud hosting configuration so you don't have to worry about tech stuff." 
+  },
+  { 
+    id: "f12", 
+    category: "SEO", 
+    question: "Will my website show up on Google search results (SEO)?", 
+    answer: "Yes! Every site we build includes built-in SEO basics: fast page loading, mobile responsiveness, meta tags, clean search-friendly URLs, and Google Search Console setup." 
+  },
+  { 
+    id: "f13", 
+    category: "Technical", 
+    question: "Will my website work well on mobile phones and tablets?", 
+    answer: "100% yes! More than 70% of web traffic comes from smartphones. We design and test every page to make sure it looks fantastic and works fast on all screen sizes." 
+  },
+  { 
+    id: "f14", 
+    category: "Support", 
+    question: "What happens if I need help or updates after the website is live?", 
+    answer: "We don't leave you after launch! We provide free post-launch support and offer affordable monthly maintenance packages to keep your site updated, secure, and backed up." 
+  },
+  { 
+    id: "f15", 
+    category: "Getting Started", 
+    question: "How do I get started with Webnex Labs?", 
+    answer: "Simply click 'Get Free Quote' or message us on WhatsApp/Contact form. We will reply within 2 hours with a free consultation and project plan!" 
+  }
 ];
+
