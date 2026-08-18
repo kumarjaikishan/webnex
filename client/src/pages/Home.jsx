@@ -118,7 +118,7 @@ export default function Home() {
       <FeaturedWorkSection limit={3} showHeader={true} showViewAllBtn={true} />
 
       {/* Testimonials */}
-      <section id="testimonials" className="max-w-7xl mx-auto px-6 py-16">
+      <section id="testimonials" className="max-w-7xl mx-auto px-6 py-16 scroll-mt-20">
         <ScrollReveal direction="up" delay={100}>
           <p className="font-mono text-xs text-cyan tracking-widest mb-4 text-center uppercase font-semibold">TESTIMONIALS</p>
           <h2 className="font-display text-3xl md:text-4xl text-center mb-12">

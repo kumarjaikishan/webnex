@@ -35,9 +35,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Something went wrong on our end." });
 });
 
-if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) {
+if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));
+  app.listen(PORT, () => console.log(`API running on port ${PORT}`));
 }
 
 export default app;

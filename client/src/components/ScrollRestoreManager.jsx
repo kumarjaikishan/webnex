@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useLocation, useNavigationType } from "react-router-dom";
 
 export default function ScrollRestoreManager() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   const navType = useNavigationType();
   const scrollPositions = useRef(new Map());
 
@@ -19,11 +19,36 @@ export default function ScrollRestoreManager() {
   }, [pathname]);
 
   useEffect(() => {
-    if (navType === "POP") {
+    if (hash) {
+      // If there is a hash (e.g. #testimonials), scroll to that element
+      const targetId = hash.replace("#", "");
+      const scrollToHashElement = () => {
+        const element = document.getElementById(targetId);
+        if (element) {
+          const navbarHeight = 80;
+          const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: "smooth",
+          });
+          return true;
+        }
+        return false;
+      };
+
+      // Try immediately or after short delays for component mounting
+      if (!scrollToHashElement()) {
+        const timer1 = setTimeout(scrollToHashElement, 100);
+        const timer2 = setTimeout(scrollToHashElement, 300);
+        return () => {
+          clearTimeout(timer1);
+          clearTimeout(timer2);
+        };
+      }
+    } else if (navType === "POP") {
       // User clicked Back or Forward button in browser
       const savedPos = scrollPositions.current.get(pathname);
       if (savedPos !== undefined && savedPos > 0) {
-        // Start from top, then smoothly scroll down to saved position
         window.scrollTo(0, 0);
         const timer = setTimeout(() => {
           window.scrollTo({
@@ -39,7 +64,7 @@ export default function ScrollRestoreManager() {
       // New navigation: scroll smoothly to top
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [pathname, navType]);
+  }, [pathname, hash, navType]);
 
   return null;
 }
