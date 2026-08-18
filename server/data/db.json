@@ -3,10 +3,10 @@
     {
       "id": "e1f66d20-0fb5-41ba-93be-309f149b0e6f",
       "role": "admin",
-      "name": "Studio Admin",
-      "email": "jai@gmail.com",
-      "passwordHash": "$2a$10$MhC7ziy5V5z/MbtOl0jtWOaL/B9e83ven5l1w96BE60mskzW3UrBi",
-      "createdAt": "2026-08-04T10:05:56.414Z"
+      "name": "Webnex Admin",
+      "email": "kumar.jaikishan0@gmail.com",
+      "passwordHash": "$2a$10$ccxFJAPFXQAZPGYl8WWMX.hY7KqeaUbeLdionB4GO6NfejUqAchL2",
+      "createdAt": "2026-08-18T16:12:36.968Z"
     },
     {
       "id": "d0574d6b-4413-470c-ae52-0f0a337f26b0",

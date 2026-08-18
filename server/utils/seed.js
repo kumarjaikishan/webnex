@@ -1,10 +1,11 @@
 // Run with: npm run seed
-// Creates data/db.json with an admin user + sample portfolio projects.
+// Seeds admin user with bcrypt hashed password to MongoDB (if configured) & data/db.json
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import bcrypt from "bcryptjs";
 import { v4 as uuid } from "uuid";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -12,60 +13,82 @@ dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_PATH = path.join(__dirname, "..", "data", "db.json");
 
-const adminEmail = process.env.ADMIN_EMAIL || "jai@gmail.com";
-const adminPassword = process.env.ADMIN_PASSWORD || "Jai@4880";
+const adminEmail = process.env.ADMIN_EMAIL || "kumar.jaikishan0@gmail.com";
+const adminPassword = process.env.ADMIN_PASSWORD || "Dev@4880";
+const passwordHash = bcrypt.hashSync(adminPassword, 10);
 
-const data = {
-  users: [
-    {
-      id: uuid(),
-      role: "admin",
-      name: "Studio Admin",
-      email: adminEmail,
-      passwordHash: bcrypt.hashSync(adminPassword, 10),
-      createdAt: new Date().toISOString(),
-    },
-  ],
-  projects: [
-    {
-      id: uuid(),
-      title: "Aster Bakery — E-commerce Rebuild",
-      summary: "Headless storefront, 40% faster checkout, custom CMS for seasonal menus.",
-      tags: ["React", "Node.js", "Stripe"],
-      coverColor: "#3A6B63",
-      liveUrl: "",
-      featured: true,
-      order: 1,
-    },
-    {
-      id: uuid(),
-      title: "Northline Logistics — Ops Dashboard",
-      summary: "Real-time fleet tracking dashboard replacing three spreadsheets.",
-      tags: ["React", "WebSocket", "PostgreSQL"],
-      coverColor: "#E8A33D",
-      liveUrl: "",
-      featured: true,
-      order: 2,
-    },
-    {
-      id: uuid(),
-      title: "Fable & Co — Brand Portfolio",
-      summary: "Design-forward marketing site with CMS-driven case studies.",
-      tags: ["Next.js", "Sanity", "Framer Motion"],
-      coverColor: "#8B93A1",
-      liveUrl: "",
-      featured: false,
-      order: 3,
-    },
-  ],
-  clients: [],
-  contracts: [],
-  maintenance: [],
-  reminders: [],
-  notes: [],
-  messages: [],
-};
+async function seed() {
+  console.log("🌱 Starting Webnex DB Seeder...");
+  console.log(`🔑 Target Admin Email: ${adminEmail}`);
 
-fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
-console.log("✅ Seeded database at", DB_PATH);
-console.log(`   Admin login → ${adminEmail} / ${adminPassword}`);
+  // 1. JSON Local DB Seeding / Update
+  let currentData = { users: [], projects: [], clients: [], contracts: [], maintenance: [], reminders: [], notes: [], messages: [] };
+  if (fs.existsSync(DB_PATH)) {
+    try {
+      currentData = JSON.parse(fs.readFileSync(DB_PATH, "utf-8"));
+    } catch (e) {}
+  }
+
+  currentData.users = currentData.users || [];
+  const existingIndex = currentData.users.findIndex(u => u.email.toLowerCase() === adminEmail.toLowerCase() || u.role === "admin");
+  const adminDoc = {
+    id: existingIndex >= 0 ? currentData.users[existingIndex].id : uuid(),
+    role: "admin",
+    name: "Webnex Admin",
+    email: adminEmail,
+    passwordHash: passwordHash,
+    createdAt: new Date().toISOString(),
+  };
+
+  if (existingIndex >= 0) {
+    currentData.users[existingIndex] = adminDoc;
+  } else {
+    currentData.users.push(adminDoc);
+  }
+
+  const dataDir = path.dirname(DB_PATH);
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
+  fs.writeFileSync(DB_PATH, JSON.stringify(currentData, null, 2));
+  console.log("✅ Seeded JSON Database file at", DB_PATH);
+
+  // 2. MongoDB Cloud Seeding (if mongoUri present)
+  const mongoUri = process.env.db || process.env.MONGODB_URI || process.env.MONGO_URI;
+  if (mongoUri) {
+    try {
+      console.log("⚡ Connecting to MongoDB Cloud...");
+      await mongoose.connect(mongoUri);
+      const dbCollection = mongoose.connection.collection("users");
+      
+      await dbCollection.updateOne(
+        { email: adminEmail.toLowerCase() },
+        {
+          $set: {
+            id: adminDoc.id,
+            role: "admin",
+            name: "Webnex Admin",
+            email: adminEmail.toLowerCase(),
+            passwordHash: passwordHash,
+            updatedAt: new Date(),
+          },
+          $setOnInsert: {
+            createdAt: new Date(),
+          }
+        },
+        { upsert: true }
+      );
+      console.log("✅ Seeded MongoDB Cloud database user successfully!");
+      await mongoose.disconnect();
+    } catch (err) {
+      console.warn("⚠️ MongoDB cloud seed error:", err.message);
+    }
+  }
+
+  console.log(`\n🎉 Admin Ready:`);
+  console.log(`   Email:    ${adminEmail}`);
+  console.log(`   Password: ${adminPassword}`);
+  console.log(`   Hash:     ${passwordHash.slice(0, 15)}... (bcrypt hashed)\n`);
+}
+
+seed();

@@ -20,6 +20,7 @@ export default function AdminLayout() {
         <NavLink to="/admin/notes" className={link}>📝 Notes & Cards</NavLink>
         <NavLink to="/admin/maintenance" className={link}>🛠️ Maintenance</NavLink>
         <NavLink to="/admin/projects" className={link}>🚀 Portfolio</NavLink>
+        <NavLink to="/admin/settings" className={link}>⚙️ Settings</NavLink>
       </aside>
       <main className="min-w-0">
         <Outlet />

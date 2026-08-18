@@ -25,11 +25,6 @@ export default function Login() {
     }
   }
 
-  function handleQuickAdminFill() {
-    setEmail("jai@gmail.com");
-    setPassword("Jai@4880");
-  }
-
   return (
     <div className="max-w-md mx-auto px-6 py-20">
       <div className="text-center mb-8">
@@ -48,7 +43,7 @@ export default function Login() {
             <input
               type="email"
               required
-              placeholder="jai@gmail.com"
+              placeholder="name@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-xl bg-void border border-edge px-4 py-3 text-paper focus-ring outline-none transition"
@@ -97,17 +92,6 @@ export default function Login() {
             {loading ? "Authenticating…" : "Sign In to Webnex CRM"}
           </button>
         </form>
-
-        <div className="mt-6 pt-6 border-t border-edge/60 text-center">
-          <p className="text-xs text-mist mb-3">Testing Admin CRM?</p>
-          <button
-            type="button"
-            onClick={handleQuickAdminFill}
-            className="text-xs px-3 py-1.5 rounded-lg border border-cyan/30 text-cyan bg-cyan/10 hover:bg-cyan/20 transition"
-          >
-            🔑 Fill Admin Credentials (jai@gmail.com)
-          </button>
-        </div>
       </div>
     </div>
   );

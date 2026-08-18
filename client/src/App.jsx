@@ -32,6 +32,7 @@ import Reminders from "./pages/admin/Reminders.jsx";
 import Notes from "./pages/admin/Notes.jsx";
 import AdminProjects from "./pages/admin/Projects.jsx";
 import ContactInquiries from "./pages/admin/ContactInquiries.jsx";
+import AdminSettings from "./pages/admin/AdminSettings.jsx";
 
 import ClientLayout from "./pages/client/ClientLayout.jsx";
 import ClientOverview from "./pages/client/ClientOverview.jsx";
@@ -72,6 +73,7 @@ export default function App() {
               <Route path="reminders" element={<Reminders />} />
               <Route path="notes" element={<Notes />} />
               <Route path="projects" element={<AdminProjects />} />
+              <Route path="settings" element={<AdminSettings />} />
             </Route>
 
             <Route path="/portal" element={<ProtectedRoute role="client"><ClientLayout /></ProtectedRoute>}>

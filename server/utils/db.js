@@ -19,8 +19,8 @@ if (!fs.existsSync(dataDir)) {
 
 // Initial JSON file structure template
 function getInitialData() {
-  const adminEmail = process.env.ADMIN_EMAIL || "jai@gmail.com";
-  const adminPassword = process.env.ADMIN_PASSWORD || "Jai@4880";
+  const adminEmail = process.env.ADMIN_EMAIL || "kumar.jaikishan0@gmail.com";
+  const adminPassword = process.env.ADMIN_PASSWORD || "Dev@4880";
   return {
     users: [
       {
@@ -65,8 +65,8 @@ function getInitialData() {
 }
 
 function readDB() {
-  const adminEmail = process.env.ADMIN_EMAIL || "jai@gmail.com";
-  const defaultAdminPassword = process.env.ADMIN_PASSWORD || "Jai@4880";
+  const adminEmail = process.env.ADMIN_EMAIL || "kumar.jaikishan0@gmail.com";
+  const defaultAdminPassword = process.env.ADMIN_PASSWORD || "Dev@4880";
   const defaultUser = {
     id: uuid(),
     role: "admin",
@@ -121,9 +121,30 @@ let isMongoConnected = false;
 if (mongoUri) {
   mongoose
     .connect(mongoUri)
-    .then(() => {
+    .then(async () => {
       isMongoConnected = true;
       console.log("⚡ [Webnex DB] Successfully connected to MongoDB Cloud!");
+
+      // Sync Admin User in MongoDB
+      try {
+        const adminEmail = process.env.ADMIN_EMAIL || "kumar.jaikishan0@gmail.com";
+        const adminPassword = process.env.ADMIN_PASSWORD || "Dev@4880";
+        const usersCollection = mongoose.connection.collection("users");
+        const existingAdmin = await usersCollection.findOne({ email: adminEmail.toLowerCase() });
+        if (!existingAdmin) {
+          await usersCollection.insertOne({
+            id: uuid(),
+            role: "admin",
+            name: "Webnex Admin",
+            email: adminEmail.toLowerCase(),
+            passwordHash: bcrypt.hashSync(adminPassword, 10),
+            createdAt: new Date(),
+          });
+          console.log(`⚡ [Webnex DB] Seeded admin (${adminEmail}) to MongoDB.`);
+        }
+      } catch (e) {
+        console.warn("⚠️ Could not auto-sync admin to MongoDB:", e.message);
+      }
     })
     .catch((err) => {
       console.warn("⚠️ [Webnex DB] MongoDB Connection Notice:", err.message);
