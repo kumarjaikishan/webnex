@@ -88,8 +88,8 @@ function readDB() {
   try {
     const content = fs.readFileSync(DB_PATH, "utf-8");
     const parsed = JSON.parse(content);
-    // Ensure admin user exists in JSON DB
-    if (!parsed.users || !parsed.users.some(u => u.email.toLowerCase() === adminEmail.toLowerCase())) {
+    // Ensure at least one admin user exists in JSON DB
+    if (!parsed.users || !parsed.users.some(u => u.role === "admin")) {
       parsed.users = parsed.users || [];
       parsed.users.push(defaultUser);
       try {
@@ -125,13 +125,13 @@ if (mongoUri) {
       isMongoConnected = true;
       console.log("⚡ [Webnex DB] Successfully connected to MongoDB Cloud!");
 
-      // Sync Admin User in MongoDB
+      // Check if admin user exists in MongoDB; if not, create initial admin
       try {
-        const adminEmail = process.env.ADMIN_EMAIL || "kumar.jaikishan0@gmail.com";
-        const adminPassword = process.env.ADMIN_PASSWORD || "Dev@4880";
         const usersCollection = mongoose.connection.collection("users");
-        const existingAdmin = await usersCollection.findOne({ email: adminEmail.toLowerCase() });
+        const existingAdmin = await usersCollection.findOne({ role: "admin" });
         if (!existingAdmin) {
+          const adminEmail = process.env.ADMIN_EMAIL || "kumar.jaikishan0@gmail.com";
+          const adminPassword = process.env.ADMIN_PASSWORD || "Dev@4880";
           await usersCollection.insertOne({
             id: uuid(),
             role: "admin",
@@ -140,10 +140,10 @@ if (mongoUri) {
             passwordHash: bcrypt.hashSync(adminPassword, 10),
             createdAt: new Date(),
           });
-          console.log(`⚡ [Webnex DB] Seeded admin (${adminEmail}) to MongoDB.`);
+          console.log(`⚡ [Webnex DB] Initial admin (${adminEmail}) created in MongoDB.`);
         }
       } catch (e) {
-        console.warn("⚠️ Could not auto-sync admin to MongoDB:", e.message);
+        console.warn("⚠️ MongoDB admin check notice:", e.message);
       }
     })
     .catch((err) => {
