@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import api from "../../api/client.js";
 import DocumentCard from "../../components/DocumentCard.jsx";
+import GearboxLoader from "../../components/GearboxLoader.jsx";
 
 const DEFAULT_AGREEMENT_TERMS = `# SOFTWARE DEVELOPMENT AND MAINTENANCE AGREEMENT
 
@@ -246,7 +247,7 @@ export default function Contracts() {
       </div>
 
       {loading ? (
-        <p className="text-mist">Loading agreements...</p>
+        <GearboxLoader label="Loading agreements..." />
       ) : contracts.length === 0 ? (
         <div className="bg-panel border border-edge rounded-2xl p-12 text-center">
           <p className="text-mist mb-4">No detailed agreements created yet.</p>

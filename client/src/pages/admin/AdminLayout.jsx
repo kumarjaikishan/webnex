@@ -1,28 +1,132 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { LayoutDashboard, Mail, Users, FileText, FileCheck, HeartHandshake, Bell, StickyNote, Wrench, FolderGit2, Settings, ChevronDown, ChevronUp } from "lucide-react";
 
-const link = ({ isActive }) =>
-  `block px-4 py-2 rounded-lg text-sm font-mono transition-colors ${
-    isActive ? "bg-grad-primary text-void font-bold" : "text-mist hover:bg-white/5"
-  }`;
+const navItems = [
+  { to: "/admin", label: "Overview", icon: LayoutDashboard, end: true },
+  { to: "/admin/inquiries", label: "Inquiries", icon: Mail },
+  { to: "/admin/clients", label: "Clients", icon: Users },
+  { to: "/admin/invoices", label: "Invoices", icon: FileText },
+  { to: "/admin/contracts", label: "Agreements", icon: FileCheck },
+  { to: "/admin/welcome-notes", label: "Welcome Notes", icon: HeartHandshake },
+  { to: "/admin/reminders", label: "Reminders", icon: Bell },
+  { to: "/admin/notes", label: "Notes & Cards", icon: StickyNote },
+  { to: "/admin/maintenance", label: "Maintenance", icon: Wrench },
+  { to: "/admin/projects", label: "Portfolio", icon: FolderGit2 },
+  { to: "/admin/settings", label: "Settings", icon: Settings },
+];
 
 export default function AdminLayout() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+
+  const currentTab = navItems.find((item) => 
+    item.end ? location.pathname === item.to : location.pathname.startsWith(item.to)
+  ) || navItems[0];
+
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10 grid md:grid-cols-[220px_1fr] gap-8">
-      <aside className="space-y-1 bg-panel border border-edge p-4 rounded-2xl h-fit">
-        <p className="font-mono text-xs text-cyan tracking-wider px-4 mb-3 uppercase">Webnex CRM</p>
-        <NavLink to="/admin" end className={link}>Overview</NavLink>
-        <NavLink to="/admin/inquiries" className={link}>📩 Inquiries</NavLink>
-        <NavLink to="/admin/clients" className={link}>Clients</NavLink>
-        <NavLink to="/admin/invoices" className={link}>🧾 Invoices</NavLink>
-        <NavLink to="/admin/contracts" className={link}>📄 Agreements</NavLink>
-        <NavLink to="/admin/welcome-notes" className={link}>💌 Welcome Notes</NavLink>
-        <NavLink to="/admin/reminders" className={link}>🔔 Reminders</NavLink>
-        <NavLink to="/admin/notes" className={link}>📝 Notes & Cards</NavLink>
-        <NavLink to="/admin/maintenance" className={link}>🛠️ Maintenance</NavLink>
-        <NavLink to="/admin/projects" className={link}>🚀 Portfolio</NavLink>
-        <NavLink to="/admin/settings" className={link}>⚙️ Settings</NavLink>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 grid md:grid-cols-[230px_1fr] gap-6 sm:gap-8">
+      {/* MOBILE ADMIN DROPDOWN & SCROLLABLE BAR */}
+      <div className="md:hidden space-y-3">
+        <div className="flex items-center justify-between bg-panel border border-edge p-3 rounded-xl">
+          <div className="flex items-center gap-2.5">
+            <currentTab.icon size={18} className="text-cyan" />
+            <span className="font-mono text-xs font-semibold text-paper uppercase tracking-wider">
+              {currentTab.label}
+            </span>
+          </div>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-void/60 border border-edge text-xs font-mono text-mist hover:text-paper transition"
+          >
+            <span>Navigation</span>
+            {mobileMenuOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+        </div>
+
+        {/* Collapsible Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="grid grid-cols-2 gap-2 bg-panel border border-edge p-3 rounded-2xl animate-in fade-in slide-in-from-top-2 shadow-xl">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.end}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-mono transition-all ${
+                      isActive
+                        ? "bg-grad-primary text-void font-bold shadow-sm"
+                        : "text-mist hover:bg-white/5 hover:text-paper"
+                    }`
+                  }
+                >
+                  <Icon size={15} />
+                  <span className="truncate">{item.label}</span>
+                </NavLink>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Quick Horizontal Scroll Pills on Mobile */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={`pill-${item.to}`}
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) =>
+                  `flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono whitespace-nowrap transition-all shrink-0 ${
+                    isActive
+                      ? "bg-cyan/15 text-cyan border border-cyan/30 font-bold"
+                      : "bg-panel border border-edge text-mist hover:text-paper"
+                  }`
+                }
+              >
+                <Icon size={13} />
+                <span>{item.label}</span>
+              </NavLink>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* DESKTOP SIDEBAR */}
+      <aside className="hidden md:block space-y-1.5 bg-panel border border-edge p-4 rounded-2xl h-fit sticky top-24">
+        <div className="px-3 pb-3 mb-2 border-b border-edge/60">
+          <p className="font-mono text-xs text-cyan tracking-wider uppercase font-semibold">Webnex CRM</p>
+          <p className="text-[11px] text-mist font-mono mt-0.5">Management Portal</p>
+        </div>
+        
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) =>
+                `flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-mono transition-all ${
+                  isActive
+                    ? "bg-grad-primary text-void font-bold shadow-md"
+                    : "text-mist hover:bg-white/5 hover:text-paper"
+                }`
+              }
+            >
+              <Icon size={16} />
+              <span>{item.label}</span>
+            </NavLink>
+          );
+        })}
       </aside>
-      <main className="min-w-0">
+
+      {/* MAIN CONTENT AREA */}
+      <main className="min-w-0 w-full overflow-hidden">
         <Outlet />
       </main>
     </div>

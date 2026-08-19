@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Mail, Phone, Calendar, Building, MessageSquare, Trash2, CheckCircle2 } from "lucide-react";
 import api from "../../api/client.js";
+import GearboxLoader from "../../components/GearboxLoader.jsx";
 
 export default function ContactInquiries() {
   const [messages, setMessages] = useState([]);
@@ -36,9 +37,7 @@ export default function ContactInquiries() {
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-mist font-mono text-sm border border-edge rounded-2xl bg-panel/50">
-          Loading contact inquiries...
-        </div>
+        <GearboxLoader label="Loading contact inquiries..." />
       ) : messages.length === 0 ? (
         <div className="p-12 text-center space-y-3 border border-edge rounded-2xl bg-panel/50">
           <MessageSquare size={36} className="mx-auto text-mist/40" />

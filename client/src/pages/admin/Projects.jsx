@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import api from "../../api/client.js";
+import GearboxLoader from "../../components/GearboxLoader.jsx";
 
 export default function AdminProjects() {
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ title: "", summary: "", tags: "", coverColor: "#3A6B63", featured: false });
 
   function load() {
-    api.get("/projects").then((r) => setProjects(r.data));
+    api.get("/projects")
+      .then((r) => setProjects(r.data))
+      .finally(() => setLoading(false));
   }
   useEffect(load, []);
 
@@ -40,17 +44,24 @@ export default function AdminProjects() {
         </button>
       </form>
 
-      <div className="grid sm:grid-cols-2 gap-4">
-        {projects.map((p) => (
-          <div key={p.id} className="rounded-2xl border border-edge bg-panel p-5">
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="font-display text-lg">{p.title}</h3>
-              <button onClick={() => remove(p.id)} className="text-mist hover:text-red-400 text-xs font-mono">remove</button>
+      {loading ? (
+        <GearboxLoader label="Loading projects..." />
+      ) : (
+        <div className="grid sm:grid-cols-2 gap-4">
+          {projects.map((p) => (
+            <div key={p.id} className="rounded-2xl border border-edge bg-panel p-5">
+              <div className="flex justify-between items-start mb-2">
+                <h3 className="font-display text-lg">{p.title}</h3>
+                <button onClick={() => remove(p.id)} className="text-mist hover:text-red-400 text-xs font-mono">remove</button>
+              </div>
+              <p className="text-sm text-mist">{p.summary}</p>
             </div>
-            <p className="text-sm text-mist">{p.summary}</p>
-          </div>
-        ))}
-      </div>
+          ))}
+          {projects.length === 0 && (
+            <p className="text-sm text-mist sm:col-span-2 py-4">No portfolio projects added yet.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

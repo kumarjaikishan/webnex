@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../api/client.js";
+import GearboxLoader from "../../components/GearboxLoader.jsx";
 
 const noteTypes = [
   { value: "welcome", label: "Welcome note" },
@@ -59,7 +60,7 @@ export default function ClientDetail() {
     load();
   }
 
-  if (!client) return <p className="text-mist font-mono text-sm">Loading…</p>;
+  if (!client) return <GearboxLoader label="Loading client details..." />;
 
   const card = "rounded-2xl border border-edge bg-panel p-6";
   const input = "w-full rounded-lg bg-void border border-edge px-4 py-2.5 text-sm focus-ring outline-none";

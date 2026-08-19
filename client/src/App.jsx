@@ -1,9 +1,11 @@
+import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import ParticleBackground from "./components/ParticleBackground.jsx";
 import ScrollRestoreManager from "./components/ScrollRestoreManager.jsx";
+import WebnexLoader from "./components/WebnexLoader.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -38,8 +40,11 @@ import ClientLayout from "./pages/client/ClientLayout.jsx";
 import ClientOverview from "./pages/client/ClientOverview.jsx";
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden">
+      {isLoading && <WebnexLoader onFinish={() => setIsLoading(false)} />}
       <ScrollRestoreManager />
       <ToastContainer position="bottom-right" theme="dark" autoClose={4000} />
       {/* Full-Page Fixed Ambient Particle & 3D Halo Canvas */}

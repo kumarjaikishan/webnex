@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import api from "../../api/client.js";
 import DocumentCard from "../../components/DocumentCard.jsx";
+import GearboxLoader from "../../components/GearboxLoader.jsx";
 
 export default function Invoices() {
   const [invoices, setInvoices] = useState([]);
@@ -146,7 +147,7 @@ export default function Invoices() {
       </div>
 
       {loading ? (
-        <p className="text-mist">Loading invoices...</p>
+        <GearboxLoader label="Loading invoices..." />
       ) : invoices.length === 0 ? (
         <div className="bg-panel border border-edge rounded-2xl p-12 text-center">
           <p className="text-mist mb-4">No invoices created yet.</p>

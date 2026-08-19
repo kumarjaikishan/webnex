@@ -96,8 +96,28 @@ export default function Testimonials() {
   const [isPaused, setIsPaused] = useState(false);
   // Change default card style theme here: "opaquePaper" | "glassSticky" | "darkGlass"
   const [cardStyle, setCardStyle] = useState("opaquePaper"); 
+  const [itemsPerView, setItemsPerView] = useState(3);
   const timerRef = useRef(null);
   const resetTimeoutRef = useRef(null);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  // Responsive items per view listener
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setItemsPerView(1);
+      } else if (window.innerWidth < 1024) {
+        setItemsPerView(2);
+      } else {
+        setItemsPerView(3);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Autoplay: always move forward seamlessly
   useEffect(() => {
@@ -114,7 +134,7 @@ export default function Testimonials() {
 
   // Seamless endless loop reset logic
   useEffect(() => {
-    if (currentIndex === totalOriginal) {
+    if (currentIndex >= totalOriginal) {
       resetTimeoutRef.current = setTimeout(() => {
         setIsTransitioning(false);
         setCurrentIndex(0);
@@ -143,6 +163,26 @@ export default function Testimonials() {
     setCurrentIndex(i);
   };
 
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+    setIsPaused(true);
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    setIsPaused(false);
+    if (touchStartX.current - touchEndX.current > 50) {
+      // Swipe Left -> Next
+      handleNext();
+    } else if (touchEndX.current - touchStartX.current > 50) {
+      // Swipe Right -> Prev
+      handlePrev();
+    }
+  };
+
   const activeDot = currentIndex % totalOriginal;
 
   return (
@@ -150,15 +190,19 @@ export default function Testimonials() {
       className="space-y-6 overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
 
       {/* SLIDING HORIZONTAL TRACK CONTAINER */}
       <div className="overflow-hidden w-full py-4">
         <div
-          className={`flex gap-8 ease-[cubic-bezier(0.16,1,0.3,1)] ${isTransitioning ? "transition-transform duration-700" : ""
-            }`}
+          className={`flex gap-4 sm:gap-6 lg:gap-8 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isTransitioning ? "transition-transform duration-700" : ""
+          }`}
           style={{
-            transform: `translateX(-${currentIndex * (100 / 3)}%)`,
+            transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
           }}
         >
           {extendedTestimonials.map((t, idx) => {
@@ -167,7 +211,7 @@ export default function Testimonials() {
                 /* THEME 1: OPAQUE PAPER STICKY NOTE CARD WITH SOFT PASTEL GRADIENT */
                 <div
                   key={`paper-${t.name}-${idx}`}
-                  className={`w-full md:w-[calc((100%-64px)/3)] flex-shrink-0 rounded-md p-6 sm:p-5 flex flex-col justify-between space-y-5 transition-all duration-500 relative overflow-hidden group hover:scale-[1.03] hover:rotate-0 hover:z-20 ${t.paperStyle}`}
+                  className={`w-full sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-64px)/3)] flex-shrink-0 rounded-md p-5 sm:p-6 flex flex-col justify-between space-y-4 sm:space-y-5 transition-all duration-500 relative overflow-hidden group hover:scale-[1.02] sm:hover:scale-[1.03] hover:rotate-0 hover:z-20 ${t.paperStyle}`}
                 >
                   {/* REALISTIC LIGHTING HIGHLIGHT & CORNER LIFT (NO BLACK OVERLAYS) */}
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-current opacity-10" />
@@ -184,14 +228,14 @@ export default function Testimonials() {
 
                   <div className="relative z-10 space-y-3 pt-4">
                     {/* RATING */}
-                    <div className="flex gap-1 text-amber-600 text-md">
+                    <div className="flex gap-1 text-amber-600 text-sm sm:text-md">
                       {Array.from({ length: t.rating }).map((_, r) => (
                         <span key={r}>★</span>
                       ))}
                     </div>
 
                     {/* HANDWRITTEN REVIEW QUOTE */}
-                    <p className="font-handwriting text-lg md:text-xl font-bold leading-snug tracking-wide text-current">
+                    <p className="font-handwriting text-base sm:text-lg md:text-xl font-bold leading-snug tracking-wide text-current">
                       “{t.quote}”
                     </p>
                   </div>
@@ -213,7 +257,7 @@ export default function Testimonials() {
                 /* THEME 2: GLASS STICKY NOTE CARD (CLEAN WITHOUT GLOW SHADOW) */
                 <div
                   key={`glass-${t.name}-${idx}`}
-                  className={`w-full md:w-[calc((100%-64px)/3)] flex-shrink-0 border rounded-2xl p-6 sm:p-7 flex flex-col justify-between space-y-5 transition-all duration-500 relative overflow-hidden group hover:scale-[1.02] hover:rotate-0 hover:z-20 backdrop-blur-md ${t.glassStyle}`}
+                  className={`w-full sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-64px)/3)] flex-shrink-0 border rounded-2xl p-5 sm:p-7 flex flex-col justify-between space-y-4 sm:space-y-5 transition-all duration-500 relative overflow-hidden group hover:scale-[1.02] hover:rotate-0 hover:z-20 backdrop-blur-md ${t.glassStyle}`}
                 >
                   <div className="relative z-10 space-y-3 pt-2">
                     {/* RATING */}
@@ -224,7 +268,7 @@ export default function Testimonials() {
                     </div>
 
                     {/* HANDWRITTEN REVIEW QUOTE */}
-                    <p className="font-handwriting text-xl md:text-2xl font-bold leading-snug tracking-wide text-paper">
+                    <p className="font-handwriting text-lg sm:text-xl md:text-2xl font-bold leading-snug tracking-wide text-paper">
                       “{t.quote}”
                     </p>
                   </div>
@@ -246,7 +290,7 @@ export default function Testimonials() {
                 /* THEME 3: DARK GLASSMORPHISM CARD */
                 <div
                   key={`dark-${t.name}-${idx}`}
-                  className="w-full md:w-[calc((100%-64px)/3)] flex-shrink-0 bg-panel border border-edge rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-cyan/40 transition-all duration-500 shadow-xl relative overflow-hidden group hover:-translate-y-1"
+                  className="w-full sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-64px)/3)] flex-shrink-0 bg-panel border border-edge rounded-3xl p-5 sm:p-8 flex flex-col justify-between space-y-4 sm:space-y-6 hover:border-cyan/40 transition-all duration-500 shadow-xl relative overflow-hidden group hover:-translate-y-1"
                 >
                   <div className="absolute inset-0 bg-aurora opacity-40 pointer-events-none group-hover:opacity-70 transition" />
 

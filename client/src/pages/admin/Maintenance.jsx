@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import api from "../../api/client.js";
+import GearboxLoader from "../../components/GearboxLoader.jsx";
 
 export default function Maintenance() {
   const [plans, setPlans] = useState([]);
@@ -151,7 +152,7 @@ export default function Maintenance() {
       <div className="space-y-4">
         <h2 className="font-display text-lg font-bold text-paper">Active Retainer Plans ({plans.length})</h2>
         {loading ? (
-          <p className="text-mist text-sm">Loading plans...</p>
+          <GearboxLoader label="Loading maintenance plans..." />
         ) : sortedPlans.length === 0 ? (
           <div className="bg-panel border border-edge rounded-2xl p-8 text-center space-y-3">
             <p className="text-mist text-sm">No maintenance plans set up yet.</p>

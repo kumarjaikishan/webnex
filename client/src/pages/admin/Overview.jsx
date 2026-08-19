@@ -20,13 +20,13 @@ export default function Overview() {
   const mrr = maintenance.reduce((sum, m) => sum + Number(m.amount || 0), 0);
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-6 sm:space-y-10">
       <div>
-        <h1 className="font-display text-3xl font-bold text-paper mb-2">Overview</h1>
+        <h1 className="font-display text-2xl sm:text-3xl font-bold text-paper mb-1 sm:mb-2">Overview</h1>
         <p className="text-xs font-mono text-mist">System metrics, recent inquiries, and active reminders.</p>
       </div>
 
-      <div className="grid sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatCard label="Active clients" value={clients.length} />
         <StatCard label="New Inquiries" value={inquiries.length} accent="text-cyan" />
         <StatCard label="Open reminders" value={openReminders.length} accent="text-cyan" />

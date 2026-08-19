@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import api from "../../api/client.js";
+import GearboxLoader from "../../components/GearboxLoader.jsx";
 
 export default function Reminders() {
   const [reminders, setReminders] = useState([]);
@@ -147,7 +148,7 @@ export default function Reminders() {
       )}
 
       {loading ? (
-        <p className="text-mist">Loading reminders...</p>
+        <GearboxLoader label="Loading reminders..." />
       ) : sortedReminders.length === 0 ? (
         <div className="bg-panel border border-edge rounded-2xl p-12 text-center">
           <p className="text-mist mb-4">No custom payment reminders scheduled.</p>
