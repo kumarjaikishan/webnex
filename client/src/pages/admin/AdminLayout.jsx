@@ -72,7 +72,7 @@ export default function AdminLayout() {
         )}
 
         {/* Quick Horizontal Scroll Pills on Mobile */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+        <div className="w-full overflow-x-auto overflow-y-hidden touch-pan-x py-1.5 -mx-4 px-4 sm:mx-0 sm:px-0 flex items-center gap-2 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -81,9 +81,9 @@ export default function AdminLayout() {
                 to={item.to}
                 end={item.end}
                 className={({ isActive }) =>
-                  `flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono whitespace-nowrap transition-all shrink-0 ${
+                  `flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono whitespace-nowrap transition-all shrink-0 select-none ${
                     isActive
-                      ? "bg-cyan/15 text-cyan border border-cyan/30 font-bold"
+                      ? "bg-cyan/15 text-cyan border border-cyan/30 font-bold shadow-sm"
                       : "bg-panel border border-edge text-mist hover:text-paper"
                   }`
                 }
