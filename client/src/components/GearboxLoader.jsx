@@ -7,17 +7,17 @@ export default function GearboxLoader({ label = "Loading data..." }) {
       {/* Interlocking rotating gears */}
       <div className="relative w-20 h-20 flex items-center justify-center">
         {/* Large gear rotating clockwise */}
-        <div className="absolute -left-1 -top-1 animate-spin [animation-duration:4s] text-[#7C6CFB] drop-shadow-[0_0_12px_rgba(124,108,251,0.45)]">
-          <Cog size={46} strokeWidth={1.8} />
+        <div className="absolute left-0 top-0 animate-spin [animation-duration:4s] text-[#7C6CFB] drop-shadow-[0_0_12px_rgba(124,108,251,0.45)]">
+          <Cog size={44} strokeWidth={1.8} />
         </div>
 
-        {/* Small gear interlocked and counter-rotating faster */}
-        <div className="absolute right-0 bottom-0 animate-spin [animation-direction:reverse] [animation-duration:2.4s] text-[#00F0FF] drop-shadow-[0_0_10px_rgba(0,240,255,0.45)]">
+        {/* Small gear interlocked with perfect teeth contact */}
+        <div className="absolute left-[29px] top-[31px] animate-spin [animation-direction:reverse] [animation-duration:2.7s] text-[#00F0FF] drop-shadow-[0_0_10px_rgba(0,240,255,0.45)]">
           <Cog size={30} strokeWidth={2.2} />
         </div>
 
         {/* Micro accent pulse center */}
-        <div className="w-2 h-2 rounded-full bg-white animate-ping opacity-75"></div>
+        <div className="absolute left-[31px] top-[31px] w-1.5 h-1.5 rounded-full bg-white animate-ping opacity-75 pointer-events-none"></div>
       </div>
 
       {/* Futuristic status label */}

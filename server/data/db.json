@@ -177,5 +177,12 @@
       "notes": "Monthly maintenance invoice. Payment due upon receipt. Thank you for choosing Webnex Labs!",
       "createdAt": "2026-08-05T09:15:50.628Z"
     }
+  ],
+  "settings": [
+    {
+      "id": "setting-show-ghost",
+      "key": "showGhost",
+      "value": true
+    }
   ]
 }

@@ -13,16 +13,16 @@ const processSteps = [
 
 export default function ProcessTimeline() {
   return (
-    <section className="max-w-7xl mx-auto px-6 py-20">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-20">
       <ScrollReveal direction="up" delay={50}>
-        <div className="mx-auto max-w-3xl text-center mb-16">
-          <span className="font-mono text-xs text-cyan tracking-widest uppercase font-semibold mb-3 inline-block">
+        <div className="mx-auto max-w-3xl text-center mb-8 sm:mb-16">
+          <span className="font-mono text-xs text-cyan tracking-widest uppercase font-semibold mb-2 sm:mb-3 inline-block">
             OUR PROCESS
           </span>
-          <h2 className="font-display text-2xl md:text-4xl font-bold mb-4 leading-tight">
+          <h2 className="font-display text-2xl md:text-4xl font-bold mb-3 sm:mb-4 leading-tight">
             From Idea to a Live Website
           </h2>
-          <p className="text-mist text-base md:text-lg max-w-xl mx-auto">
+          <p className="text-mist text-xs sm:text-lg max-w-xl mx-auto">
             A clear, structured 8-step engineering process so you always know what happens next.
           </p>
         </div>

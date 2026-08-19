@@ -7,10 +7,10 @@ export default function FeaturedWorkSection({ limit = 3, showHeader = true, show
   const featured = limit ? projectsData.slice(0, limit) : projectsData;
 
   return (
-    <section id="featured-work" className="max-w-7xl mx-auto px-6 py-20">
+    <section id="featured-work" className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-20">
       {showHeader && (
         <ScrollReveal direction="up" delay={50}>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-8 sm:mb-14">
             <div>
               <span className="font-mono text-xs text-cyan tracking-widest uppercase font-semibold mb-3 inline-block px-3 py-1 rounded-full border border-cyan/30 bg-cyan/10">
                 FEATURED WORK

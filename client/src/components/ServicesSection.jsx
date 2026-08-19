@@ -50,11 +50,11 @@ export default function ServicesSection({ limit = 8, showHeader = true, showView
   const featuredServices = limit ? servicesData.slice(0, limit) : servicesData;
 
   return (
-    <section id="services" className="max-w-7xl mx-auto px-6 py-20">
+    <section id="services" className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-20">
       {showHeader && (
         <ScrollReveal direction="up" delay={50}>
-          <div className="mx-auto max-w-3xl text-center mb-14">
-            <span className="font-mono text-xs text-cyan tracking-widest uppercase font-semibold mb-3 inline-block">
+          <div className="mx-auto max-w-3xl text-center mb-8 sm:mb-14">
+            <span className="font-mono text-xs text-cyan tracking-widest uppercase font-semibold mb-2 sm:mb-3 inline-block">
               WHAT WE BUILD
             </span>
             <h2 className="font-display text-2xl md:text-4xl font-bold mb-4 leading-tight">
@@ -67,20 +67,20 @@ export default function ServicesSection({ limit = 8, showHeader = true, showView
         </ScrollReveal>
       )}
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:gap-6 grid-cols-2 lg:grid-cols-4">
         {featuredServices.map((service, idx) => {
           const IconComponent = iconMap[service.icon] || Globe;
           return (
             <ScrollReveal key={service.id} direction="up" delay={50 * ((idx % 4) + 1)}>
-              <div className="h-full flex flex-col justify-between rounded-2xl border border-edge bg-panel/70 p-6 backdrop-blur transition-all duration-300 hover:border-cyan/40 hover:bg-panel hover:-translate-y-1.5 shadow-lg group">
+              <div className="h-full flex flex-col justify-between rounded-xl sm:rounded-2xl border border-edge bg-panel/70 p-3.5 sm:p-6 backdrop-blur transition-all duration-300 hover:border-cyan/40 hover:bg-panel hover:-translate-y-1.5 shadow-lg group">
                 <div>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-cyan/20 bg-cyan/10 text-cyan transition-colors group-hover:border-cyan/50 group-hover:bg-cyan/20">
-                    <IconComponent size={24} />
+                  <div className="flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-lg sm:rounded-xl border border-cyan/20 bg-cyan/10 text-cyan transition-colors group-hover:border-cyan/50 group-hover:bg-cyan/20">
+                    <IconComponent className="w-4 h-4 sm:w-6 sm:h-6" />
                   </div>
-                  <h3 className="mt-5 font-display text-xl font-semibold text-paper group-hover:text-cyan transition-colors">
+                  <h3 className="mt-3 sm:mt-5 font-display text-sm sm:text-xl font-semibold text-paper group-hover:text-cyan transition-colors leading-snug">
                     {service.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-mist">
+                  <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm leading-relaxed text-mist line-clamp-3 sm:line-clamp-none">
                     {service.description}
                   </p>
                 </div>

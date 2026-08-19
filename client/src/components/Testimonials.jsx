@@ -196,13 +196,15 @@ export default function Testimonials() {
     >
 
       {/* SLIDING HORIZONTAL TRACK CONTAINER */}
-      <div className="overflow-hidden w-full py-4">
+      <div className="overflow-hidden w-full py-4 -mx-1 px-1">
         <div
           className={`flex gap-4 sm:gap-6 lg:gap-8 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isTransitioning ? "transition-transform duration-700" : ""
           }`}
           style={{
-            transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
+            transform: `translateX(calc(-${currentIndex} * (${100 / itemsPerView}% + ${
+              itemsPerView === 1 ? "16px" : itemsPerView === 2 ? "12px" : "10.66px"
+            })))`,
           }}
         >
           {extendedTestimonials.map((t, idx) => {
@@ -211,7 +213,7 @@ export default function Testimonials() {
                 /* THEME 1: OPAQUE PAPER STICKY NOTE CARD WITH SOFT PASTEL GRADIENT */
                 <div
                   key={`paper-${t.name}-${idx}`}
-                  className={`w-full sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-64px)/3)] flex-shrink-0 rounded-md p-5 sm:p-6 flex flex-col justify-between space-y-4 sm:space-y-5 transition-all duration-500 relative overflow-hidden group hover:scale-[1.02] sm:hover:scale-[1.03] hover:rotate-0 hover:z-20 ${t.paperStyle}`}
+                  className={`w-full sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-64px)/3)] flex-shrink-0 max-w-full box-border rounded-xl sm:rounded-md p-4 sm:p-6 flex flex-col justify-between space-y-3 sm:space-y-5 transition-all duration-500 relative overflow-hidden group hover:scale-[1.02] sm:hover:scale-[1.03] hover:rotate-0 hover:z-20 ${t.paperStyle}`}
                 >
                   {/* REALISTIC LIGHTING HIGHLIGHT & CORNER LIFT (NO BLACK OVERLAYS) */}
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-current opacity-10" />
@@ -257,7 +259,7 @@ export default function Testimonials() {
                 /* THEME 2: GLASS STICKY NOTE CARD (CLEAN WITHOUT GLOW SHADOW) */
                 <div
                   key={`glass-${t.name}-${idx}`}
-                  className={`w-full sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-64px)/3)] flex-shrink-0 border rounded-2xl p-5 sm:p-7 flex flex-col justify-between space-y-4 sm:space-y-5 transition-all duration-500 relative overflow-hidden group hover:scale-[1.02] hover:rotate-0 hover:z-20 backdrop-blur-md ${t.glassStyle}`}
+                  className={`w-full sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-64px)/3)] flex-shrink-0 max-w-full box-border border rounded-2xl p-4 sm:p-7 flex flex-col justify-between space-y-3 sm:space-y-5 transition-all duration-500 relative overflow-hidden group hover:scale-[1.02] hover:rotate-0 hover:z-20 backdrop-blur-md ${t.glassStyle}`}
                 >
                   <div className="relative z-10 space-y-3 pt-2">
                     {/* RATING */}
@@ -268,7 +270,7 @@ export default function Testimonials() {
                     </div>
 
                     {/* HANDWRITTEN REVIEW QUOTE */}
-                    <p className="font-handwriting text-lg sm:text-xl md:text-2xl font-bold leading-snug tracking-wide text-paper">
+                    <p className="font-handwriting text-base sm:text-xl md:text-2xl font-bold leading-snug tracking-wide text-paper">
                       “{t.quote}”
                     </p>
                   </div>
@@ -290,7 +292,7 @@ export default function Testimonials() {
                 /* THEME 3: DARK GLASSMORPHISM CARD */
                 <div
                   key={`dark-${t.name}-${idx}`}
-                  className="w-full sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-64px)/3)] flex-shrink-0 bg-panel border border-edge rounded-3xl p-5 sm:p-8 flex flex-col justify-between space-y-4 sm:space-y-6 hover:border-cyan/40 transition-all duration-500 shadow-xl relative overflow-hidden group hover:-translate-y-1"
+                  className="w-full sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-64px)/3)] flex-shrink-0 max-w-full box-border bg-panel border border-edge rounded-2xl sm:rounded-3xl p-4 sm:p-8 flex flex-col justify-between space-y-3 sm:space-y-6 hover:border-cyan/40 transition-all duration-500 shadow-xl relative overflow-hidden group hover:-translate-y-1"
                 >
                   <div className="absolute inset-0 bg-aurora opacity-40 pointer-events-none group-hover:opacity-70 transition" />
 

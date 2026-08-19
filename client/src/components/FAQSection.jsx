@@ -40,18 +40,18 @@ export default function FAQSection() {
   };
 
   return (
-    <section id="faq" className="max-w-7xl mx-auto px-6 py-20">
-      <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] items-start">
+    <section id="faq" className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-20">
+      <div className="grid gap-8 lg:gap-12 lg:grid-cols-[0.8fr_1.2fr] items-start">
         {/* Left Column: Heading + Tag + Subtext + CTA */}
         <ScrollReveal direction="left" delay={50}>
           <div>
-            <span className="font-mono text-xs text-cyan tracking-widest uppercase font-semibold mb-3 inline-block px-3 py-1 rounded-full border border-cyan/30 bg-cyan/10">
+            <span className="font-mono text-xs text-cyan tracking-widest uppercase font-semibold mb-2 sm:mb-3 inline-block px-3 py-1 rounded-full border border-cyan/30 bg-cyan/10">
               FAQs
             </span>
-            <h2 className="font-display text-3xl md:text-5xl font-bold mb-4 leading-tight text-paper">
+            <h2 className="font-display text-2xl sm:text-3xl md:text-5xl font-bold mb-3 sm:mb-4 leading-tight text-paper">
               Common Questions, Answered
             </h2>
-            <p className="text-mist text-base md:text-md mb-8">
+            <p className="text-mist text-xs sm:text-base mb-6 sm:mb-8">
               Can't find what you're looking for?
             </p>
             <Link

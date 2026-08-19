@@ -11,6 +11,7 @@ import reminderRoutes from "./routes/reminders.js";
 import noteRoutes from "./routes/notes.js";
 import contactRoutes from "./routes/contact.js";
 import invoiceRoutes from "./routes/invoices.js";
+import settingsRoutes from "./routes/settings.js";
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,7 @@ app.use("/api/reminders", reminderRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/invoices", invoiceRoutes);
+app.use("/api/settings", settingsRoutes);
 
 // Root Health & Welcome Check (for Render URL check in browser: e.g. https://your-app.onrender.com)
 app.get("/", (req, res) => {

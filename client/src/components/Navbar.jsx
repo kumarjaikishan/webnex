@@ -7,16 +7,31 @@ const navLink = ({ isActive }) =>
   `text-sm font-medium transition-colors ${isActive ? "text-paper" : "text-mist hover:text-paper"}`;
 
 const mobileNavLink = ({ isActive }) =>
-  `flex items-center px-4 py-3 rounded-xl text-base font-medium transition-all ${
-    isActive
-      ? "bg-cyan/15 text-cyan border border-cyan/30 font-semibold"
-      : "text-mist hover:text-paper hover:bg-panel"
+  `flex items-center px-4 py-3 rounded-xl text-base font-medium transition-all ${isActive
+    ? "bg-cyan/15 text-cyan border border-cyan/30 font-semibold"
+    : "text-mist hover:text-paper hover:bg-panel"
   }`;
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+
+  // Handle scroll event for transparent to solid transition
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Close mobile menu whenever the route changes
   useEffect(() => {
@@ -36,7 +51,12 @@ export default function Navbar() {
   }, [mobileMenuOpen]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-white/10 bg-void/80 backdrop-blur-md transition-all duration-300 shadow-lg">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${isScrolled || mobileMenuOpen
+        ? "bg-void/20 backdrop-blur-md border-b border-white/10 shadow-lg"
+        : "bg-transparent border-b border-transparent shadow-none"
+        }`}
+    >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Brand Logo */}
         <Link to="/" className="font-display text-lg tracking-tight flex items-center gap-2 z-50">
