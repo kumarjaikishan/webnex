@@ -3,24 +3,23 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { RefreshCw } from "lucide-react";
 
-export default function CuteGhost3D({ className = "" }) {
+export default function CyberFox3D({ className = "" }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(true);
-  const [currentAction, setCurrentAction] = useState("Wave");
+  const [currentAction, setCurrentAction] = useState("Survey");
   const [isGrabbing, setIsGrabbing] = useState(false);
   const actionsRef = useRef({});
   const mixerRef = useRef(null);
-  const currentActionRef = useRef("Wave");
+  const currentActionRef = useRef("Survey");
 
-  // Keep track of current action in ref
   useEffect(() => {
     currentActionRef.current = currentAction;
   }, [currentAction]);
 
-  // Auto-randomize animation every 16 seconds
+  // Auto-randomize animation every 14 seconds
   useEffect(() => {
-    const animationPool = ["Wave", "Dance", "Jump", "ThumbsUp", "Walking", "Running", "Yes"];
+    const animationPool = ["Survey", "Walk", "Run"];
     
     const timer = setInterval(() => {
       const actions = actionsRef.current;
@@ -36,7 +35,7 @@ export default function CuteGhost3D({ className = "" }) {
       if (actions[randomNext]) actions[randomNext].reset().fadeIn(0.4).play();
       
       setCurrentAction(randomNext);
-    }, 16000);
+    }, 14000);
 
     return () => clearInterval(timer);
   }, []);
@@ -51,8 +50,8 @@ export default function CuteGhost3D({ className = "" }) {
 
     // --- 1. Scene, Camera, Renderer Setup ---
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 1.6, 5.0);
+    const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
+    camera.position.set(0, 1.4, 4.6);
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
@@ -63,7 +62,7 @@ export default function CuteGhost3D({ className = "" }) {
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.25;
+    renderer.toneMappingExposure = 1.3;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -76,15 +75,15 @@ export default function CuteGhost3D({ className = "" }) {
     dirLight.castShadow = true;
     scene.add(dirLight);
 
-    const cyanPoint = new THREE.PointLight(0x3fd6e0, 5.0, 10);
+    const cyanPoint = new THREE.PointLight(0x3fd6e0, 4.5, 10);
     cyanPoint.position.set(-3, 2, 2);
     scene.add(cyanPoint);
 
-    const violetPoint = new THREE.PointLight(0x7c6cfb, 5.0, 10);
+    const violetPoint = new THREE.PointLight(0x7c6cfb, 4.5, 10);
     violetPoint.position.set(3, 1, -2);
     scene.add(violetPoint);
 
-    // --- 3. Dynamic Interactive Ground Shadow ---
+    // --- 3. Dynamic Ground Shadow Disk ---
     const floorGeo = new THREE.CircleGeometry(1.6, 32);
     const floorMat = new THREE.MeshBasicMaterial({
       color: 0x060914,
@@ -105,7 +104,7 @@ export default function CuteGhost3D({ className = "" }) {
       const angle = (i / pCount) * Math.PI * 2;
       const radius = 1.8 + Math.random() * 0.8;
       pPos[i * 3] = Math.cos(angle) * radius;
-      pPos[i * 3 + 1] = 0.2 + (Math.random() - 0.5) * 2.2;
+      pPos[i * 3 + 1] = 0.2 + (Math.random() - 0.5) * 2.0;
       pPos[i * 3 + 2] = Math.sin(angle) * radius;
     }
     pGeo.setAttribute("position", new THREE.BufferAttribute(pPos, 3));
@@ -127,41 +126,35 @@ export default function CuteGhost3D({ className = "" }) {
     let dragOffsetX = 0;
     let dragOffsetY = 0;
 
-    // Physics vectors
     let posX = 0;
     let posY = 0;
     let posZ = 0;
     let velX = 0;
     let velY = 0;
 
-    // Tilt kinematics
     let mouseX = 0;
     let mouseY = 0;
     let targetRotY = 0;
     let targetRotX = 0;
     let targetRotZ = 0;
 
-    // Velocity sampler for smooth throwing momentum
     let prevMouseX = 0;
     let prevMouseY = 0;
     let lastTime = performance.now();
 
     const loader = new GLTFLoader();
     loader.load(
-      "/robot.glb",
+      "/fox.glb",
       (gltf) => {
         const model = gltf.scene;
-        model.scale.set(0.32, 0.32, 0.32);
+        // Scale and center the Fox model
+        model.scale.set(0.018, 0.018, 0.018);
         model.position.set(0, 0, 0);
 
         model.traverse((child) => {
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
-            if (child.material) {
-              child.material.metalness = 0.2;
-              child.material.roughness = 0.3;
-            }
           }
         });
 
@@ -177,19 +170,19 @@ export default function CuteGhost3D({ className = "" }) {
         });
         actionsRef.current = availableActions;
 
-        if (availableActions["Wave"]) {
-          availableActions["Wave"].play();
-          setCurrentAction("Wave");
-        } else if (availableActions["Idle"]) {
-          availableActions["Idle"].play();
-          setCurrentAction("Idle");
+        if (availableActions["Survey"]) {
+          availableActions["Survey"].play();
+          setCurrentAction("Survey");
+        } else if (availableActions["Walk"]) {
+          availableActions["Walk"].play();
+          setCurrentAction("Walk");
         }
 
         setLoading(false);
       },
       undefined,
       (error) => {
-        console.error("Error loading 3D GLTF model:", error);
+        console.error("Error loading Fox 3D GLTF model:", error);
         setLoading(false);
       }
     );
@@ -228,7 +221,7 @@ export default function CuteGhost3D({ className = "" }) {
       mouseY = -normY;
 
       if (!isDragging) {
-        targetRotY = mouseX * 0.45;
+        targetRotY = mouseX * 0.55;
         targetRotX = mouseY * 0.18;
         return;
       }
@@ -236,15 +229,12 @@ export default function CuteGhost3D({ className = "" }) {
       const worldX = normX * 2.2;
       const worldY = (normY + 0.35) * 1.8;
 
-      // Update position with drag
       posX = worldX + dragOffsetX;
       posY = Math.max(0, worldY + dragOffsetY);
 
-      // Tilt while dragging
       targetRotZ = -velX * 0.35;
       targetRotX = velY * 0.25;
 
-      // Sample throw velocity
       const now = performance.now();
       const dt = Math.max(0.001, (now - lastTime) / 1000);
       velX = (worldX - prevMouseX) / dt;
@@ -306,11 +296,10 @@ export default function CuteGhost3D({ className = "" }) {
         velX += springForceX * delta;
         velX *= Math.pow(damping, delta * 60);
 
-        // Position Integration
         posX += velX * delta;
         posY += velY * delta;
 
-        // Floor Bounce
+        // Floor Collision & Bounce
         if (posY <= 0) {
           posY = 0;
           if (Math.abs(velY) > 1.2) {
@@ -333,7 +322,6 @@ export default function CuteGhost3D({ className = "" }) {
       modelGroup.rotation.x += (targetRotX - modelGroup.rotation.x) * 0.08;
       modelGroup.rotation.z += (targetRotZ - modelGroup.rotation.z) * 0.1;
 
-      // Floor Shadow
       floor.position.x = posX;
       const heightFactor = Math.max(0.2, 1 / (1 + posY * 1.2));
       floor.scale.set(heightFactor, heightFactor, heightFactor);
@@ -386,44 +374,40 @@ export default function CuteGhost3D({ className = "" }) {
       className={`relative flex flex-col items-center justify-center select-none group ${className}`}
     >
       {/* 1. Volumetric Cyber Halo Backlight */}
-      <div className="absolute w-72 sm:w-88 h-72 sm:h-88 bg-gradient-to-tr from-violet/25 via-cyan/20 to-pink-500/15 rounded-full blur-[80px] pointer-events-none animate-pulse" />
+      <div className="absolute w-72 sm:w-88 h-72 sm:h-88 bg-gradient-to-tr from-amber-500/20 via-cyan/20 to-violet/20 rounded-full blur-[80px] pointer-events-none animate-pulse" />
       <div className="absolute w-60 h-60 bg-cyan/15 rounded-full blur-[65px] pointer-events-none" />
 
       {/* Loading Spinner */}
       {loading && (
         <div className="absolute inset-0 z-40 flex flex-col items-center justify-center gap-3 bg-panel/60 backdrop-blur-sm rounded-2xl">
           <RefreshCw className="w-8 h-8 text-cyan animate-spin" />
-          <span className="font-mono text-xs text-cyan tracking-wider">LOADING 3D CHARACTER...</span>
+          <span className="font-mono text-xs text-cyan tracking-wider">LOADING 3D FOX...</span>
         </div>
       )}
 
-      {/* 2. Main Three.js Canvas with Grab / Grabbing Cursor */}
+      {/* 2. Main Three.js Canvas */}
       <canvas
         ref={canvasRef}
         className={`relative z-20 w-full h-[360px] sm:h-[420px] drop-shadow-[0_25px_50px_rgba(0,0,0,0.8)] transition-cursor duration-75 ${
           isGrabbing ? "cursor-grabbing" : "cursor-grab"
         }`}
-        title="Interactive 3D Character - Click & Drag to throw!"
+        title="Interactive 3D Fox Mascot - Click & Drag to throw!"
       />
 
       {/* 3. Interactive 3D Action Controller Bar */}
       <div className="relative z-30 flex flex-wrap items-center justify-center gap-1.5 -mt-4 bg-panel/90 backdrop-blur-md border border-edge/80 px-3 py-1.5 rounded-full shadow-lg">
         {[
-          { name: "Wave", label: "Wave 👋" },
-          { name: "Dance", label: "Dance 💃" },
-          { name: "Jump", label: "Jump 🦘" },
-          { name: "ThumbsUp", label: "Like 👍" },
-          { name: "Walking", label: "Walk 🚶" },
-          { name: "Running", label: "Run ⚡" },
-          { name: "Yes", label: "Yes ✨" },
+          { name: "Survey", label: "Survey 🦊" },
+          { name: "Walk", label: "Walk 🐾" },
+          { name: "Run", label: "Run ⚡" },
         ].map((act) => (
           <button
             key={act.name}
             type="button"
             onClick={() => playAnimation(act.name)}
-            className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono transition-all ${
+            className={`px-3 py-0.5 rounded-full text-[10px] font-mono transition-all ${
               currentAction === act.name
-                ? "bg-gradient-to-r from-cyan to-violet text-void font-bold shadow-[0_0_12px_rgba(63,214,224,0.4)] scale-105"
+                ? "bg-gradient-to-r from-amber-400 to-cyan text-void font-bold shadow-[0_0_12px_rgba(251,191,36,0.4)] scale-105"
                 : "bg-void/60 text-mist hover:text-paper hover:bg-panel2 border border-edge/60"
             }`}
           >

@@ -1,17 +1,22 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpRight, ArrowRight, Code2, CheckCircle2 } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Code2, CheckCircle2, ShieldCheck, Sparkles, BookOpen } from "lucide-react";
 import { projectsData } from "../data/projectsData.js";
 import ScrollReveal from "../components/ScrollReveal.jsx";
+import ProjectDetailModal from "../components/ProjectDetailModal.jsx";
 
-const categories = ["All", "Full-Stack Web App", "Internal Software", "SaaS & Finance", "ERP & Systems", "Enterprise Systems"];
+const categories = ["All", "Commercial Client Software", "Proprietary SaaS", "ERP & Systems", "Finance & Operations"];
 
 export default function PortfolioPage() {
   const [activeCategory, setActiveCategory] = useState("All");
 
   const filteredProjects = activeCategory === "All"
     ? projectsData
-    : projectsData.filter((p) => p.category === activeCategory);
+    : projectsData.filter((p) => {
+        if (activeCategory === "Commercial Client Software") return p.projectType === "commercial_client" || p.projectType === "freelance";
+        if (activeCategory === "Proprietary SaaS") return p.projectType === "personal" || p.projectType === "proprietary_saas";
+        return p.category === activeCategory;
+      });
 
   return (
     <div className="pt-8 pb-24">
@@ -20,13 +25,13 @@ export default function PortfolioPage() {
         <ScrollReveal direction="up" delay={50}>
           <span className="inline-flex items-center gap-2 rounded-full border border-edge bg-panel/90 backdrop-blur px-4 py-1.5 font-mono text-xs text-cyan mb-6 shadow-lg">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
-            ENGINEERING PORTFOLIO
+            ENGINEERING CASE STUDIES & PORTFOLIO
           </span>
           <h1 className="font-display text-4xl md:text-6xl font-bold mb-6 leading-tight text-paper">
-            Projects We're Proud Of
+            Commercial Client Systems & SaaS Platforms
           </h1>
           <p className="text-mist text-lg max-w-2xl mx-auto leading-relaxed">
-            A look at the custom platforms, ERPs, web apps, and management systems we've engineered for real business impact.
+            A track record of bespoke enterprise software delivered into live commercial operations, alongside scalable proprietary SaaS products.
           </p>
         </ScrollReveal>
 
@@ -53,66 +58,108 @@ export default function PortfolioPage() {
       {/* Grid of Portfolio Cards */}
       <section className="max-w-7xl mx-auto px-6">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredProjects.map((project, idx) => (
-            <ScrollReveal key={project.id} direction="up" delay={40 * (idx % 6 + 1)}>
-              <div className="h-full flex flex-col justify-between rounded-2xl border border-edge bg-panel/70 backdrop-blur overflow-hidden transition-all duration-300 hover:border-cyan/40 hover:bg-panel hover:-translate-y-1.5 shadow-2xl group">
-                <div className="p-7">
-                  <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
-                    <span className="font-mono text-xs text-cyan uppercase tracking-wider font-semibold">
-                      {project.tagline}
-                    </span>
-                    <span className="font-mono text-[10px] text-paper/70 bg-void/60 px-2.5 py-1 rounded border border-edge">
-                      {project.category}
-                    </span>
-                  </div>
+          {filteredProjects.map((project, idx) => {
+            const isCommercial = project.projectType === "commercial_client" || project.projectType === "freelance";
 
-                  {project.badge && (
+            return (
+              <ScrollReveal key={project.id} direction="up" delay={40 * ((idx % 6) + 1)}>
+                <div className="h-full flex flex-col justify-between rounded-3xl border border-edge bg-panel/75 backdrop-blur overflow-hidden transition-all duration-300 hover:border-cyan/50 hover:bg-panel hover:-translate-y-1.5 shadow-2xl group">
+                  <div className="p-7">
+                    {/* Top Tag & Category */}
+                    <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
+                      <span className="font-mono text-xs text-cyan uppercase tracking-wider font-semibold">
+                        {project.tagline}
+                      </span>
+                      <span className="font-mono text-[10px] text-paper/70 bg-void/60 px-2.5 py-1 rounded border border-edge">
+                        {project.category}
+                      </span>
+                    </div>
+
+                    {/* Commercial Client vs Proprietary SaaS Badge */}
                     <div className="mb-4">
-                      <span className="inline-block rounded-full bg-cyan/15 border border-cyan/40 px-3 py-1 font-mono text-[11px] font-bold text-cyan">
-                        ⚡ {project.badge}
-                      </span>
+                      {isCommercial ? (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/40 px-3 py-1 font-mono text-[11px] font-bold text-emerald-400">
+                          <ShieldCheck size={14} />
+                          Commercial Client System (100% Handover)
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-cyan/15 border border-cyan/40 px-3 py-1 font-mono text-[11px] font-bold text-cyan">
+                          <Sparkles size={14} />
+                          {project.badge || "Proprietary SaaS Product"}
+                        </span>
+                      )}
                     </div>
-                  )}
 
-                  <h2 className="font-display text-2xl font-bold text-paper group-hover:text-cyan transition-colors mb-4">
-                    {project.title}
-                  </h2>
+                    <Link to={`/work/${project.slug}`}>
+                      <h2 className="font-display text-2xl font-bold text-paper group-hover:text-cyan transition-colors mb-4">
+                        {project.title}
+                      </h2>
+                    </Link>
 
-
-                  <div className="space-y-3 text-sm leading-relaxed text-mist">
-                    <p><strong className="text-paper">Problem & Need:</strong> {project.problem}</p>
-                    <p><strong className="text-paper">Platform Built:</strong> {project.solution}</p>
-                    <p className="text-cyan/90 font-medium"><strong className="text-paper">Impact & Reach:</strong> {project.businessImpact}</p>
+                    <div className="space-y-3 text-sm leading-relaxed text-mist">
+                      <p>
+                        <strong className="text-paper font-semibold">
+                          {isCommercial ? "Client Need: " : "The Problem: "}
+                        </strong>
+                        {project.problem}
+                      </p>
+                      <p>
+                        <strong className="text-paper font-semibold">
+                          {isCommercial ? "System Delivered: " : "Product Engineered: "}
+                        </strong>
+                        {project.solution}
+                      </p>
+                      <p className="text-cyan/95 font-medium">
+                        <strong className="text-paper font-semibold">
+                          {isCommercial ? "Business Outcome: " : "Product Impact: "}
+                        </strong>
+                        {project.businessImpact}
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="p-7 pt-0 border-t border-edge/40 mt-4">
-                  <div className="mt-4 flex flex-wrap gap-1.5">
-                    {project.technology.map((tech) => (
-                      <span key={tech} className="font-mono text-[11px] text-mist/90 bg-void/50 px-2.5 py-1 rounded-full border border-edge/60">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                  {/* Card Bottom / Actions */}
+                  <div className="p-7 pt-0 border-t border-edge/40 mt-4">
+                    {/* Tech Badges */}
+                    <div className="mt-4 flex flex-wrap gap-1.5">
+                      {project.technology.slice(0, 5).map((tech) => (
+                        <span key={tech} className="font-mono text-[11px] text-mist/90 bg-void/50 px-2.5 py-1 rounded-full border border-edge/60">
+                          {tech}
+                        </span>
+                      ))}
+                      {project.technology.length > 5 && (
+                        <span className="font-mono text-[10px] text-cyan bg-void/50 px-2 py-1 rounded-full border border-edge/60">
+                          +{project.technology.length - 5} more
+                        </span>
+                      )}
+                    </div>
 
-                  {project.liveUrl && (
-                    <div className="mt-5">
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-full bg-grad-primary text-void font-bold text-xs hover:brightness-110 transition shadow-md"
+                    {/* Action Buttons: View Details & Live App */}
+                    <div className="mt-5 space-y-2">
+                      <Link
+                        to={`/work/${project.slug}`}
+                        className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-full border border-cyan/40 bg-cyan/10 hover:bg-cyan/20 text-cyan font-mono text-xs font-semibold transition shadow-sm"
                       >
-                        Try {project.title} Live <ArrowUpRight size={14} />
-                      </a>
+                        <BookOpen size={14} />
+                        View Full Case Study & Challenges
+                      </Link>
+
+                      {project.liveUrl && (
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-full bg-grad-primary text-void font-bold text-xs hover:brightness-110 transition shadow-md"
+                        >
+                          Try {project.title} Live <ArrowUpRight size={14} />
+                        </a>
+                      )}
                     </div>
-                  )}
-
+                  </div>
                 </div>
-
-              </div>
-            </ScrollReveal>
-          ))}
+              </ScrollReveal>
+            );
+          })}
         </div>
       </section>
 
@@ -122,7 +169,7 @@ export default function PortfolioPage() {
           <div className="rounded-3xl border border-edge bg-panel p-12 relative overflow-hidden shadow-2xl">
             <div className="absolute inset-0 bg-aurora pointer-events-none" />
             <div className="relative z-10">
-              <h2 className="font-display text-3xl md:text-4xl mb-4 text-paper">Ready to build your project?</h2>
+              <h2 className="font-display text-3xl md:text-4xl mb-4 text-paper">Ready to engineer your custom system?</h2>
               <p className="text-mist mb-8 max-w-md mx-auto">
                 Tell us your vision — we'll reply with clear milestone schedules, fixed quotes, and architecture plans.
               </p>
@@ -136,3 +183,4 @@ export default function PortfolioPage() {
     </div>
   );
 }
+

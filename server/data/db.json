@@ -5,7 +5,7 @@
       "role": "admin",
       "name": "Webnex Admin",
       "email": "kumar.jaikishan0@gmail.com",
-      "passwordHash": "$2a$10$ccxFJAPFXQAZPGYl8WWMX.hY7KqeaUbeLdionB4GO6NfejUqAchL2",
+      "passwordHash": "$2a$10$T6t1JuHF1rPXazxF/1zmWu61vRZQEUA7kij1CaVJZfNxtXbxLOWgy",
       "createdAt": "2026-08-18T16:12:36.968Z"
     },
     {
@@ -15,17 +15,25 @@
       "email": "hey@gmail.com",
       "passwordHash": "$2a$10$x8DBJSlrNEIP3q/LRoJa4u7uCY36abHIIz0ENp778i7OCpq5lugVi",
       "createdAt": "2026-08-05T09:06:44.409Z"
-    },
-    {
-      "id": "d3cd9d7e-b4bb-4a56-a46e-9bcf3d8d87d6",
-      "role": "admin",
-      "name": "Webnex Admin",
-      "email": "kumar.jaikishan0@gmail.com",
-      "passwordHash": "$2a$10$POqFIj/sczDNeC8mcORo1eY4ip49AEcUNHcZQKUOCWWaZPlrM25.W",
-      "createdAt": "2026-08-09T16:43:46.657Z"
     }
   ],
   "projects": [
+    {
+      "id": "proj-riseown",
+      "title": "RISEOWN — Custom Enterprise Retail & Real Estate ERP",
+      "summary": "Custom enterprise ERP engineered for a private commercial client, covering retail POS, property plot bookings, WebSockets wireless scanner, multi-tier sponsor commissions & automated bilingual legal contract generation. 100% delivered and handed over.",
+      "tags": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "Socket.IO",
+        "jsPDF"
+      ],
+      "coverColor": "#0284C7",
+      "liveUrl": "",
+      "featured": true,
+      "order": 1
+    },
     {
       "id": "d34ca352-e97c-40e4-9df5-4d015b719f5a",
       "title": "Aster Bakery — E-commerce Rebuild",
@@ -38,21 +46,24 @@
       "coverColor": "#3A6B63",
       "liveUrl": "",
       "featured": true,
-      "order": 1
+      "order": 2
     },
     {
       "id": "06d9658a-43f6-4235-af30-2688e70ea53a",
-      "title": "Northline Logistics — Ops Dashboard",
-      "summary": "Real-time fleet tracking dashboard replacing three spreadsheets.",
+      "title": "AccuSoft — Personal & Business Expense Analytics SaaS",
+      "summary": "100% Free-to-use cloud financial management SaaS. Features multi-ledger tracking (Personal/Office), interactive Chart.js analytics, Cloudinary receipt attachments, and one-click CSV report exports.",
       "tags": [
         "React",
-        "WebSocket",
-        "PostgreSQL"
+        "Redux Toolkit",
+        "Node.js",
+        "MongoDB",
+        "Chart.js",
+        "Cloudinary"
       ],
       "coverColor": "#E8A33D",
-      "liveUrl": "",
+      "liveUrl": "https://accusoft.battlefiesta.in/dashboard",
       "featured": true,
-      "order": 2
+      "order": 3
     },
     {
       "id": "6bc2919b-c536-434b-a196-568d3e1e84e5",
@@ -66,7 +77,7 @@
       "coverColor": "#8B93A1",
       "liveUrl": "",
       "featured": false,
-      "order": 3
+      "order": 4
     }
   ],
   "clients": [
@@ -183,6 +194,16 @@
       "id": "setting-show-ghost",
       "key": "showGhost",
       "value": true
+    },
+    {
+      "id": "4fbb6515-9034-4769-9dbb-606a03109fc0",
+      "key": "hero3DStyle",
+      "value": "cyber_bot"
+    },
+    {
+      "id": "setting-bg-style",
+      "key": "backgroundStyle",
+      "value": "warp_speed"
     }
   ]
 }

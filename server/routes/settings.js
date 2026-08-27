@@ -5,7 +5,7 @@ import { requireAuth, requireRole } from "../middleware/auth.js";
 
 const router = express.Router();
 
-// Public — Frontend gets site settings (e.g. showGhost, themes, etc.)
+// Public — Frontend gets site settings (e.g. showGhost, hero3DStyle, themes, etc.)
 router.get("/", (req, res) => {
   try {
     const settings = db.get("settings") || [];
@@ -18,6 +18,9 @@ router.get("/", (req, res) => {
     if (settingsObj.showGhost === undefined) {
       settingsObj.showGhost = true;
     }
+    if (settingsObj.hero3DStyle === undefined) {
+      settingsObj.hero3DStyle = "three_3d"; // "three_3d" | "canvas_ghost" | "none"
+    }
 
     res.json(settingsObj);
   } catch (err) {
@@ -29,23 +32,21 @@ router.get("/", (req, res) => {
 // Admin only — Update settings
 router.post("/", requireAuth, requireRole("admin"), (req, res) => {
   try {
-    const newSettings = req.body; // e.g. { showGhost: true / false }
+    const newSettings = req.body; // e.g. { showGhost: true, hero3DStyle: "three_3d" }
     const currentList = db.get("settings") || [];
     
     // Convert to map for easy deduplication
     const settingsMap = new Map();
     currentList.forEach((item) => {
-      if (item.key && item.key !== "ghostMode") settingsMap.set(item.key, item);
+      if (item.key) settingsMap.set(item.key, item);
     });
 
     Object.keys(newSettings).forEach((key) => {
-      if (key !== "ghostMode") {
-        if (settingsMap.has(key)) {
-          const existing = settingsMap.get(key);
-          existing.value = newSettings[key];
-        } else {
-          settingsMap.set(key, { id: uuid(), key, value: newSettings[key] });
-        }
+      if (settingsMap.has(key)) {
+        const existing = settingsMap.get(key);
+        existing.value = newSettings[key];
+      } else {
+        settingsMap.set(key, { id: uuid(), key, value: newSettings[key] });
       }
     });
 

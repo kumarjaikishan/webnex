@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import api from "./api/client.js";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
@@ -17,6 +18,7 @@ import Login from "./pages/Login.jsx";
 import ServicesPage from "./pages/ServicesPage.jsx";
 import FAQsPage from "./pages/FAQsPage.jsx";
 import PortfolioPage from "./pages/PortfolioPage.jsx";
+import ProjectDetailPage from "./pages/ProjectDetailPage.jsx";
 import BlogPage from "./pages/BlogPage.jsx";
 import PricingPage from "./pages/PricingPage.jsx";
 import PrivacyPage from "./pages/PrivacyPage.jsx";
@@ -41,6 +43,27 @@ import ClientOverview from "./pages/client/ClientOverview.jsx";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const [backgroundStyle, setBackgroundStyle] = useState("cyber_grid");
+
+  useEffect(() => {
+    // Initial fetch from settings via configured Axios client
+    api.get("/settings")
+      .then((res) => {
+        if (res.data?.backgroundStyle) {
+          setBackgroundStyle(res.data.backgroundStyle);
+        }
+      })
+      .catch(() => {});
+
+    // Listen for real-time backgroundStyle updates from Admin Settings
+    const handleBgUpdate = (e) => {
+      if (e.detail?.backgroundStyle) {
+        setBackgroundStyle(e.detail.backgroundStyle);
+      }
+    };
+    window.addEventListener("webnex:backgroundStyle", handleBgUpdate);
+    return () => window.removeEventListener("webnex:backgroundStyle", handleBgUpdate);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden">
@@ -48,7 +71,7 @@ export default function App() {
       <ScrollRestoreManager />
       <ToastContainer position="bottom-right" theme="dark" autoClose={4000} />
       {/* Full-Page Fixed Ambient Particle & 3D Halo Canvas */}
-      <ParticleBackground />
+      <ParticleBackground style={backgroundStyle} />
 
       <div className="relative z-10 flex flex-col min-h-screen">
         <Navbar />
@@ -59,6 +82,7 @@ export default function App() {
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/faqs" element={<FAQsPage />} />
             <Route path="/work" element={<PortfolioPage />} />
+            <Route path="/work/:slug" element={<ProjectDetailPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/privacy-policy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
