@@ -13,7 +13,7 @@ const testimonials = [
     // Opaque Paper Sticky with Soft Pastel Gradient & Deep Dark Amber Ink Text
     paperStyle: "bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7] to-[#FDE68A] border border-amber-300/80 text-[#451A03] shadow-[4px_8px_22px_rgba(0,0,0,0.25)] -rotate-2",
     paperPin: "bg-amber-50/90",
-    avatarBg: "bg-[#451A03] text-amber-100",
+    avatarBg: "bg-[#451a03] text-white",
   },
   {
     name: "Daniel Cho",
@@ -26,7 +26,7 @@ const testimonials = [
     // Deep Dark Cyan Ink Text (#042F2E)
     paperStyle: "bg-gradient-to-br from-[#ECFEFF] via-[#CFFAFE] to-[#A5F3FC] border border-cyan-300/80 text-[#042F2E] shadow-[4px_8px_22px_rgba(0,0,0,0.25)] rotate-2",
     paperPin: "bg-cyan-50/90",
-    avatarBg: "bg-[#042F2E] text-cyan-100",
+    avatarBg: "bg-[#042f2e] text-white",
   },
   {
     name: "Maya Torres",
@@ -39,7 +39,7 @@ const testimonials = [
     // Deep Dark Purple Ink Text (#3B0764)
     paperStyle: "bg-gradient-to-br from-[#FAF5FF] via-[#F3E8FF] to-[#E9D5FF] border border-purple-300/80 text-[#3B0764] shadow-[4px_8px_22px_rgba(0,0,0,0.25)] -rotate-1",
     paperPin: "bg-purple-50/90",
-    avatarBg: "bg-[#3B0764] text-purple-100",
+    avatarBg: "bg-[#3b0764] text-white",
   },
   {
     name: "Vikram Sharma",
@@ -52,7 +52,7 @@ const testimonials = [
     // Deep Dark Emerald Ink Text (#022C22)
     paperStyle: "bg-gradient-to-br from-[#ECFDF5] via-[#D1FAE5] to-[#A7F3D0] border border-emerald-300/80 text-[#022C22] shadow-[4px_8px_22px_rgba(0,0,0,0.25)] rotate-1",
     paperPin: "bg-emerald-50/90",
-    avatarBg: "bg-[#022C22] text-emerald-100",
+    avatarBg: "bg-[#022c22] text-white",
   },
   {
     name: "Sophia Chen",
@@ -65,7 +65,7 @@ const testimonials = [
     // Deep Dark Pink Ink Text (#500724)
     paperStyle: "bg-gradient-to-br from-[#FDF2F8] via-[#FCE7F3] to-[#FBCFE8] border border-pink-300/80 text-[#500724] shadow-[4px_8px_22px_rgba(0,0,0,0.25)] -rotate-2",
     paperPin: "bg-pink-50/90",
-    avatarBg: "bg-[#500724] text-pink-100",
+    avatarBg: "bg-[#500724] text-white",
   },
   {
     name: "Elena Rostova",
@@ -78,7 +78,7 @@ const testimonials = [
     // Deep Dark Indigo Ink Text (#1E1B4B)
     paperStyle: "bg-gradient-to-br from-[#EEF2FF] via-[#E0E7FF] to-[#C7D2FE] border border-indigo-300/80 text-[#1E1B4B] shadow-[4px_8px_22px_rgba(0,0,0,0.25)] rotate-2",
     paperPin: "bg-indigo-50/90",
-    avatarBg: "bg-[#1E1B4B] text-indigo-100",
+    avatarBg: "bg-[#1e1b4b] text-white",
   },
 ];
 

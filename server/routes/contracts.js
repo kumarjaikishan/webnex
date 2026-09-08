@@ -14,6 +14,13 @@ function scoped(req) {
 
 router.get("/", (req, res) => res.json(scoped(req)));
 
+router.get("/:id", (req, res) => {
+  const contracts = scoped(req);
+  const contract = contracts.find((c) => c.id === req.params.id);
+  if (!contract) return res.status(404).json({ error: "Contract not found." });
+  res.json(contract);
+});
+
 router.post("/", requireRole("admin"), (req, res) => {
   const { clientId, title, scope, amount, status } = req.body;
   if (!clientId || !title) return res.status(400).json({ error: "Client and title are required." });

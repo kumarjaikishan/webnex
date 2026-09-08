@@ -77,7 +77,7 @@ export default function Home() {
                 </ScrollReveal>
 
                 <ScrollReveal direction="up" delay={300}>
-                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-8">
+                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
                     <Link
                       to="/contact"
                       className="group relative px-6 py-3 rounded-full bg-grad-primary text-void text-xs sm:text-sm font-bold hover:brightness-110 transition shadow-[0_0_25px_rgba(124,108,251,0.4)] focus-ring overflow-hidden"
@@ -92,21 +92,6 @@ export default function Home() {
                     >
                       See Our Projects
                     </Link>
-                  </div>
-                </ScrollReveal>
-
-                {/* Micro Tech Stack Chips */}
-                <ScrollReveal direction="up" delay={400}>
-                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-2 border-t border-edge/60 text-[11px] font-mono text-mist">
-                    <span className="text-paper/60 uppercase text-[10px] tracking-wider mr-1">Stack:</span>
-                    {["Three.js 3D", "React 19", "Next.js", "TailwindCSS", "Node & Python", "PostgreSQL"].map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2.5 py-1 rounded-md bg-panel/80 border border-edge/80 text-mist hover:text-cyan hover:border-cyan/30 transition-colors"
-                      >
-                        {tech}
-                      </span>
-                    ))}
                   </div>
                 </ScrollReveal>
               </div>

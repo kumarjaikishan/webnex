@@ -114,12 +114,26 @@
       "nextDueDate": "2026-09-04",
       "lastInvoicedDate": "2026-08-05",
       "notes": "Includes monthly security updates, automated backups, and 2 hours of feature support.",
-      "status": "active",
+      "status": "paused",
       "createdAt": "2026-08-05T09:15:21.563Z"
     }
   ],
   "reminders": [],
-  "notes": [],
+  "notes": [
+    {
+      "id": "4cfc8ce0-8efd-416e-9378-41bd0bf34241",
+      "clientId": "d0574d6b-4413-470c-ae52-0f0a337f26b0",
+      "clientName": "Alex Rivers",
+      "clientEmail": "alex@acmestudio.com",
+      "companyName": "Acme Studio",
+      "projectTitle": "E-commerce Storefront & Mobile API",
+      "kickoffDate": "2026-09-08",
+      "portalUrl": "https://webnex.battlefiesta.in/login",
+      "type": "welcome",
+      "message": "Dear Alex Rivers,\n\nWelcome to Webnex Labs! We are thrilled to partner with Acme Studio for the upcoming \"E-commerce Storefront & Mobile API\" development.\n\nHere is a quick summary of what to expect during our onboarding:\n\n1. Kickoff Date: 2026-09-08\n2. Client Workspace Portal: https://webnex.battlefiesta.in/login\n3. Deliverables & Milestones: Highlighting weekly progress demos and transparent updates.\n\nYour dedicated development sprint is preparing the initial staging environment. Please log into your Client Portal to review the initial scope documents and milestone invoices.\n\nIf you have any questions before our kickoff call, feel free to reply directly to this note or contact hello@webnexlabs.in.\n\nWarm regards,\nJai Kishan Kumar\nFounder & Lead Developer — Webnex Labs\nWeb & Digital Solutions",
+      "sentAt": "2026-09-08T16:54:20.751Z"
+    }
+  ],
   "messages": [
     {
       "id": "bfacf084-daa3-482c-ad18-c7423fe53e4b",
@@ -161,7 +175,7 @@
       "totalAmount": 1500,
       "issueDate": "2026-08-05",
       "dueDate": "2026-08-05",
-      "status": "Pending",
+      "status": "Paid",
       "notes": "Thank you for partnering with Webnex Labs! Payment is due within 14 days.",
       "createdAt": "2026-08-05T08:53:28.452Z"
     },
@@ -204,6 +218,17 @@
       "id": "setting-bg-style",
       "key": "backgroundStyle",
       "value": "warp_speed"
+    },
+    {
+      "id": "20df92c4-d1bb-4433-843e-0e222275b0ab",
+      "key": "paymentDetails",
+      "value": {
+        "beneficiaryName": "Jai Kishan Kumar (Webnex Labs)",
+        "upiId": "8210539367@jio",
+        "bankName": "Jio Payment Bank",
+        "accountNumber": "000520391198279",
+        "ifscCode": "jiop0000001"
+      }
     }
   ]
 }

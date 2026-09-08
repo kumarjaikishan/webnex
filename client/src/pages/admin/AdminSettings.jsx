@@ -19,6 +19,16 @@ export default function AdminSettings() {
   const [savingFlag, setSavingFlag] = useState(false);
   const [savingBgFlag, setSavingBgFlag] = useState(false);
 
+  // Default Bank & Settlement Settings State
+  const [bankSettings, setBankSettings] = useState({
+    beneficiaryName: "Jai Kishan Kumar (Webnex Labs)",
+    upiId: "8210539367@fam",
+    bankName: "State Bank of India",
+    accountNumber: "39001234567",
+    ifscCode: "SBIN0001234",
+  });
+  const [savingBank, setSavingBank] = useState(false);
+
   useEffect(() => {
     // Fetch global site settings
     api.get("/settings")
@@ -31,9 +41,27 @@ export default function AdminSettings() {
         if (res.data?.backgroundStyle !== undefined) {
           setBackgroundStyle(res.data.backgroundStyle);
         }
+        if (res.data?.paymentDetails) {
+          setBankSettings(res.data.paymentDetails);
+        }
       })
       .catch((err) => console.error("Failed to load settings:", err));
   }, []);
+
+  async function handleSaveBankSettings(e) {
+    e.preventDefault();
+    setSavingBank(true);
+    try {
+      await api.post("/settings", {
+        paymentDetails: bankSettings,
+      });
+      toast.success("Bank & UPI settlement defaults saved successfully!");
+    } catch (err) {
+      toast.error("Failed to save bank settings.");
+    } finally {
+      setSavingBank(false);
+    }
+  }
 
   async function handleSelectHeroStyle(newStyle) {
     if (newStyle === hero3DStyle) return;
@@ -123,25 +151,56 @@ export default function AdminSettings() {
     }
   }
 
+  // Active Tab State: "theme" | "bank" | "security"
+  const [activeTab, setActiveTab] = useState("bank");
+
+  const tabs = [
+    { id: "bank", label: "💳 Bank & UPI Settlement", desc: "Default receiving account & QR codes" },
+    { id: "theme", label: "🎨 3D Mascot & Themes", desc: "Hero characters & canvas background" },
+    { id: "security", label: "🔒 Security & Profile", desc: "Password reset & admin credentials" },
+  ];
+
   return (
-    <div className="space-y-8 max-w-xl">
+    <div className="space-y-6 max-w-2xl">
       <div>
-        <h1 className="font-display text-3xl font-bold text-paper mb-2">Admin Settings</h1>
-        <p className="text-xs font-mono text-mist">Manage your security credentials, hero 3D style, and site configuration.</p>
+        <h1 className="font-display text-3xl font-bold text-paper mb-1">Admin Settings</h1>
+        <p className="text-xs font-mono text-mist">Manage studio configurations, visual experiences, settlements, and security.</p>
       </div>
 
-      {/* Feature Flags: 3D Hero Mascot Switcher */}
-      <div className="bg-panel border border-edge rounded-2xl p-6 sm:p-7 shadow-lg relative overflow-hidden">
-        <div className="flex items-center justify-between gap-2 mb-1">
-          <div className="flex items-center gap-2">
-            <Sparkles size={16} className="text-cyan animate-pulse" />
-            <h2 className="font-display text-lg font-bold text-paper">Hero 3D Mascot & Experience</h2>
-          </div>
-          {savingFlag && (
-            <span className="font-mono text-[10px] text-cyan animate-pulse">Saving...</span>
-          )}
-        </div>
-        <p className="text-xs text-mist mb-5">Select which 3D visual experience is displayed on the homepage for all visitors.</p>
+      {/* SLEEK TAB NAVIGATION BAR */}
+      <div className="flex flex-wrap items-center gap-2 p-1.5 bg-panel border border-edge rounded-2xl shadow-md">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex-1 min-w-[140px] px-4 py-2.5 rounded-xl text-xs font-semibold transition-all flex flex-col items-center sm:items-start gap-0.5 ${
+              activeTab === tab.id
+                ? "bg-cyan/15 text-cyan border border-cyan/40 shadow-sm"
+                : "text-mist hover:text-paper hover:bg-void/60 border border-transparent"
+            }`}
+          >
+            <span className="font-bold">{tab.label}</span>
+            <span className="text-[10px] font-mono opacity-70 hidden sm:inline">{tab.desc}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* TAB CONTENT: THEME & VISUAL EXPERIENCES */}
+      {activeTab === "theme" && (
+        <div className="space-y-6 animate-in fade-in duration-200">
+          {/* Feature Flags: 3D Hero Mascot Switcher */}
+          <div className="bg-panel border border-edge rounded-2xl p-6 sm:p-7 shadow-lg relative overflow-hidden">
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <div className="flex items-center gap-2">
+                <Sparkles size={16} className="text-cyan animate-pulse" />
+                <h2 className="font-display text-lg font-bold text-paper">Hero 3D Mascot & Experience</h2>
+              </div>
+              {savingFlag && (
+                <span className="font-mono text-[10px] text-cyan animate-pulse">Saving...</span>
+              )}
+            </div>
+            <p className="text-xs text-mist mb-5">Select which 3D visual experience is displayed on the homepage for all visitors.</p>
 
         <div className="space-y-3">
           {/* Option 1: Animated 3D Cyber Robot (Three.js WebGL) */}
@@ -443,110 +502,203 @@ export default function AdminSettings() {
           </div>
         </div>
       </div>
+    </div>
+  )}
 
-      {/* Profile Info Card */}
-      <div className="bg-panel border border-edge rounded-2xl p-6">
-        <h2 className="text-sm font-mono text-cyan uppercase tracking-wider font-semibold mb-4">Account Profile</h2>
-        <div className="space-y-3 text-sm">
-          <div className="flex justify-between items-center py-2 border-b border-edge/40">
-            <span className="text-mist font-mono text-xs">NAME</span>
-            <span className="text-paper font-semibold">{user?.name || "Webnex Admin"}</span>
-          </div>
-          <div className="flex justify-between items-center py-2 border-b border-edge/40">
-            <span className="text-mist font-mono text-xs">EMAIL</span>
-            <span className="text-paper font-mono text-xs text-cyan">{user?.email || "kumar.jaikishan0@gmail.com"}</span>
-          </div>
-          <div className="flex justify-between items-center py-2">
-            <span className="text-mist font-mono text-xs">ROLE</span>
-            <span className="px-2 py-0.5 rounded text-xs font-mono bg-cyan/10 text-cyan border border-cyan/30">
-              Administrator
-            </span>
+      {/* TAB CONTENT: BANK & UPI SETTLEMENT */}
+      {activeTab === "bank" && (
+        <div className="space-y-6 animate-in fade-in duration-200">
+          <div className="bg-panel border border-edge rounded-2xl p-6 sm:p-7 shadow-lg">
+            <div className="flex items-center justify-between border-b border-edge pb-3 mb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-base">💳</span>
+                  <h2 className="font-display text-lg font-bold text-paper">Default Bank & UPI Settlement Details</h2>
+                </div>
+                <p className="text-xs text-mist mt-0.5">These details will automatically prefill every new invoice with your dynamic UPI QR code.</p>
+              </div>
+              {savingBank && <span className="font-mono text-[10px] text-cyan animate-pulse">Saving...</span>}
+            </div>
+
+            <form onSubmit={handleSaveBankSettings} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-mono text-mist uppercase mb-1">Primary UPI ID (VPA)</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. 8210539367@fam"
+                    value={bankSettings.upiId || ""}
+                    onChange={(e) => setBankSettings({ ...bankSettings, upiId: e.target.value })}
+                    className="w-full rounded-xl bg-void border border-edge px-3.5 py-2.5 text-xs text-cyan font-mono focus-ring outline-none font-semibold"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-mono text-mist uppercase mb-1">Account Holder Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Jai Kishan Kumar (Webnex Labs)"
+                    value={bankSettings.beneficiaryName || ""}
+                    onChange={(e) => setBankSettings({ ...bankSettings, beneficiaryName: e.target.value })}
+                    className="w-full rounded-xl bg-void border border-edge px-3.5 py-2.5 text-xs text-paper font-mono focus-ring outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-mono text-mist uppercase mb-1">Bank Name</label>
+                  <input
+                    type="text"
+                    placeholder="State Bank of India / HDFC"
+                    value={bankSettings.bankName || ""}
+                    onChange={(e) => setBankSettings({ ...bankSettings, bankName: e.target.value })}
+                    className="w-full rounded-xl bg-void border border-edge px-3.5 py-2.5 text-xs text-paper font-mono focus-ring outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-mono text-mist uppercase mb-1">Account Number</label>
+                  <input
+                    type="text"
+                    placeholder="Account Number"
+                    value={bankSettings.accountNumber || ""}
+                    onChange={(e) => setBankSettings({ ...bankSettings, accountNumber: e.target.value })}
+                    className="w-full rounded-xl bg-void border border-edge px-3.5 py-2.5 text-xs text-paper font-mono focus-ring outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-mono text-mist uppercase mb-1">IFSC Code</label>
+                  <input
+                    type="text"
+                    placeholder="IFSC Code"
+                    value={bankSettings.ifscCode || ""}
+                    onChange={(e) => setBankSettings({ ...bankSettings, ifscCode: e.target.value.toUpperCase() })}
+                    className="w-full rounded-xl bg-void border border-edge px-3.5 py-2.5 text-xs text-cyan font-mono focus-ring outline-none uppercase font-semibold"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={savingBank}
+                className="w-full py-3 rounded-xl bg-grad-primary text-void font-semibold text-xs hover:brightness-110 active:scale-[0.99] transition focus-ring disabled:opacity-50 shadow-md"
+              >
+                {savingBank ? "Saving Bank Settings..." : "Save Default Bank & UPI Details"}
+              </button>
+            </form>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Change Password Card */}
-      <div className="bg-panel border border-edge rounded-2xl p-6 sm:p-8">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="font-display text-xl font-bold text-paper">Change Password</h2>
-            <p className="text-xs text-mist mt-1">Update your admin login password securely.</p>
+      {/* TAB CONTENT: SECURITY & PROFILE */}
+      {activeTab === "security" && (
+        <div className="space-y-6 animate-in fade-in duration-200">
+          {/* Profile Info Card */}
+          <div className="bg-panel border border-edge rounded-2xl p-6 shadow-lg">
+            <h2 className="text-sm font-mono text-cyan uppercase tracking-wider font-semibold mb-4">Account Profile</h2>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between items-center py-2 border-b border-edge/40">
+                <span className="text-mist font-mono text-xs">NAME</span>
+                <span className="text-paper font-semibold">{user?.name || "Webnex Admin"}</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-edge/40">
+                <span className="text-mist font-mono text-xs">EMAIL</span>
+                <span className="text-paper font-mono text-xs text-cyan">{user?.email || "kumar.jaikishan0@gmail.com"}</span>
+              </div>
+              <div className="flex justify-between items-center py-2">
+                <span className="text-mist font-mono text-xs">ROLE</span>
+                <span className="px-2 py-0.5 rounded text-xs font-mono bg-cyan/10 text-cyan border border-cyan/30">
+                  Administrator
+                </span>
+              </div>
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={() => setShowPass(!showPass)}
-            className="text-xs font-mono text-cyan hover:underline"
-          >
-            {showPass ? "Hide Passwords" : "Show Passwords"}
-          </button>
+
+          {/* Change Password Card */}
+          <div className="bg-panel border border-edge rounded-2xl p-6 sm:p-8 shadow-lg">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="font-display text-xl font-bold text-paper">Change Password</h2>
+                <p className="text-xs text-mist mt-1">Update your admin login password securely.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPass(!showPass)}
+                className="text-xs font-mono text-cyan hover:underline"
+              >
+                {showPass ? "Hide Passwords" : "Show Passwords"}
+              </button>
+            </div>
+
+            {status.message && (
+              <div
+                className={`p-3.5 rounded-xl text-sm mb-5 ${
+                  status.type === "error"
+                    ? "bg-red-950/30 border border-red-800/40 text-red-400"
+                    : "bg-emerald-950/30 border border-emerald-800/40 text-emerald-300"
+                }`}
+              >
+                {status.message}
+              </div>
+            )}
+
+            <form onSubmit={handlePasswordChange} className="space-y-4">
+              <div>
+                <label className="block text-xs font-mono text-mist uppercase tracking-wider mb-2">
+                  Current Password
+                </label>
+                <input
+                  type={showPass ? "text" : "password"}
+                  required
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Enter current password"
+                  className="w-full rounded-xl bg-void border border-edge px-4 py-3 text-paper focus-ring outline-none transition text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-mist uppercase tracking-wider mb-2">
+                  New Password
+                </label>
+                <input
+                  type={showPass ? "text" : "password"}
+                  required
+                  minLength={6}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Minimum 6 characters"
+                  className="w-full rounded-xl bg-void border border-edge px-4 py-3 text-paper focus-ring outline-none transition text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-mist uppercase tracking-wider mb-2">
+                  Confirm New Password
+                </label>
+                <input
+                  type={showPass ? "text" : "password"}
+                  required
+                  minLength={6}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm new password"
+                  className="w-full rounded-xl bg-void border border-edge px-4 py-3 text-paper focus-ring outline-none transition text-sm"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full mt-2 px-6 py-3.5 rounded-xl bg-grad-primary text-void font-semibold hover:brightness-110 active:scale-[0.99] transition focus-ring disabled:opacity-50 text-sm shadow-md"
+              >
+                {loading ? "Updating Password…" : "Update Password"}
+              </button>
+            </form>
+          </div>
         </div>
-
-        {status.message && (
-          <div
-            className={`p-3.5 rounded-xl text-sm mb-5 ${
-              status.type === "error"
-                ? "bg-red-950/30 border border-red-800/40 text-red-400"
-                : "bg-emerald-950/30 border border-emerald-800/40 text-emerald-300"
-            }`}
-          >
-            {status.message}
-          </div>
-        )}
-
-        <form onSubmit={handlePasswordChange} className="space-y-4">
-          <div>
-            <label className="block text-xs font-mono text-mist uppercase tracking-wider mb-2">
-              Current Password
-            </label>
-            <input
-              type={showPass ? "text" : "password"}
-              required
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Enter current password"
-              className="w-full rounded-xl bg-void border border-edge px-4 py-3 text-paper focus-ring outline-none transition text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-mono text-mist uppercase tracking-wider mb-2">
-              New Password
-            </label>
-            <input
-              type={showPass ? "text" : "password"}
-              required
-              minLength={6}
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Minimum 6 characters"
-              className="w-full rounded-xl bg-void border border-edge px-4 py-3 text-paper focus-ring outline-none transition text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-mono text-mist uppercase tracking-wider mb-2">
-              Confirm New Password
-            </label>
-            <input
-              type={showPass ? "text" : "password"}
-              required
-              minLength={6}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm new password"
-              className="w-full rounded-xl bg-void border border-edge px-4 py-3 text-paper focus-ring outline-none transition text-sm"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full mt-2 px-6 py-3.5 rounded-xl bg-grad-primary text-void font-semibold hover:brightness-110 active:scale-[0.99] transition focus-ring disabled:opacity-50 text-sm shadow-md"
-          >
-            {loading ? "Updating Password…" : "Update Password"}
-          </button>
-        </form>
-      </div>
+      )}
     </div>
   );
 }

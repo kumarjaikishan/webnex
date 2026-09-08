@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../../api/client.js";
-import DocumentCard from "../../components/DocumentCard.jsx";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
 
 const DEFAULT_AGREEMENT_TERMS = `# SOFTWARE DEVELOPMENT AND MAINTENANCE AGREEMENT
@@ -10,105 +10,72 @@ const DEFAULT_AGREEMENT_TERMS = `# SOFTWARE DEVELOPMENT AND MAINTENANCE AGREEMEN
 Client Name: [Client Name]
 Client Contact: [Client Email]
 
-Developer: Webnex Labs (Digital Studio & Engineering Solutions)
-Contact Email: hello@webnexlabs.com
+Developer / Studio: Webnex Labs (Represented by Jai Kishan Kumar, Lead Developer & Proprietor)
+Contact Email: hello@webnexlabs.in
+Website: https://webnexlabs.in
 
 Collectively referred to as "the Parties."
 
 ---
 
-## 2. Purpose
-The Developer has developed and agrees to maintain a custom web-based software application for the Client.
+## 2. Scope & Purpose
+The Developer has architected, built, and agrees to maintain a custom web-based software application for the Client.
 
-The software consists of the following integrated modules:
-1. MLM Product Sales & Commission Management
-2. Land/Plot Sales with Down Payment & EMI Management
-3. Investment Management with Daily/Monthly Accrual System
-4. Referral & Commission Distribution
-5. Admin Dashboard
-6. Customer Dashboard
-7. Reports and Analytics
-8. User & Role Management
-9. Wallet/Ledger System
+The software deliverables include:
+1. Custom Frontend & Responsive UI/UX Interface
+2. Backend API Architecture & Database Engineering
+3. Authentication, Role-based Access & Security Controls
+4. Third-party Integrations (Payment Gateway / SMS / Analytics)
+5. Production Deployment, Domain Configuration & SSL Setup
 
 ---
 
-## 3. Development Charges
-Total Development Cost: ₹60,000/- (Rupees Sixty Thousand Only).
-- Development Fee Paid: As agreed per invoice schedules.
-- Balance Amount: Payable upon delivery/milestone completion.
+## 3. Commercials & Milestones
+- Total Development Fee: ₹60,000/- (Rupees Sixty Thousand Only)
+- Payment Structure: Staged milestone schedule as per issued Webnex Labs invoices.
+- Tax Status: GST Exempt (Under threshold limit).
 
 ---
 
-## 4. Monthly Maintenance Charges
-- Monthly Fee: ₹4,500/- per month
-- Payment Due: Payable on or before the 5th day of every month.
+## 4. Monthly Maintenance & Retainer (Optional/Post-Launch)
+- Monthly Retainer Fee: ₹4,500/- per month
+- Billing Cycle: Payable within 5 days of monthly invoice generation.
+- Includes: Bug fixes, server uptime monitoring, security patching, and technical support.
+- Excludes: Major new feature additions and separate standalone applications.
 
 ---
 
-## 5. Maintenance Includes
-* Bug fixing & minor software corrections
-* Security updates & framework patching
-* Database optimization & backup guidance support
-* Technical support during standard business hours
-* System performance & uptime monitoring
+## 5. Intellectual Property & Code Ownership
+Upon complete receipt of agreed development fees, the Client receives full perpetual ownership of application deliverables, data, and source code. Webnex Labs retains the right to display the completed work in its technical portfolio.
 
 ---
 
-## 6. Maintenance Does NOT Include (Charged Separately)
-* New modules & new custom business logic
-* Complete UI redesigns & native mobile apps
-* Payment gateway/SMS/WhatsApp 3rd party API fees
+## 6. Confidentiality & Data Security
+All Client proprietary logic, customer databases, and commercial data shall remain strictly confidential and protected under standard non-disclosure practices.
 
 ---
 
-## 7. Client Responsibilities
-The Client shall provide server/domain credentials, business rules, and timely approvals.
-Client bears costs for: Hosting, Domain registration, SMS gateways, and third-party APIs.
+## 7. Governing Law & Dispute Resolution
+This agreement is executed and governed under the laws of the Republic of India.
 
 ---
 
-## 8. Source Code & Ownership
-Upon payment of complete development charges, the Client owns the application data and holds a perpetual operational license for the code.
+## Signatures & Execution
 
----
+For Client:
+Authorized Signature: _______________________      Date: _________
+Name & Designation: [Client Name]
 
-## 9. Confidentiality
-All Client financial, commission, and user data shall remain strictly confidential and will not be disclosed to third parties.
-
----
-
-## 10. Service SLA Response Times
-- Critical Issue: Within 24 hours
-- Medium Priority Issue: Within 2 business days
-- Minor Issue: Within 5 business days
-
----
-
-## 11. Termination
-Either party may terminate the monthly maintenance agreement by giving 30 days' written notice.
-
----
-
-## 12. Limitation of Liability & Disputes
-Developer shall not be liable for third-party hosting outages or unauthorized external modifications.
-
----
-
-## Signatures
-
-Client Signature: _______________________      Date: _________
-
-Developer Signature (Webnex Labs): _________________ Date: _________
-
-Witness 1: ____________________________      Witness 2: ____________________________`;
+For Webnex Labs:
+Authorized Signature: _______________________      Date: _________
+Jai Kishan Kumar (Founder & Lead Developer, Webnex Labs)`;
 
 export default function Contracts() {
+  const navigate = useNavigate();
   const [contracts, setContracts] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [activeContract, setActiveContract] = useState(null);
   const [editingContract, setEditingContract] = useState(null);
 
   // Create Form State
@@ -129,7 +96,7 @@ export default function Contracts() {
   }, []);
 
   useEffect(() => {
-    if (showModal || activeContract || editingContract) {
+    if (showModal || editingContract) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
@@ -137,7 +104,7 @@ export default function Contracts() {
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [showModal, activeContract, editingContract]);
+  }, [showModal, editingContract]);
 
   async function fetchData() {
     try {
@@ -281,10 +248,10 @@ export default function Contracts() {
 
                 <div className="flex items-center gap-3">
                   <button
-                    onClick={() => setActiveContract({ ...c, clientName: client?.name, clientEmail: client?.email })}
-                    className="px-3 py-1.5 rounded-lg border border-edge text-xs hover:bg-white/5 transition font-semibold"
+                    onClick={() => navigate(`/admin/contracts/${c.id}`)}
+                    className="px-3 py-1.5 rounded-lg border border-edge text-xs hover:bg-white/5 transition font-semibold text-paper"
                   >
-                    View & Print Agreement
+                    View Agreement
                   </button>
 
                   <button
@@ -487,33 +454,6 @@ export default function Contracts() {
                 </button>
               </div>
             </form>
-          </div>
-        </div>,
-        document.body
-      )}
-
-      {/* VIEW & PRINT DETAILED AGREEMENT MODAL */}
-      {activeContract && createPortal(
-        <div className="fixed inset-0 z-[9999] bg-void/90 backdrop-blur-md flex items-center justify-center p-4 m-0 top-0 left-0 right-0 bottom-0 printable-modal-portal">
-          <div className="max-w-3xl w-full">
-            <DocumentCard
-              docType="AGREEMENT"
-              docNumber={`AGR-${activeContract.id.slice(0, 6)}`}
-              date={new Date().toISOString().split("T")[0]}
-              secondaryDate={`₹${activeContract.amount?.toLocaleString()}`}
-              secondaryDateLabel="Dev Cost"
-              clientName={activeContract.clientName || "Client"}
-              clientEmail={activeContract.clientEmail || "client@domain.com"}
-              projectTitle={activeContract.title}
-              status={activeContract.status?.toUpperCase()}
-              onPrint={() => window.print()}
-              onClose={() => setActiveContract(null)}
-              notes="Legally binding Software Development & Maintenance Agreement executed via Webnex Labs CRM."
-            >
-              <div className="bg-void p-5 rounded-xl border border-edge font-mono text-xs text-paper whitespace-pre-wrap leading-relaxed shadow-inner max-h-[60vh] overflow-y-auto printable-agreement-text">
-                {activeContract.terms || activeContract.scope || DEFAULT_AGREEMENT_TERMS}
-              </div>
-            </DocumentCard>
           </div>
         </div>,
         document.body

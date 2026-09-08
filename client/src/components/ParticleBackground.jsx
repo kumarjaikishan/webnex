@@ -393,7 +393,7 @@ export default function ParticleBackground({ style = "cyber_grid" }) {
   }, [style]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden no-print">
       <div className="absolute inset-0 bg-[#06060B]" />
       <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-gradient-to-b from-cyan-500/10 via-violet-600/5 to-transparent rounded-full blur-[120px] pointer-events-none" />
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block pointer-events-none" />

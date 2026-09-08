@@ -19,13 +19,31 @@ router.post("/", (req, res) => {
     businessType: businessType || "",
     subject: subject || "New Project Inquiry",
     message: message || "",
+    status: "new", // "new" | "contacted" | "converted" | "archived"
     receivedAt: new Date().toISOString(),
   });
   res.status(201).json({ ok: true });
 });
 
+// GET /api/contact - Admin view all messages
 router.get("/", requireAuth, requireRole("admin"), (req, res) => {
-  res.json(db.get("messages"));
+  const messages = db.get("messages") || [];
+  res.json(messages);
+});
+
+// PUT /api/contact/:id - Admin update status or notes
+router.put("/:id", requireAuth, requireRole("admin"), (req, res) => {
+  const updated = db.update("messages", req.params.id, req.body);
+  if (!updated) {
+    return res.status(404).json({ error: "Message not found" });
+  }
+  res.json(updated);
+});
+
+// DELETE /api/contact/:id - Admin delete inquiry
+router.delete("/:id", requireAuth, requireRole("admin"), (req, res) => {
+  db.remove("messages", req.params.id);
+  res.json({ ok: true });
 });
 
 export default router;

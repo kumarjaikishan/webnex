@@ -51,7 +51,7 @@ export default function ProjectDetailPage() {
         "author": {
           "@type": "Organization",
           "name": "Webnex Labs",
-          "url": "https://webnexlabs.com"
+          "url": "https://webnexlabs.in"
         },
         "publisher": {
           "@type": "Organization",

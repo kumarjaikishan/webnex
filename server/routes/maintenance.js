@@ -2,6 +2,7 @@ import express from "express";
 import { v4 as uuid } from "uuid";
 import { db } from "../utils/db.js";
 import { requireAuth, requireRole } from "../middleware/auth.js";
+import { generateNextInvoiceNumber } from "../utils/invoiceNumber.js";
 
 const router = express.Router();
 router.use(requireAuth);
@@ -62,9 +63,12 @@ router.post("/generate-invoices", requireRole("admin"), (req, res) => {
       email: plan.clientEmail || "client@domain.com",
     };
 
+    const existingInvoices = db.get("invoices") || [];
+    const invoiceNum = generateNextInvoiceNumber(existingInvoices, "INV");
+
     const newInvoice = {
       id: uuid(),
-      invoiceNumber: `INV-MNT-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 90 + 10)}`,
+      invoiceNumber: invoiceNum,
       clientName: client.name,
       clientEmail: client.email,
       projectTitle: `${plan.planTitle || "Monthly Website Maintenance"} (${plan.cycle || "monthly"})`,

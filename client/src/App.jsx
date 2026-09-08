@@ -29,8 +29,11 @@ import Overview from "./pages/admin/Overview.jsx";
 import Clients from "./pages/admin/Clients.jsx";
 import ClientDetail from "./pages/admin/ClientDetail.jsx";
 import Invoices from "./pages/admin/Invoices.jsx";
+import InvoiceViewPage from "./pages/admin/InvoiceViewPage.jsx";
 import Contracts from "./pages/admin/Contracts.jsx";
+import ContractViewPage from "./pages/admin/ContractViewPage.jsx";
 import WelcomeNotes from "./pages/admin/WelcomeNotes.jsx";
+import WelcomeNoteViewPage from "./pages/admin/WelcomeNoteViewPage.jsx";
 import Maintenance from "./pages/admin/Maintenance.jsx";
 import Reminders from "./pages/admin/Reminders.jsx";
 import Notes from "./pages/admin/Notes.jsx";
@@ -96,8 +99,11 @@ export default function App() {
               <Route path="clients" element={<Clients />} />
               <Route path="clients/:id" element={<ClientDetail />} />
               <Route path="invoices" element={<Invoices />} />
+              <Route path="invoices/:id" element={<InvoiceViewPage />} />
               <Route path="contracts" element={<Contracts />} />
+              <Route path="contracts/:id" element={<ContractViewPage />} />
               <Route path="welcome-notes" element={<WelcomeNotes />} />
+              <Route path="welcome-notes/:id" element={<WelcomeNoteViewPage />} />
               <Route path="maintenance" element={<Maintenance />} />
               <Route path="reminders" element={<Reminders />} />
               <Route path="notes" element={<Notes />} />

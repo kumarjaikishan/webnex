@@ -25,9 +25,9 @@ export default function AdminLayout() {
   ) || navItems[0];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 grid md:grid-cols-[230px_1fr] gap-6 sm:gap-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 grid md:grid-cols-[230px_1fr] gap-6 sm:gap-8 print:m-0 print:p-0 print:w-full print:max-w-full print:block print:border-0">
       {/* MOBILE ADMIN DROPDOWN & SCROLLABLE BAR */}
-      <div className="md:hidden space-y-3">
+      <div className="md:hidden space-y-3 no-print">
         <div className="flex items-center justify-between bg-panel border border-edge p-3 rounded-xl">
           <div className="flex items-center gap-2.5">
             <currentTab.icon size={18} className="text-cyan" />
@@ -97,7 +97,7 @@ export default function AdminLayout() {
       </div>
 
       {/* DESKTOP SIDEBAR */}
-      <aside className="hidden md:block space-y-1.5 bg-panel border border-edge p-4 rounded-2xl h-fit sticky top-24">
+      <aside className="hidden md:block space-y-1.5 bg-panel border border-edge p-4 rounded-2xl h-fit sticky top-24 no-print">
         <div className="px-3 pb-3 mb-2 border-b border-edge/60">
           <p className="font-mono text-xs text-cyan tracking-wider uppercase font-semibold">Webnex CRM</p>
           <p className="text-[11px] text-mist font-mono mt-0.5">Management Portal</p>
