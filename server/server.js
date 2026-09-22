@@ -49,7 +49,7 @@ app.get("/api/health", (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: `${Math.floor(process.uptime())}s`,
     environment: process.env.NODE_ENV || "development",
-    port: process.env.PORT || 5000,
+    port: process.env.PORT || 5002,
   });
 });
 
@@ -59,7 +59,7 @@ app.use((err, req, res, next) => {
 });
 
 if (!process.env.VERCEL) {
-  const PORT = process.env.PORT || 5000;
+  const PORT = process.env.PORT || 5002;
   app.listen(PORT, () => console.log(`API running on port ${PORT}`));
 }
 
