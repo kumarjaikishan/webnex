@@ -19,7 +19,10 @@ router.get("/", (req, res) => {
       settingsObj.showGhost = true;
     }
     if (settingsObj.hero3DStyle === undefined) {
-      settingsObj.hero3DStyle = "three_3d"; // "three_3d" | "canvas_ghost" | "none"
+      settingsObj.hero3DStyle = "cyber_bot";
+    }
+    if (settingsObj.backgroundStyle === undefined) {
+      settingsObj.backgroundStyle = "warp_speed";
     }
 
     res.json(settingsObj);

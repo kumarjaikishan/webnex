@@ -72,6 +72,14 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-7">
           <NavLink to="/services" className={navLink}>Services</NavLink>
           <NavLink to="/work" className={navLink}>Work</NavLink>
+          <NavLink to="/extensions" className={navLink}>
+            <span className="flex items-center gap-1.5">
+              Extensions
+              <span className="px-1.5 py-0.2 text-[9px] font-mono uppercase bg-cyan/15 text-cyan border border-cyan/30 rounded-full font-semibold">
+                New
+              </span>
+            </span>
+          </NavLink>
           <NavLink to="/pricing" className={navLink}>Pricing</NavLink>
           <NavLink to="/about" className={navLink}>About</NavLink>
         </div>
@@ -121,6 +129,14 @@ export default function Navbar() {
           <div className="p-5 space-y-2">
             <NavLink to="/services" className={mobileNavLink}>Services</NavLink>
             <NavLink to="/work" className={mobileNavLink}>Work</NavLink>
+            <NavLink to="/extensions" className={mobileNavLink}>
+              <span className="flex items-center justify-between w-full">
+                Extensions
+                <span className="px-2 py-0.5 text-[10px] font-mono uppercase bg-cyan/15 text-cyan border border-cyan/30 rounded-full font-semibold">
+                  Upcoming
+                </span>
+              </span>
+            </NavLink>
             <NavLink to="/pricing" className={mobileNavLink}>Pricing</NavLink>
             <NavLink to="/about" className={mobileNavLink}>About</NavLink>
             <NavLink to="/contact" className={mobileNavLink}>Contact Us</NavLink>

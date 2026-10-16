@@ -21,18 +21,23 @@ const CyberFox3D = lazy(() => import("../components/CyberFox3D.jsx"));
 export default function Home() {
   const [projects, setProjects] = useState([]);
   const [showGhost, setShowGhost] = useState(true);
-  const [hero3DStyle, setHero3DStyle] = useState("reaper_3d"); // "reaper_3d" | "cyber_3d" | "canvas_ghost" | "none"
+  const [hero3DStyle, setHero3DStyle] = useState(() => {
+    return localStorage.getItem("webnex_hero_3d_style") || "cyber_bot";
+  });
 
   useEffect(() => {
-    api.get("/projects").then((res) => setProjects(res.data));
+    api.get("/projects").then((res) => setProjects(res.data)).catch(() => {});
     api.get("/settings")
       .then((res) => {
         if (res.data?.hero3DStyle !== undefined) {
           setHero3DStyle(res.data.hero3DStyle);
           setShowGhost(res.data.hero3DStyle !== "none");
+          localStorage.setItem("webnex_hero_3d_style", res.data.hero3DStyle);
         } else if (res.data?.showGhost !== undefined) {
           setShowGhost(res.data.showGhost);
-          setHero3DStyle(res.data.showGhost ? "reaper_3d" : "none");
+          const style = res.data.showGhost ? "cyber_bot" : "none";
+          setHero3DStyle(style);
+          localStorage.setItem("webnex_hero_3d_style", style);
         }
       })
       .catch(() => {});
@@ -59,7 +64,7 @@ export default function Home() {
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan"></span>
                     </span>
-                    WEBNEX LABS — FULL-STACK & 3D WEB STUDIO
+                    WEBNEX LABS
                   </div>
                 </ScrollReveal>
 
@@ -118,7 +123,7 @@ export default function Home() {
             <ScrollReveal direction="up" delay={50}>
               <span className="inline-flex items-center gap-2 rounded-full border border-edge bg-panel/90 backdrop-blur px-3.5 sm:px-4 py-1 sm:py-1.5 font-mono text-[10px] sm:text-xs text-cyan mb-6 sm:mb-8 shadow-lg">
                 <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
-                WEBNEX LABS — FULL-STACK ENGINEERING STUDIO
+                WEBNEX LABS
               </span>
             </ScrollReveal>
 
@@ -149,7 +154,8 @@ export default function Home() {
         )}
       </section>
 
-      <Marquee />
+      {/* Hidden for now: Trusted By Marquee (GoodFeel & Riseown) */}
+      {/* <Marquee /> */}
 
       {/* About / features, mirroring image + copy blocks */}
       <section id="about" className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-24 grid md:grid-cols-2 gap-8 sm:gap-16 items-center">
@@ -182,10 +188,10 @@ export default function Home() {
             </div>
             <div className="p-4 sm:p-6 font-mono text-xs sm:text-sm space-y-2.5 sm:space-y-3">
               <p className="text-cyan">$ check-client-status --all</p>
-              <p className="text-paper/90">✓ Royal Sweets &amp; Bakery — Website Live &amp; Maintenance Active</p>
-              <p className="text-paper/90">✓ Apex Classes &amp; Academy — School ERP Deployed</p>
-              <p className="text-violet">! Sharma Logistics &amp; Transport — Renewal due in 5 days</p>
-              <p className="text-paper/90">✓ Lifecare Clinic &amp; Hospital — Contract Signed</p>
+              <p className="text-paper/90">✓ Riseown — Fully Deployed &amp; Maintenance Active</p>
+              <p className="text-paper/90">⚡ GoodFeel — Near to Complete (Staging Phase)</p>
+              <p className="text-violet">✦ Wealth Plant — Project Discussion &amp; Architecture</p>
+              <p className="text-paper/90">✦ E-commerce Platform — Scope &amp; Discovery Discussion</p>
               <p className="text-mist">$ _</p>
             </div>
           </div>
@@ -218,7 +224,7 @@ export default function Home() {
       {/* Stats with Staggered Scroll Reveal */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-20 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 text-center">
         <ScrollReveal direction="up" delay={100}>
-          <StatCounter target={40} suffix="+" label="Projects shipped" />
+          <StatCounter target={10} suffix="+" label="Projects shipped" />
         </ScrollReveal>
         <ScrollReveal direction="up" delay={200}>
           <StatCounter target={98} suffix="%" label="Client retention" />
@@ -227,7 +233,7 @@ export default function Home() {
           <StatCounter target={72} suffix="h" label="Avg. response time" />
         </ScrollReveal>
         <ScrollReveal direction="up" delay={400}>
-          <StatCounter target={6} suffix="yr" label="Engineering Excellence" />
+          <StatCounter target={3} suffix="yr" label="Engineering Excellence" />
         </ScrollReveal>
       </section>
 

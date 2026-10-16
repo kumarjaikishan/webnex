@@ -21,6 +21,7 @@ import PortfolioPage from "./pages/PortfolioPage.jsx";
 import ProjectDetailPage from "./pages/ProjectDetailPage.jsx";
 import BlogPage from "./pages/BlogPage.jsx";
 import PricingPage from "./pages/PricingPage.jsx";
+import ExtensionsPage from "./pages/ExtensionsPage.jsx";
 import PrivacyPage from "./pages/PrivacyPage.jsx";
 import TermsPage from "./pages/TermsPage.jsx";
 
@@ -46,7 +47,9 @@ import ClientOverview from "./pages/client/ClientOverview.jsx";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [backgroundStyle, setBackgroundStyle] = useState("cyber_grid");
+  const [backgroundStyle, setBackgroundStyle] = useState(() => {
+    return localStorage.getItem("webnex_background_style") || "warp_speed";
+  });
 
   useEffect(() => {
     // Initial fetch from settings via configured Axios client
@@ -54,6 +57,7 @@ export default function App() {
       .then((res) => {
         if (res.data?.backgroundStyle) {
           setBackgroundStyle(res.data.backgroundStyle);
+          localStorage.setItem("webnex_background_style", res.data.backgroundStyle);
         }
       })
       .catch(() => {});
@@ -62,6 +66,7 @@ export default function App() {
     const handleBgUpdate = (e) => {
       if (e.detail?.backgroundStyle) {
         setBackgroundStyle(e.detail.backgroundStyle);
+        localStorage.setItem("webnex_background_style", e.detail.backgroundStyle);
       }
     };
     window.addEventListener("webnex:backgroundStyle", handleBgUpdate);
@@ -82,6 +87,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<ServicesPage />} />
+            <Route path="/extensions" element={<ExtensionsPage />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/faqs" element={<FAQsPage />} />
             <Route path="/work" element={<PortfolioPage />} />

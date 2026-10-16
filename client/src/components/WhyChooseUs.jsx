@@ -38,21 +38,24 @@ export default function WhyChooseUs() {
         </div>
       </ScrollReveal>
 
-      <div className="grid gap-px overflow-hidden rounded-xl sm:rounded-2xl border border-edge bg-edge grid-cols-2 lg:grid-cols-4 shadow-2xl">
+      {/* Grid of Why Choose Us Cards matching ProcessTimeline aesthetic */}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((item, i) => {
           const IconComponent = item.icon;
           return (
-            <ScrollReveal key={item.title} direction="up" delay={30 * ((i % 4) + 1)}>
-              <div className="h-full bg-panel/90 p-4 sm:p-7 backdrop-blur transition-all duration-300 hover:bg-panel hover:border-cyan/30 group">
-                <div className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-lg sm:rounded-xl border border-cyan/20 bg-cyan/10 text-cyan group-hover:border-cyan/50 group-hover:bg-cyan/20 transition-colors">
-                  <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
+            <ScrollReveal key={item.title} direction="up" delay={40 * ((i % 4) + 1)}>
+              <div className="relative h-full flex flex-col justify-between rounded-2xl border border-edge bg-panel/70 p-6 sm:p-7 backdrop-blur transition-all duration-300 hover:border-cyan/40 hover:bg-panel hover:-translate-y-1 shadow-lg group">
+                <div>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-cyan/20 bg-cyan/10 text-cyan group-hover:border-cyan/50 group-hover:bg-cyan/20 group-hover:scale-105 transition-all mb-5">
+                    <IconComponent className="w-5 h-5" />
+                  </div>
+                  <h3 className="font-display text-lg sm:text-xl font-semibold text-paper group-hover:text-cyan transition-colors mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-mist">
+                    {item.desc}
+                  </p>
                 </div>
-                <h3 className="mt-3 sm:mt-5 font-display text-sm sm:text-lg font-semibold text-paper group-hover:text-cyan transition-colors">
-                  {item.title}
-                </h3>
-                <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm leading-relaxed text-mist">
-                  {item.desc}
-                </p>
               </div>
             </ScrollReveal>
           );

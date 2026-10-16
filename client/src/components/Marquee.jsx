@@ -1,6 +1,5 @@
 const names = [
-  "Aster Bakery", "Northline Logistics", "Fable & Co", "Harborline Studio",
-  "Cedar & Finch", "Loop Analytics", "Marrow Coffee", "Vantage Realty",
+  "GoodFeel", "Riseown", "GoodFeel", "Riseown",
 ];
 
 export default function Marquee() {

@@ -85,7 +85,7 @@ export default function About() {
       <section className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center rounded-3xl border border-edge bg-panel/60 p-8 backdrop-blur shadow-2xl">
           <ScrollReveal direction="up" delay={100}>
-            <StatCounter target={40} suffix="+" label="Projects shipped" />
+            <StatCounter target={10} suffix="+" label="Projects shipped" />
           </ScrollReveal>
           <ScrollReveal direction="up" delay={200}>
             <StatCounter target={98} suffix="%" label="Client retention" />
@@ -94,7 +94,7 @@ export default function About() {
             <StatCounter target={72} suffix="h" label="Avg. response time" />
           </ScrollReveal>
           <ScrollReveal direction="up" delay={400}>
-            <StatCounter target={6} suffix="yr" label="Engineering Excellence" />
+            <StatCounter target={3} suffix="yr" label="Engineering Excellence" />
           </ScrollReveal>
         </div>
       </section>

@@ -2,11 +2,11 @@ import { useEffect, useState, useRef } from "react";
 
 const testimonials = [
   {
-    name: "Priya Nair",
-    role: "Founder, Aster Bakery",
+    name: "Dharmendra Kumar",
+    role: "Founder, GoodFeel Merchandise Pvt. Ltd.",
     rating: 5,
-    avatar: "PN",
-    quote: "Our new site loads instantly and online orders doubled in the first month. Every update since launch has been handled promptly without chasing anyone!",
+    avatar: "DK",
+    quote: "Webnex Labs built our complete GoodFeel platform with high speed, modern UI, and smooth product checkout. The technical execution was flawless and very easy to manage.",
     // Glass Sticky
     glassStyle: "bg-amber-400/10 border border-amber-400/30 text-amber-200 -rotate-1",
     glassPin: "bg-amber-400/40",
@@ -16,11 +16,11 @@ const testimonials = [
     avatarBg: "bg-[#451a03] text-white",
   },
   {
-    name: "Daniel Cho",
-    role: "Ops Lead, Northline Logistics",
+    name: "Chandra Bhushan Prasad",
+    role: "Director, Riseown Marketing Pvt. Ltd.",
     rating: 5,
-    avatar: "DC",
-    quote: "We replaced three chaotic spreadsheets with one streamlined Webnex dashboard. The handoff was clean and technical support has been lightning fast.",
+    avatar: "CP",
+    quote: "Our multi-tier network commission engine and property portal works seamlessly. The technical execution was flawless and communication throughout development was outstanding.",
     glassStyle: "bg-cyan-400/10 border border-cyan-400/30 text-cyan-200 rotate-2",
     glassPin: "bg-cyan-400/40",
     // Deep Dark Cyan Ink Text (#042F2E)
@@ -29,11 +29,11 @@ const testimonials = [
     avatarBg: "bg-[#042f2e] text-white",
   },
   {
-    name: "Maya Torres",
-    role: "Founder, Fable & Co",
+    name: "Bhudev Prasad",
+    role: "Founder, Wealth Plant",
     rating: 5,
-    avatar: "MT",
-    quote: "Clear contract, transparent timeline, and zero surprise charges. Webnex Labs is the kind of engineering studio you build a long-term partnership with.",
+    avatar: "BP",
+    quote: "Hamare Wealth Plant project ke discussion aur architecture planning me Webnex team ka approach lajawaab raha. Har step ko bariki se samjhaya aur budget ke mutabik best roadmap diya.",
     glassStyle: "bg-purple-400/10 border border-purple-400/30 text-purple-200 -rotate-2",
     glassPin: "bg-purple-400/40",
     // Deep Dark Purple Ink Text (#3B0764)
@@ -42,11 +42,11 @@ const testimonials = [
     avatarBg: "bg-[#3b0764] text-white",
   },
   {
-    name: "Vikram Sharma",
-    role: "Tech Lead, Nexus Fintech",
+    name: "Vikram Raj",
+    role: "Founder, Apex Academy Bihar",
     rating: 5,
-    avatar: "VS",
-    quote: "The software architecture is top-tier. Clean code, rock-solid security, and sensible structure that easily handles 50,000 monthly active users.",
+    avatar: "VR",
+    quote: "Fees collection aur student attendance ka jhanjhat khatam ho gaya. Webnex Labs team is very cooperative and quick on WhatsApp.",
     glassStyle: "bg-emerald-400/10 border border-emerald-400/30 text-emerald-200 rotate-1",
     glassPin: "bg-emerald-400/40",
     // Deep Dark Emerald Ink Text (#022C22)
@@ -55,11 +55,11 @@ const testimonials = [
     avatarBg: "bg-[#022c22] text-white",
   },
   {
-    name: "Sophia Chen",
-    role: "Director, Horizon Properties",
+    name: "Ghanshyam Kumar",
+    role: "User, Accusoft Expense Manager",
     rating: 5,
-    avatar: "SC",
-    quote: "The automated EMI and maintenance tracking system completely transformed our client billing operations. Saved us over 20 hours every month!",
+    avatar: "GK",
+    quote: "Accusoft Expense Manager is so easy to use! Daily shop expenses aur cashflow track karna bohot aasan ho gaya hai. Ekdum free aur clean software!",
     glassStyle: "bg-pink-400/10 border border-pink-400/30 text-pink-200 -rotate-1",
     glassPin: "bg-pink-400/40",
     // Deep Dark Pink Ink Text (#500724)
@@ -68,11 +68,11 @@ const testimonials = [
     avatarBg: "bg-[#500724] text-white",
   },
   {
-    name: "Elena Rostova",
-    role: "CEO, Velox Media",
+    name: "Saurabh Tiwari",
+    role: "Managing Director, Tiwari Logistics",
     rating: 5,
-    avatar: "ER",
-    quote: "Webnex Labs delivered our full web platform 10 days ahead of deadline. Extremely professional, responsive, and detail-oriented engineering team.",
+    avatar: "ST",
+    quote: "Excel sheets se pareshan the hum. Webnex ne custom portal bana kar hamara pura dispatch aur invoicing automatic kar diya. Paisa vasool service!",
     glassStyle: "bg-indigo-400/10 border border-indigo-400/30 text-indigo-200 rotate-2",
     glassPin: "bg-indigo-400/40",
     // Deep Dark Indigo Ink Text (#1E1B4B)

@@ -33,10 +33,10 @@ export default function Footer() {
               </svg>
             </a>
             <a
-              href="https://github.com"
+              href="https://github.com/kumarjaikishan"
               target="_blank"
               rel="noreferrer"
-              aria-label="GitHub"
+              aria-label="GitHub - Kumar Jaikishan"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-edge bg-panel/60 text-mist transition-all duration-300 hover:border-cyan/40 hover:text-cyan hover:bg-cyan/10"
             >
               <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -65,6 +65,7 @@ export default function Footer() {
             <li><Link to="/services" className="hover:text-paper transition-colors">School ERP</Link></li>
             <li><Link to="/services" className="hover:text-paper transition-colors">Hospital Management</Link></li>
             <li><Link to="/services" className="hover:text-paper transition-colors">Custom Web Apps</Link></li>
+            <li><Link to="/extensions" className="hover:text-paper transition-colors text-cyan">Chrome Extensions</Link></li>
           </ul>
         </div>
 
@@ -72,6 +73,7 @@ export default function Footer() {
         <div>
           <p className="font-mono text-xs text-cyan tracking-widest uppercase font-semibold mb-4">RESOURCES</p>
           <ul className="space-y-2.5 text-sm text-mist">
+            <li><Link to="/extensions" className="hover:text-paper transition-colors">Extension Waitlist</Link></li>
             <li><Link to="/pricing" className="hover:text-paper transition-colors">Pricing</Link></li>
             <li><Link to="/faqs" className="hover:text-paper transition-colors">FAQs</Link></li>
             <li><Link to="/#testimonials" className="hover:text-paper transition-colors">Testimonials</Link></li>
@@ -88,11 +90,11 @@ export default function Footer() {
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-mist">
             <span className="flex items-center gap-1.5 hover:text-paper transition-colors">
               <MapPin size={14} className="text-cyan shrink-0" />
-              Bihar Sharif, Nalanda, Bihar
+              Nalanda, Bihar
             </span>
             <span className="flex items-center gap-1.5 hover:text-paper transition-colors">
               <Phone size={14} className="text-cyan shrink-0" />
-              +91-XXXXXXXXXX
+              +91-8210539367
             </span>
             <span className="flex items-center gap-1.5 hover:text-paper transition-colors">
               <Mail size={14} className="text-cyan shrink-0" />
