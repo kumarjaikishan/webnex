@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { LayoutDashboard, Mail, Users, FileText, FileCheck, HeartHandshake, Bell, StickyNote, Wrench, FolderGit2, Settings, ChevronDown, ChevronUp } from "lucide-react";
+import { WebnexLogoIcon } from "../../components/BrandLogo.jsx";
 
 const navItems = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, end: true },
@@ -98,9 +99,15 @@ export default function AdminLayout() {
 
       {/* DESKTOP SIDEBAR */}
       <aside className="hidden md:block space-y-1.5 bg-panel border border-edge p-4 rounded-2xl h-fit sticky top-24 no-print">
-        <div className="px-3 pb-3 mb-2 border-b border-edge/60">
-          <p className="font-mono text-xs text-cyan tracking-wider uppercase font-semibold">Webnex CRM</p>
-          <p className="text-[11px] text-mist font-mono mt-0.5">Management Portal</p>
+        <div className="px-3 pb-3 mb-2 border-b border-edge/60 flex items-center gap-2.5">
+          <WebnexLogoIcon className="w-5 h-6.5 drop-shadow-[0_0_8px_rgba(245,184,66,0.3)]" />
+          <div>
+            <div className="flex items-baseline gap-1 font-display text-xs font-black tracking-wider uppercase">
+              <span className="text-white">WEBNEX</span>
+              <span className="text-[#f5b842]">CRM</span>
+            </div>
+            <p className="text-[10px] text-mist font-mono">Management Portal</p>
+          </div>
         </div>
         
         {navItems.map((item) => {
@@ -125,8 +132,8 @@ export default function AdminLayout() {
         })}
       </aside>
 
-      {/* MAIN CONTENT AREA */}
-      <main className="min-w-0 w-full overflow-hidden">
+      {/* MAIN VIEW AREA */}
+      <main className="min-w-0 print:w-full print:max-w-full print:p-0 print:m-0">
         <Outlet />
       </main>
     </div>

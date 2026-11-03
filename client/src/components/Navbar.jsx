@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Menu, X } from "lucide-react";
+import { WebnexLogoIcon } from "./BrandLogo.jsx";
 
 const navLink = ({ isActive }) =>
   `text-sm font-medium transition-colors ${isActive ? "text-paper" : "text-mist hover:text-paper"}`;
@@ -58,14 +59,15 @@ export default function Navbar() {
         }`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link to="/" className="font-display text-lg tracking-tight flex items-center gap-2 z-50">
-          <span className="w-7 h-7 rounded-lg bg-grad-primary shadow-md flex items-center justify-center font-bold text-void text-xs">
-            W
-          </span>
-          <span className="font-bold text-paper">
-            Webnex <span className="bg-grad-primary bg-clip-text text-transparent">Labs</span>
-          </span>
+        {/* Brand Logo - Circled Webnex Logo & Typography */}
+        <Link to="/" className="flex items-center gap-2.5 z-50 group hover:opacity-95 transition">
+          <WebnexLogoIcon className="w-6 h-7.5 drop-shadow-[0_0_10px_rgba(245,184,66,0.35)] transition-transform duration-300 group-hover:scale-105" />
+          <div className="flex flex-col justify-center">
+            <div className="flex items-baseline gap-1.5 font-display text-lg sm:text-xl font-black tracking-tight uppercase">
+              <span className="text-white">WEBNEX</span>
+              <span className="text-[#f5b842]">LABS</span>
+            </div>
+          </div>
         </Link>
 
         {/* Desktop Navigation Links (Key Primary Items) */}
@@ -101,7 +103,7 @@ export default function Navbar() {
           ) : (
             <div className="flex items-center gap-3">
               <Link to="/login" className="hidden sm:inline text-sm text-mist hover:text-paper focus-ring rounded font-medium">
-                Client Login
+                Login
               </Link>
               <Link
                 to="/contact"
@@ -162,7 +164,7 @@ export default function Navbar() {
                   to="/login"
                   className="flex items-center justify-center px-4 py-3 rounded-xl border border-edge text-paper font-medium bg-panel/60"
                 >
-                  Client Portal Login
+                  Login
                 </Link>
               )}
             </div>

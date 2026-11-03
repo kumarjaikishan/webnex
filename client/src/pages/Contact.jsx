@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import api from "../api/client.js";
 import ScrollReveal from "../components/ScrollReveal.jsx";
+import { Target, Zap, Wrench, ShieldCheck, Users, FileText } from "lucide-react";
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -34,14 +35,14 @@ export default function Contact() {
     try {
       await api.post("/contact", form);
       setStatus("sent");
-      toast.success("🚀 Inquiry submitted successfully! We will contact you soon.", {
+      toast.success("Thank you! Your message has been sent successfully.", {
         position: "bottom-right",
         theme: "dark"
       });
       setForm({ name: "", phone: "", email: "", businessType: "", message: "" });
-    } catch (err) {
+    } catch {
       setStatus("error");
-      toast.error("Failed to send inquiry. Please try again.", {
+      toast.error("Failed to send message. Please try again or reach out on WhatsApp.", {
         position: "bottom-right",
         theme: "dark"
       });
@@ -49,18 +50,23 @@ export default function Contact() {
   }
 
   return (
-    <div className="pt-8 pb-24">
-      {/* TOP CENTERED HEADER SECTION */}
-      <section className="max-w-5xl mx-auto px-6 text-center pt-12 pb-14">
+    <div className="py-12 sm:py-20 relative">
+      <section className="max-w-4xl mx-auto px-6 text-center mb-12 sm:mb-16">
         <ScrollReveal direction="up" delay={50}>
-          <span className="inline-flex items-center gap-2 rounded-full border border-edge bg-panel/90 backdrop-blur px-4 py-1.5 font-mono text-xs text-cyan mb-6 shadow-lg">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
-            CONTACT US
+          <span className="inline-flex items-center gap-2 rounded-full border border-cyan/30 bg-panel/80 px-4 py-1.5 font-mono text-xs text-cyan mb-4 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-cyan animate-pulse" />
+            DIRECT FOUNDER & TEAM CONTACT
           </span>
-          <h1 className="font-display text-4xl md:text-6xl font-bold mb-6 leading-tight text-paper">
+        </ScrollReveal>
+
+        <ScrollReveal direction="up" delay={100}>
+          <h1 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4">
             Let's Talk About Your Project
           </h1>
-          <p className="text-mist text-lg max-w-2xl mx-auto leading-relaxed">
+        </ScrollReveal>
+
+        <ScrollReveal direction="up" delay={150}>
+          <p className="text-mist text-sm sm:text-base max-w-xl mx-auto">
             Fill out the form and our team will get back to you with a free quote.
           </p>
         </ScrollReveal>
@@ -77,9 +83,9 @@ export default function Contact() {
                 </h2>
 
                 <div className="space-y-3">
-                  <div className="p-4 rounded-2xl bg-panel/70 border border-edge flex items-start gap-4">
-                    <div className="w-9 h-9 rounded-xl bg-cyan/10 border border-cyan/30 flex items-center justify-center text-cyan shrink-0 text-base font-bold">
-                      🎯
+                  <div className="p-4 rounded-2xl bg-panel/70 border border-edge flex items-start gap-4 transition-all hover:border-cyan/40">
+                    <div className="w-12 h-12 rounded-full border border-cyan/40 flex items-center justify-center text-cyan shrink-0 transition-transform duration-300">
+                      <Target size={24} strokeWidth={2} />
                     </div>
                     <div>
                       <h3 className="text-sm font-semibold text-paper">Fixed & Clear Pricing</h3>
@@ -89,9 +95,9 @@ export default function Contact() {
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-panel/70 border border-edge flex items-start gap-4">
-                    <div className="w-9 h-9 rounded-xl bg-purple/10 border border-purple/30 flex items-center justify-center text-purple-400 shrink-0 text-base font-bold">
-                      ⚡
+                  <div className="p-4 rounded-2xl bg-panel/70 border border-edge flex items-start gap-4 transition-all hover:border-purple-400/40">
+                    <div className="w-12 h-12 rounded-full border border-purple-400/40 flex items-center justify-center text-purple-400 shrink-0 transition-transform duration-300">
+                      <Zap size={24} strokeWidth={2} />
                     </div>
                     <div>
                       <h3 className="text-sm font-semibold text-paper">Fast & Reliable Delivery</h3>
@@ -101,9 +107,9 @@ export default function Contact() {
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-panel/70 border border-edge flex items-start gap-4">
-                    <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 text-base font-bold">
-                      🛠️
+                  <div className="p-4 rounded-2xl bg-panel/70 border border-edge flex items-start gap-4 transition-all hover:border-emerald-400/40">
+                    <div className="w-12 h-12 rounded-full border border-emerald-400/40 flex items-center justify-center text-emerald-400 shrink-0 transition-transform duration-300">
+                      <Wrench size={24} strokeWidth={2} />
                     </div>
                     <div>
                       <h3 className="text-sm font-semibold text-paper">Ongoing Support</h3>
@@ -120,7 +126,9 @@ export default function Contact() {
             <ScrollReveal direction="left" delay={200}>
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <div className="p-3.5 rounded-2xl bg-panel/80 border border-edge flex items-center gap-3">
-                  <span className="text-xl">⚡</span>
+                  <div className="w-9 h-9 rounded-full border border-cyan/30 flex items-center justify-center text-cyan shrink-0">
+                    <Zap size={18} strokeWidth={2} />
+                  </div>
                   <div>
                     <p className="text-xs font-semibold text-paper">Quick Reply</p>
                     <p className="text-[11px] text-mist font-mono">Within 24 hours</p>
@@ -128,7 +136,9 @@ export default function Contact() {
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-panel/80 border border-edge flex items-center gap-3">
-                  <span className="text-xl">🛡️</span>
+                  <div className="w-9 h-9 rounded-full border border-cyan/30 flex items-center justify-center text-cyan shrink-0">
+                    <ShieldCheck size={18} strokeWidth={2} />
+                  </div>
                   <div>
                     <p className="text-xs font-semibold text-paper">Private & Safe</p>
                     <p className="text-[11px] text-mist font-mono">NDA Available</p>
@@ -136,7 +146,9 @@ export default function Contact() {
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-panel/80 border border-edge flex items-center gap-3">
-                  <span className="text-xl">🤝</span>
+                  <div className="w-9 h-9 rounded-full border border-cyan/30 flex items-center justify-center text-cyan shrink-0">
+                    <Users size={18} strokeWidth={2} />
+                  </div>
                   <div>
                     <p className="text-xs font-semibold text-paper">Direct Contact</p>
                     <p className="text-[11px] text-mist font-mono">No Sales Middlemen</p>
@@ -144,7 +156,9 @@ export default function Contact() {
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-panel/80 border border-edge flex items-center gap-3">
-                  <span className="text-xl">📄</span>
+                  <div className="w-9 h-9 rounded-full border border-cyan/30 flex items-center justify-center text-cyan shrink-0">
+                    <FileText size={18} strokeWidth={2} />
+                  </div>
                   <div>
                     <p className="text-xs font-semibold text-paper">Clear Terms</p>
                     <p className="text-[11px] text-mist font-mono">Simple Contracts</p>

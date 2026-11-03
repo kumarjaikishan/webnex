@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Puzzle, ArrowRight, Sparkles, Clock, Compass } from "lucide-react";
+import { ArrowRight, Sparkles, Clock, Compass } from "lucide-react";
 
 export default function ExtensionsPage() {
   return (
@@ -17,17 +17,17 @@ export default function ExtensionsPage() {
           WEBNEX EXTENSIONS LAB
         </div>
 
-        {/* Main Hook Headline */}
+        {/* Main Headline */}
         <h1 className="font-display text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-paper mb-6 leading-[1.1]">
-          Something Powerful Is{" "}
+          Useful Browser Extensions{" "}
           <span className="bg-grad-primary bg-clip-text text-transparent block mt-1.5 sm:mt-2">
-            Coming Very Soon.
+            Coming Soon.
           </span>
         </h1>
 
-        {/* Clear, simple English message */}
+        {/* Subtitle Message */}
         <p className="text-mist text-base sm:text-xl leading-relaxed max-w-2xl mx-auto mb-10 font-normal">
-          We are building a collection of useful Chrome extensions designed to make your daily work easier, faster, and more productive. Stay tuned as we roll them out!
+          We are crafting smart, lightweight tools designed to simplify your everyday browsing and boost daily productivity.
         </p>
 
         {/* Simple Card Highlights */}
@@ -48,7 +48,7 @@ export default function ExtensionsPage() {
             </div>
             <h3 className="font-semibold text-paper text-sm">Fast & Clean</h3>
             <p className="text-xs text-mist mt-1 leading-relaxed">
-              Lightweight extensions with modern UI and no bloat.
+              Lightweight extensions with modern UI and zero bloat.
             </p>
           </div>
 

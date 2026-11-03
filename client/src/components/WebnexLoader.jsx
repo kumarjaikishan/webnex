@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { WebnexLogoIcon } from "./BrandLogo.jsx";
 
 export default function WebnexLoader({ onFinish, duration = 2200 }) {
   const [progress, setProgress] = useState(0);
@@ -9,7 +10,7 @@ export default function WebnexLoader({ onFinish, duration = 2200 }) {
     const statuses = [
       { at: 15, text: "CONNECTING TO WEBNEX ENGINE" },
       { at: 45, text: "LOADING INTERACTIVE MODULES" },
-      { at: 75, text: "SYNCING NEURAL ASSETS" },
+      { at: 75, text: "SYNCING BRAND ASSETS" },
       { at: 95, text: "PREPARING STUDIO EXPERIENCE" },
     ];
 
@@ -44,44 +45,37 @@ export default function WebnexLoader({ onFinish, duration = 2200 }) {
       }`}
     >
       {/* Dynamic Background Halo Glows */}
-      <div className="absolute w-96 h-96 bg-[#7C6CFB]/15 rounded-full blur-[120px] pointer-events-none animate-pulse"></div>
+      <div className="absolute w-96 h-96 bg-[#f5b842]/10 rounded-full blur-[130px] pointer-events-none animate-pulse"></div>
       <div className="absolute w-72 h-72 bg-[#00F0FF]/10 rounded-full blur-[100px] pointer-events-none"></div>
 
       <div className="relative z-10 flex flex-col items-center max-w-sm w-full px-6">
         {/* Animated Brand Logo Symbol */}
-        <div className="relative mb-8 flex items-center justify-center">
+        <div className="relative mb-6 flex items-center justify-center">
           {/* Outer rotating neon ring */}
-          <div className="w-24 h-24 rounded-2xl border border-[#7C6CFB]/30 animate-spin [animation-duration:8s] bg-[#13131F]/40 backdrop-blur-md flex items-center justify-center shadow-[0_0_30px_rgba(124,108,251,0.2)]"></div>
+          <div className="w-24 h-24 rounded-2xl border border-[#f5b842]/30 animate-spin [animation-duration:8s] bg-[#13131F]/50 backdrop-blur-md flex items-center justify-center shadow-[0_0_30px_rgba(245,184,66,0.2)]"></div>
           
           {/* Inner pulsating counter-rotating square */}
-          <div className="absolute w-16 h-16 rounded-xl border border-[#00F0FF]/40 animate-spin [animation-direction:reverse] [animation-duration:5s]"></div>
+          <div className="absolute w-16 h-16 rounded-xl border border-white/30 animate-spin [animation-direction:reverse] [animation-duration:5s]"></div>
 
-          {/* Central Logo Hexagon / Emblem */}
-          <div className="absolute w-12 h-12 rounded-xl bg-gradient-to-tr from-[#7C6CFB] to-[#00F0FF] flex items-center justify-center shadow-[0_0_20px_rgba(0,240,255,0.4)]">
-            <svg
-              className="w-6 h-6 text-black"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2.5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
-            </svg>
+          {/* Central Logo Emblem with Circled Webnex Logo */}
+          <div className="absolute w-12 h-14 flex items-center justify-center drop-shadow-[0_0_20px_rgba(245,184,66,0.6)]">
+            <WebnexLogoIcon className="w-10 h-12" strokeColor="#ffffff" fillColor="#f5b842" />
           </div>
         </div>
 
-        {/* Brand Title */}
-        <div className="flex items-center gap-1.5 mb-2">
-          <span className="text-3xl font-extrabold tracking-widest text-white font-mono">
-            WEBNEX
-          </span>
-          <span className="text-3xl font-extrabold text-[#00F0FF] font-mono animate-pulse">
-            .
-          </span>
+        {/* Brand Title - Circled Logo Brand Typography */}
+        <div className="flex flex-col items-center justify-center mb-3">
+          <div className="flex items-baseline gap-2">
+            <span className="font-display text-3xl sm:text-4xl font-black tracking-tight text-white uppercase">
+              WEBNEX
+            </span>
+            <span className="font-display text-3xl sm:text-4xl font-black tracking-tight text-[#f5b842] uppercase">
+              LABS
+            </span>
+          </div>
+          <p className="text-[10px] sm:text-[11px] font-mono tracking-[0.28em] text-gray-400 uppercase font-semibold mt-1">
+            WEB • DESIGN • DEVELOPMENT
+          </p>
         </div>
 
         {/* Dynamic Status Subtitle */}
@@ -94,7 +88,7 @@ export default function WebnexLoader({ onFinish, duration = 2200 }) {
         {/* Futuristic Progress Bar */}
         <div className="w-full bg-[#13131F] rounded-full h-1.5 p-0.5 overflow-hidden border border-[#232333]/80 relative shadow-inner">
           <div
-            className="h-full bg-gradient-to-r from-[#7C6CFB] via-[#00F0FF] to-[#7C6CFB] rounded-full transition-all duration-75 relative"
+            className="h-full bg-gradient-to-r from-[#f5b842] via-[#00F0FF] to-[#f5b842] rounded-full transition-all duration-75 relative"
             style={{ width: `${progress}%` }}
           >
             <div className="absolute right-0 top-0 bottom-0 w-2 bg-white rounded-full shadow-[0_0_8px_#ffffff]"></div>
@@ -103,8 +97,8 @@ export default function WebnexLoader({ onFinish, duration = 2200 }) {
 
         {/* Progress Counter & Tech Specs */}
         <div className="w-full flex justify-between items-center mt-2.5 text-[10px] font-mono text-[#64748B]">
-          <span>VER 2.4.0</span>
-          <span className="text-[#00F0FF] font-bold">{progress}%</span>
+          <span>WEBNEX v2.4</span>
+          <span className="text-[#f5b842] font-bold">{progress}%</span>
         </div>
       </div>
     </div>

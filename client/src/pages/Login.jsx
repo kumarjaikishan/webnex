@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import { WebnexLogoIcon } from "../components/BrandLogo.jsx";
 
 export default function Login() {
   const { login } = useAuth();
@@ -28,12 +29,18 @@ export default function Login() {
   return (
     <div className="max-w-md mx-auto px-6 py-20">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 mb-3">
-          <span className="w-8 h-8 rounded-lg bg-grad-primary" />
-          <span className="font-display text-2xl font-bold tracking-tight">Webnex <span className="bg-grad-primary bg-clip-text text-transparent">Labs</span></span>
+        <div className="inline-flex flex-col items-center justify-center gap-2">
+          <div className="flex items-center gap-2.5">
+            <WebnexLogoIcon className="w-9 h-11 drop-shadow-[0_0_12px_rgba(245,184,66,0.35)]" />
+            <div className="flex items-baseline gap-1.5 font-display text-2xl sm:text-3xl font-black tracking-tight uppercase">
+              <span className="text-white">WEBNEX</span>
+              <span className="text-[#f5b842]">LABS</span>
+            </div>
+          </div>
+          <p className="text-[10px] font-mono tracking-widest text-gray-400 uppercase font-semibold">
+            WEB • DESIGN • DEVELOPMENT
+          </p>
         </div>
-        <h1 className="font-display text-2xl text-paper">Admin & Client Portal Login</h1>
-        <p className="text-mist text-sm mt-1">Access Webnex Labs CRM, Invoices & Client Workspace</p>
       </div>
 
       <div className="bg-panel border border-edge rounded-2xl p-6 sm:p-8 shadow-xl">
@@ -89,7 +96,7 @@ export default function Login() {
             disabled={loading}
             className="w-full px-6 py-3.5 rounded-xl bg-grad-primary text-void font-semibold hover:brightness-110 active:scale-[0.99] transition focus-ring disabled:opacity-50"
           >
-            {loading ? "Authenticating…" : "Sign In to Webnex CRM"}
+            {loading ? "Authenticating…" : "Login"}
           </button>
         </form>
       </div>

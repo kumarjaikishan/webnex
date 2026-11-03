@@ -12,6 +12,7 @@ import WhyChooseUs from "../components/WhyChooseUs.jsx";
 import ProcessTimeline from "../components/ProcessTimeline.jsx";
 import FAQSection from "../components/FAQSection.jsx";
 import FeaturedWorkSection from "../components/FeaturedWorkSection.jsx";
+import { WebnexLogoIcon } from "../components/BrandLogo.jsx";
 
 // Dynamic on-demand code splitting: only the active model & GLTF is downloaded over network
 const CuteGhost3D = lazy(() => import("../components/CuteGhost3D.jsx"));
@@ -59,12 +60,13 @@ export default function Home() {
               {/* Left Column: Headlines & CTA */}
               <div className="lg:col-span-7 text-center lg:text-left">
                 <ScrollReveal direction="up" delay={50}>
-                  <div className="inline-flex items-center gap-2 rounded-full border border-cyan/30 bg-panel/90 backdrop-blur-md px-3.5 sm:px-4 py-1.5 font-mono text-[10px] sm:text-xs text-cyan mb-5 sm:mb-7 shadow-[0_0_20px_rgba(63,214,224,0.15)]">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan"></span>
-                    </span>
-                    WEBNEX LABS
+                  <div className="inline-flex items-center gap-2.5 rounded-full border border-[#f5b842]/30 bg-panel/90 backdrop-blur-md px-3.5 sm:px-4 py-1.5 font-mono text-[10px] sm:text-xs mb-5 sm:mb-7 shadow-[0_0_20px_rgba(245,184,66,0.18)]">
+                    <WebnexLogoIcon className="w-4 h-5 drop-shadow-[0_0_8px_rgba(245,184,66,0.5)]" />
+                    <div className="flex items-baseline gap-1 font-display font-black tracking-tight uppercase">
+                      <span className="text-white">WEBNEX</span>
+                      <span className="text-[#f5b842]">LABS</span>
+                    </div>
+                    <span className="text-[9px] text-gray-400 font-mono tracking-wider hidden sm:inline">• WEB • DESIGN • DEVELOPMENT</span>
                   </div>
                 </ScrollReveal>
 
@@ -121,9 +123,13 @@ export default function Home() {
           /* MODE 2: CLASSIC CENTERED HERO SECTION */
           <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-10 sm:pb-20 text-center">
             <ScrollReveal direction="up" delay={50}>
-              <span className="inline-flex items-center gap-2 rounded-full border border-edge bg-panel/90 backdrop-blur px-3.5 sm:px-4 py-1 sm:py-1.5 font-mono text-[10px] sm:text-xs text-cyan mb-6 sm:mb-8 shadow-lg">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
-                WEBNEX LABS
+              <span className="inline-flex items-center gap-2.5 rounded-full border border-[#f5b842]/30 bg-panel/90 backdrop-blur px-3.5 sm:px-4 py-1 sm:py-1.5 font-mono text-[10px] sm:text-xs mb-6 sm:mb-8 shadow-[0_0_20px_rgba(245,184,66,0.18)]">
+                <WebnexLogoIcon className="w-4 h-5 drop-shadow-[0_0_8px_rgba(245,184,66,0.5)]" />
+                <div className="flex items-baseline gap-1 font-display font-black tracking-tight uppercase">
+                  <span className="text-white">WEBNEX</span>
+                  <span className="text-[#f5b842]">LABS</span>
+                </div>
+                <span className="text-[9px] text-gray-400 font-mono tracking-wider hidden sm:inline">• WEB • DESIGN • DEVELOPMENT</span>
               </span>
             </ScrollReveal>
 
@@ -198,7 +204,7 @@ export default function Home() {
         </ScrollReveal>
       </section>
 
-      {/* Services Section from demo project */}
+      {/* Services Section */}
       <ServicesSection limit={8} showHeader={true} showViewAllBtn={true} />
 
       {/* Why Choose Us Section */}
@@ -245,7 +251,8 @@ export default function Home() {
         <ScrollReveal direction="scale" delay={150}>
           <div className="rounded-2xl sm:rounded-3xl border border-edge bg-panel p-6 sm:p-12 relative overflow-hidden shadow-2xl">
             <div className="absolute inset-0 bg-aurora pointer-events-none" />
-            <div className="relative z-10">
+            <div className="relative z-10 flex flex-col items-center">
+              <WebnexLogoIcon className="w-10 h-12 mb-4 drop-shadow-[0_0_15px_rgba(245,184,66,0.4)]" />
               <h2 className="font-display text-2xl sm:text-4xl mb-3 sm:mb-4">Have a project in mind?</h2>
               <p className="text-mist text-xs sm:text-base mb-6 sm:mb-8 max-w-md mx-auto">
                 Tell us what you're building — we'll reply within 24 hours with next steps and a quote.
