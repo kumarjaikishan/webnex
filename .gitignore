@@ -2,7 +2,9 @@
 node_modules/
 .pnpm-store/
 
-# Production / Build outputs
+# Production / Build outputs (build and dist are allowed to upload)
+# build/
+# dist/
 
 .next/
 out/
