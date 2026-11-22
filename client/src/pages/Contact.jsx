@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import api from "../api/client.js";
 import ScrollReveal from "../components/ScrollReveal.jsx";
 import { Target, Zap, Wrench, ShieldCheck, Users, FileText } from "lucide-react";
@@ -24,10 +24,7 @@ export default function Contact() {
     e.preventDefault();
 
     if (form.phone.length !== 10) {
-      toast.error("Please enter a valid 10-digit mobile number.", {
-        position: "bottom-right",
-        theme: "dark"
-      });
+      toast.error("Please enter a valid 10-digit mobile number.");
       return;
     }
 
@@ -35,17 +32,11 @@ export default function Contact() {
     try {
       await api.post("/contact", form);
       setStatus("sent");
-      toast.success("Thank you! Your message has been sent successfully.", {
-        position: "bottom-right",
-        theme: "dark"
-      });
+      toast.success("Thank you! Your message has been sent successfully.");
       setForm({ name: "", phone: "", email: "", businessType: "", message: "" });
     } catch {
       setStatus("error");
-      toast.error("Failed to send message. Please try again or reach out on WhatsApp.", {
-        position: "bottom-right",
-        theme: "dark"
-      });
+      toast.error("Failed to send message. Please try again or reach out on WhatsApp.");
     }
   }
 

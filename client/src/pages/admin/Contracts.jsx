@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../../api/client.js";
+import { toast } from "sonner";
+import { useConfirm } from "../../context/ConfirmContext.jsx";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
 
 const DEFAULT_AGREEMENT_TERMS = `# SOFTWARE DEVELOPMENT AND MAINTENANCE AGREEMENT
@@ -71,6 +73,7 @@ Authorized Signature: _______________________      Date: _________
 Jai Kishan Kumar (Founder & Lead Developer, Webnex Labs)`;
 
 export default function Contracts() {
+  const confirm = useConfirm();
   const navigate = useNavigate();
   const [contracts, setContracts] = useState([]);
   const [clients, setClients] = useState([]);
@@ -183,18 +186,26 @@ export default function Contracts() {
     try {
       await api.put(`/contracts/${c.id}`, { status });
       setContracts((prev) => prev.map((x) => (x.id === c.id ? { ...x, status } : x)));
+      toast.success("Agreement status updated");
     } catch (err) {
-      alert("Failed to update status");
+      toast.error("Failed to update status");
     }
   }
 
   async function handleDelete(id) {
-    if (!confirm("Delete this agreement?")) return;
+    const ok = await confirm({
+      title: "Delete Agreement",
+      message: "Are you sure you want to delete this agreement record?",
+      confirmText: "Delete",
+      variant: "danger",
+    });
+    if (!ok) return;
     try {
       await api.delete(`/contracts/${id}`);
+      toast.success("Agreement deleted successfully");
       fetchData();
     } catch (err) {
-      alert("Failed to delete agreement");
+      toast.error("Failed to delete agreement");
     }
   }
 

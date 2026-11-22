@@ -21,7 +21,7 @@ export default function AdminLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const currentTab = navItems.find((item) => 
+  const currentTab = navItems.find((item) =>
     item.end ? location.pathname === item.to : location.pathname.startsWith(item.to)
   ) || navItems[0];
 
@@ -57,10 +57,9 @@ export default function AdminLayout() {
                   end={item.end}
                   onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-mono transition-all ${
-                      isActive
-                        ? "bg-grad-primary text-void font-bold shadow-sm"
-                        : "text-mist hover:bg-white/5 hover:text-paper"
+                    `flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-mono transition-all ${isActive
+                      ? "bg-grad-primary text-void font-bold shadow-sm"
+                      : "text-mist hover:bg-white/5 hover:text-paper"
                     }`
                   }
                 >
@@ -82,10 +81,9 @@ export default function AdminLayout() {
                 to={item.to}
                 end={item.end}
                 className={({ isActive }) =>
-                  `flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono whitespace-nowrap transition-all shrink-0 select-none ${
-                    isActive
-                      ? "bg-cyan/15 text-cyan border border-cyan/30 font-bold shadow-sm"
-                      : "bg-panel border border-edge text-mist hover:text-paper"
+                  `flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono whitespace-nowrap transition-all shrink-0 select-none ${isActive
+                    ? "bg-cyan/15 text-cyan border border-cyan/30 font-bold shadow-sm"
+                    : "bg-panel border border-edge text-mist hover:text-paper"
                   }`
                 }
               >
@@ -109,7 +107,7 @@ export default function AdminLayout() {
             <p className="text-[10px] text-mist font-mono">Management Portal</p>
           </div>
         </div>
-        
+
         {navItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -118,10 +116,9 @@ export default function AdminLayout() {
               to={item.to}
               end={item.end}
               className={({ isActive }) =>
-                `flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-mono transition-all ${
-                  isActive
-                    ? "bg-grad-primary text-void font-bold shadow-md"
-                    : "text-mist hover:bg-white/5 hover:text-paper"
+                `flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-mono transition-all ${isActive
+                  ? "bg-grad-primary text-void font-bold shadow-md"
+                  : "text-mist hover:bg-white/5 hover:text-paper"
                 }`
               }
             >

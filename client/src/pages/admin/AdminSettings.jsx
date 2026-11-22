@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../../api/client.js";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { Sparkles, ToggleLeft, ToggleRight } from "lucide-react";
 

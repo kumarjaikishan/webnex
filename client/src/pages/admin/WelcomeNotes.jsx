@@ -3,9 +3,11 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/client.js";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
+import { useConfirm } from "../../context/ConfirmContext.jsx";
 
 export default function WelcomeNotes() {
+  const confirm = useConfirm();
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const [welcomeNotes, setWelcomeNotes] = useState([]);
@@ -177,7 +179,13 @@ Web & Digital Solutions`;
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("Delete this welcome note record?")) return;
+    const ok = await confirm({
+      title: "Delete Welcome Note",
+      message: "Are you sure you want to delete this welcome note record?",
+      confirmText: "Delete Note",
+      variant: "danger",
+    });
+    if (!ok) return;
     try {
       await api.delete(`/notes/${id}`);
       toast.success("Welcome note deleted.");

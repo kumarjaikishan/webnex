@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { Landmark } from "lucide-react";
 import api from "../../api/client.js";
 import DocumentCard from "../../components/DocumentCard.jsx";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
@@ -204,70 +205,114 @@ export default function InvoiceViewPage() {
             </p>
           </div>
 
-          <div className="w-full sm:w-64 space-y-1.5 text-right text-xs">
-            <div className="flex justify-between px-2">
-              <span className="font-mono text-gray-500">Sub Total</span>
-              <span className="font-mono font-semibold text-gray-900">
-                ₹{invoice.subtotal?.toLocaleString()}
-              </span>
-            </div>
-            {invoice.taxPercent > 0 && (
+          <div className="w-full sm:w-72 text-right text-xs">
+            <div className="space-y-1.5 pb-2">
               <div className="flex justify-between px-2">
-                <span className="font-mono text-gray-500">Tax Vat ({invoice.taxPercent}%)</span>
+                <span className="font-mono text-gray-500">Sub Total</span>
                 <span className="font-mono font-semibold text-gray-900">
-                  ₹{(invoice.subtotal * (invoice.taxPercent / 100)).toLocaleString()}
+                  ₹{invoice.subtotal?.toLocaleString()}
                 </span>
               </div>
-            )}
+              {invoice.taxPercent > 0 && (
+                <div className="flex justify-between px-2">
+                  <span className="font-mono text-gray-500">Tax Vat ({invoice.taxPercent}%)</span>
+                  <span className="font-mono font-semibold text-gray-900">
+                    ₹{(invoice.subtotal * (invoice.taxPercent / 100)).toLocaleString()}
+                  </span>
+                </div>
+              )}
+            </div>
 
             {/* Golden Yellow Grand Total Banner */}
-            <div className="flex justify-between items-center bg-[#f5b842] text-gray-950 px-4 py-2.5 rounded font-mono font-black text-sm tracking-wider shadow-sm mt-2">
-              <span className="uppercase text-xs font-bold text-gray-950">GRAND TOTAL</span>
-              <span className="text-base text-gray-950">₹{invoice.totalAmount?.toLocaleString()}</span>
+            <div
+              className="bg-[#f5b842] text-gray-950 rounded font-mono font-black shadow-sm"
+              style={{
+                marginTop: "14px",
+                marginBottom: "0px",
+                padding: "0 16px",
+                height: "44px",
+                minHeight: "44px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                boxSizing: "border-box",
+              }}
+            >
+              <span
+                className="uppercase text-xs font-bold text-gray-950 tracking-wider"
+                style={{
+                  lineHeight: "44px",
+                  height: "44px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                }}
+              >
+                GRAND TOTAL
+              </span>
+              <span
+                className="text-base text-gray-950 font-black"
+                style={{
+                  lineHeight: "44px",
+                  height: "44px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                }}
+              >
+                ₹{invoice.totalAmount?.toLocaleString()}
+              </span>
             </div>
           </div>
         </div>
 
         {/* BANK SETTLEMENT & DYNAMIC SCAN-TO-PAY UPI QR CODE */}
-        <div className="mt-6 pt-4 border-t border-gray-200 bg-gray-50 p-4 rounded-xl border border-gray-200">
+        <div className="mt-6 pt-4 border-t border-gray-200 bg-gray-50/20 backdrop-blur-[2px] p-4 rounded-xl border border-gray-200/60">
           <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4">
             {/* Bank Details */}
             <div className="space-y-1.5 text-xs flex-1">
               <p className="font-mono text-[11px] font-bold text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                <span>⚡</span> BANK & SETTLEMENT INSTRUCTIONS
+                <Landmark className="w-3.5 h-3.5 text-gray-900 shrink-0 stroke-[2.2]" /> BANK & SETTLEMENT INSTRUCTIONS
               </p>
-              <div className="space-y-1 text-gray-600 pt-1">
-                <p>
-                  <span className="font-mono text-gray-900 font-semibold">Account Holder:</span>{" "}
-                  <span className="text-gray-900">{pd.beneficiaryName || "Jai Kishan Kumar (Webnex Labs)"}</span>
-                </p>
-                {pd.bankName && (
-                  <p>
-                    <span className="font-mono text-gray-900 font-semibold">Bank:</span>{" "}
-                    {pd.bankName}
-                  </p>
-                )}
-                {pd.accountNumber && (
-                  <p>
-                    <span className="font-mono text-gray-900 font-semibold">A/C Number:</span>{" "}
-                    <span className="font-mono text-gray-900">{pd.accountNumber}</span>
-                  </p>
-                )}
-                {pd.ifscCode && (
-                  <p>
-                    <span className="font-mono text-gray-900 font-semibold">IFSC:</span>{" "}
-                    <span className="font-mono text-blue-600 font-bold uppercase">{pd.ifscCode.toUpperCase()}</span>
-                  </p>
-                )}
-                {pd.upiId && (
-                  <p className="pt-1">
-                    <span className="font-mono text-gray-900 font-semibold">UPI ID:</span>{" "}
-                    <span className="font-mono text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                      {pd.upiId}
-                    </span>
-                  </p>
-                )}
-              </div>
+              <table className="border-collapse p-0 m-0 border-0 text-left pt-1">
+                <tbody className="space-y-1 text-gray-600">
+                  <tr>
+                    <td className="py-0.5 pr-2 font-mono text-gray-900 font-semibold whitespace-nowrap">A/c Holder</td>
+                    <td className="py-0.5 px-1.5 text-gray-400 font-bold">:</td>
+                    <td className="py-0.5 pl-1.5 text-gray-900">{pd.beneficiaryName || "Jai Kishan Kumar (Webnex Labs)"}</td>
+                  </tr>
+                  {pd.bankName && (
+                    <tr>
+                      <td className="py-0.5 pr-2 font-mono text-gray-900 font-semibold whitespace-nowrap">Bank</td>
+                      <td className="py-0.5 px-1.5 text-gray-400 font-bold">:</td>
+                      <td className="py-0.5 pl-1.5 text-gray-900">{pd.bankName}</td>
+                    </tr>
+                  )}
+                  {pd.accountNumber && (
+                    <tr>
+                      <td className="py-0.5 pr-2 font-mono text-gray-900 font-semibold whitespace-nowrap">A/c No.</td>
+                      <td className="py-0.5 px-1.5 text-gray-400 font-bold">:</td>
+                      <td className="py-0.5 pl-1.5 font-mono text-gray-900">{pd.accountNumber}</td>
+                    </tr>
+                  )}
+                  {pd.ifscCode && (
+                    <tr>
+                      <td className="py-0.5 pr-2 font-mono text-gray-900 font-semibold whitespace-nowrap">IFSC</td>
+                      <td className="py-0.5 px-1.5 text-gray-400 font-bold">:</td>
+                      <td className="py-0.5 pl-1.5 font-mono text-gray-900 font-semibold uppercase">{pd.ifscCode.toUpperCase()}</td>
+                    </tr>
+                  )}
+                  {pd.upiId && (
+                    <tr>
+                      <td className="pt-2 pb-0.5 pr-2 font-mono text-gray-900 font-semibold whitespace-nowrap">UPI ID</td>
+                      <td className="pt-2 pb-0.5 px-1.5 text-gray-400 font-bold">:</td>
+                      <td className="pt-2 pb-0.5 pl-1.5">
+                        <span className="font-mono text-gray-900 font-semibold select-all">
+                          {pd.upiId}
+                        </span>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
 
             {/* UPI QR Code Container */}
@@ -282,6 +327,7 @@ export default function InvoiceViewPage() {
                       invoice.invoiceNumber
                     )}
                     alt="Scan to Pay via UPI"
+                    crossOrigin="anonymous"
                     className="w-32 h-32 object-contain rounded-lg"
                   />
                   <div className="absolute inset-0 border border-black/10 rounded-lg pointer-events-none" />

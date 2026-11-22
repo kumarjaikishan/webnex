@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import api from "../../api/client.js";
+import { toast } from "sonner";
+import { useConfirm } from "../../context/ConfirmContext.jsx";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
 
 export default function Maintenance() {
+  const confirm = useConfirm();
   const [plans, setPlans] = useState([]);
   const [clients, setClients] = useState([]);
   const [invoices, setInvoices] = useState([]);
@@ -54,15 +57,20 @@ export default function Maintenance() {
   }
 
   async function handleGenerateMonthlyInvoices() {
-    if (!confirm("Generate monthly maintenance invoices for all active clients now?")) return;
+    const ok = await confirm({
+      title: "Generate Monthly Invoices",
+      message: "Are you sure you want to generate monthly maintenance invoices for all active clients now?",
+      confirmText: "Generate Invoices",
+      variant: "primary",
+    });
+    if (!ok) return;
     setGenerating(true);
     try {
       const res = await api.post("/maintenance/generate-invoices");
-      setNotice(`✅ ${res.data.message}`);
+      toast.success(res.data.message || "Monthly invoices generated successfully!");
       loadAllData();
-      setTimeout(() => setNotice(null), 5000);
     } catch (err) {
-      alert(err.response?.data?.error || "Failed to generate monthly invoices.");
+      toast.error(err.response?.data?.error || "Failed to generate monthly invoices.");
     } finally {
       setGenerating(false);
     }
@@ -82,8 +90,9 @@ export default function Maintenance() {
       setShowModal(false);
       resetForm();
       loadAllData();
+      toast.success("Maintenance plan created!");
     } catch (err) {
-      alert("Failed to create maintenance plan");
+      toast.error("Failed to create maintenance plan");
     }
   }
 
@@ -91,19 +100,27 @@ export default function Maintenance() {
     const newStatus = plan.status === "active" ? "paused" : "active";
     try {
       await api.put(`/maintenance/${plan.id}`, { status: newStatus });
+      toast.success(`Plan marked as ${newStatus}`);
       loadAllData();
     } catch (err) {
-      alert("Failed to update plan status");
+      toast.error("Failed to update plan status");
     }
   }
 
   async function handleDeletePlan(id) {
-    if (!confirm("Are you sure you want to delete this maintenance plan?")) return;
+    const ok = await confirm({
+      title: "Delete Maintenance Plan",
+      message: "Are you sure you want to delete this maintenance plan?",
+      confirmText: "Delete Plan",
+      variant: "danger",
+    });
+    if (!ok) return;
     try {
       await api.delete(`/maintenance/${id}`);
+      toast.success("Maintenance plan deleted.");
       loadAllData();
     } catch (err) {
-      alert("Failed to delete plan");
+      toast.error("Failed to delete plan");
     }
   }
 

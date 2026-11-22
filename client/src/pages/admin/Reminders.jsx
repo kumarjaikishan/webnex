@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import api from "../../api/client.js";
+import { toast } from "sonner";
+import { useConfirm } from "../../context/ConfirmContext.jsx";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
 
 export default function Reminders() {
+  const confirm = useConfirm();
   const [reminders, setReminders] = useState([]);
   const [clients, setClients] = useState([]);
   const [invoices, setInvoices] = useState([]);
@@ -78,18 +81,26 @@ export default function Reminders() {
       setTitle("");
       setDueDate("");
       loadData();
+      toast.success("Reminder created successfully");
     } catch (err) {
-      alert("Failed to create reminder");
+      toast.error("Failed to create reminder");
     }
   }
 
   async function handleDelete(id) {
-    if (!confirm("Delete this reminder?")) return;
+    const ok = await confirm({
+      title: "Delete Reminder",
+      message: "Are you sure you want to delete this payment reminder?",
+      confirmText: "Delete",
+      variant: "danger",
+    });
+    if (!ok) return;
     try {
       await api.delete(`/reminders/${id}`);
+      toast.success("Reminder deleted");
       loadData();
     } catch (err) {
-      alert("Failed to delete reminder");
+      toast.error("Failed to delete reminder");
     }
   }
 

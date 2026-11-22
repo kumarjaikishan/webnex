@@ -207,7 +207,7 @@ body {
     page-break-inside: avoid !important;
   }
 
-  /* Watermark fixed in exact middle of every printed A4 page (straight horizontal, scaled) */
+  /* Watermark fixed in exact middle of every printed A4 page (tilted, color) */
   .printable-page-watermark {
     position: fixed !important;
     top: 50% !important;
@@ -221,7 +221,7 @@ body {
     justify-content: center !important;
     pointer-events: none !important;
     z-index: 1 !important;
-    opacity: 0.055 !important;
+    opacity: 0.12 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -273,3 +273,49 @@ body {
     print-color-adjust: exact !important;
   }
 }
+
+/* Sonner Toast Custom Theme Indicators */
+[data-sonner-toast][data-type='success'] {
+  background: #071e14 !important;
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  color: #ecfdf5 !important;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2) !important;
+}
+[data-sonner-toast][data-type='success'] [data-icon],
+[data-sonner-toast][data-type='success'] svg {
+  color: #10b981 !important;
+}
+
+[data-sonner-toast][data-type='error'] {
+  background: #260a10 !important;
+  border-color: rgba(244, 63, 94, 0.5) !important;
+  color: #fff1f2 !important;
+  box-shadow: 0 4px 20px rgba(244, 63, 94, 0.2) !important;
+}
+[data-sonner-toast][data-type='error'] [data-icon],
+[data-sonner-toast][data-type='error'] svg {
+  color: #f43f5e !important;
+}
+
+[data-sonner-toast][data-type='warning'] {
+  background: #241703 !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  color: #fffbeb !important;
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.2) !important;
+}
+[data-sonner-toast][data-type='warning'] [data-icon],
+[data-sonner-toast][data-type='warning'] svg {
+  color: #f59e0b !important;
+}
+
+[data-sonner-toast][data-type='info'] {
+  background: #051a23 !important;
+  border-color: rgba(6, 182, 212, 0.5) !important;
+  color: #ecfeff !important;
+  box-shadow: 0 4px 20px rgba(6, 182, 212, 0.2) !important;
+}
+[data-sonner-toast][data-type='info'] [data-icon],
+[data-sonner-toast][data-type='info'] svg {
+  color: #06b6d4 !important;
+}
+

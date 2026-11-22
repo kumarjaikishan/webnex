@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import api from "../../api/client.js";
+import { toast } from "sonner";
+import { useConfirm } from "../../context/ConfirmContext.jsx";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
 import { InvoiceCard, CreateInvoiceModal } from "../../components/invoices";
 
 export default function Invoices() {
+  const confirm = useConfirm();
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -54,19 +57,27 @@ export default function Invoices() {
   async function handleStatusChange(id, status) {
     try {
       await api.put(`/invoices/${id}`, { status });
+      toast.success("Invoice status updated");
       fetchInvoices();
     } catch (err) {
-      alert("Failed to update invoice status");
+      toast.error("Failed to update invoice status");
     }
   }
 
   async function handleDelete(id) {
-    if (!confirm("Are you sure you want to delete this invoice?")) return;
+    const ok = await confirm({
+      title: "Delete Invoice",
+      message: "Are you sure you want to delete this invoice? This cannot be undone.",
+      confirmText: "Delete Invoice",
+      variant: "danger",
+    });
+    if (!ok) return;
     try {
       await api.delete(`/invoices/${id}`);
+      toast.success("Invoice deleted successfully");
       fetchInvoices();
     } catch (err) {
-      alert("Failed to delete invoice");
+      toast.error("Failed to delete invoice");
     }
   }
 
@@ -101,10 +112,11 @@ export default function Invoices() {
         </div>
       ) : (
         <div className="grid gap-4">
-          {invoices.map((inv) => (
+          {invoices.map((inv, index) => (
             <InvoiceCard
               key={inv.id}
               invoice={inv}
+              serialNumber={index + 1}
               onStatusChange={handleStatusChange}
               onDelete={handleDelete}
             />

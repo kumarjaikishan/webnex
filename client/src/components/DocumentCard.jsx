@@ -1,6 +1,6 @@
 import React, { useState, useRef, forwardRef, useImperativeHandle } from "react";
 import { downloadElementAsPdf } from "../utils/pdfExport.js";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const DocumentCard = forwardRef(function DocumentCard(
   {
@@ -53,23 +53,13 @@ const DocumentCard = forwardRef(function DocumentCard(
     if (downloading || !cardRef.current) return;
     setDownloading(true);
     if (onDownloadingChange) onDownloadingChange(true);
-    const toastId = toast.loading("Generating high-resolution PDF...", { autoClose: false });
+    const toastId = toast.loading("Generating high-resolution PDF...");
     try {
       await downloadElementAsPdf(cardRef.current, defaultPdfName);
-      toast.update(toastId, {
-        render: `✓ PDF downloaded: ${defaultPdfName}`,
-        type: "success",
-        isLoading: false,
-        autoClose: 3500,
-      });
+      toast.success(`✓ PDF downloaded: ${defaultPdfName}`, { id: toastId });
     } catch (err) {
       console.error("Failed to generate direct PDF:", err);
-      toast.update(toastId, {
-        render: "Opening system print dialog to save PDF...",
-        type: "info",
-        isLoading: false,
-        autoClose: 2500,
-      });
+      toast.info("Opening system print dialog to save PDF...", { id: toastId });
       handlePrint();
     } finally {
       setDownloading(false);
@@ -87,26 +77,26 @@ const DocumentCard = forwardRef(function DocumentCard(
       ref={cardRef}
       className={`bg-white text-gray-900 border-0 rounded-2xl overflow-hidden ${isPage ? "max-h-none overflow-visible" : "max-h-[90vh] overflow-y-auto"} relative shadow-2xl printable-document print-theme-light print:overflow-visible print:max-h-none print:rounded-none print:shadow-none`}
     >
-      {/* 100% EXACT BRAND WATERMARK (Logo + WEBNEX LABS + Tagline) - STRAIGHT HORIZONTAL & EXACT A4 PAGE CENTERED */}
+      {/* 100% BRAND WATERMARK (Logo + WEBNEX LABS in vivid color, slightly tilted) */}
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden printable-page-watermark"
-        style={{ opacity: 0.058 }}
+        style={{ opacity: 0.12 }}
         aria-hidden="true"
       >
-        <div className="flex flex-col items-center justify-center text-center transform scale-125 sm:scale-150 print:scale-150">
-          {/* Row: Geometric Leaf Logo + WEBNEX LABS (Straight Horizontal) */}
-          <div className="flex items-center gap-5 sm:gap-7">
-            {/* Geometric Leaf/Petal Icon */}
-            <div className="relative w-16 h-20 sm:w-24 sm:h-28 shrink-0 flex items-center justify-center">
-              <svg viewBox="0 0 40 50" className="w-full h-full">
+        <div className="flex flex-col items-center justify-center text-center transform -rotate-12 scale-110 sm:scale-130 print:scale-130">
+          {/* Row: Geometric Leaf Logo + WEBNEX LABS */}
+          <div className="flex items-center gap-4 sm:gap-6">
+            {/* Geometric Leaf/Petal Icon with vivid gold and clean dark outline */}
+            <div className="relative w-16 h-20 sm:w-22 sm:h-26 shrink-0 flex items-center justify-center">
+              <svg viewBox="0 0 40 50" className="w-full h-full drop-shadow-sm">
                 <path d="M5 25 C5 10, 20 5, 22 5 C22 20, 10 35, 5 25 Z" fill="#f5b842" />
-                <path d="M22 5 C25 5, 38 15, 35 30 C30 45, 12 45, 22 5 Z" fill="none" stroke="#111827" strokeWidth="2.8" />
+                <path d="M22 5 C25 5, 38 15, 35 30 C30 45, 12 45, 22 5 Z" fill="none" stroke="#1e293b" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
 
             {/* Brand Typography: WEBNEX (Dark) + LABS (Gold) */}
             <div className="text-left">
-              <div className="flex items-baseline gap-2.5">
+              <div className="flex items-baseline gap-2">
                 <span className="font-display text-5xl sm:text-7xl font-black tracking-tight text-gray-950 uppercase">
                   WEBNEX
                 </span>
@@ -114,9 +104,6 @@ const DocumentCard = forwardRef(function DocumentCard(
                   LABS
                 </span>
               </div>
-              <p className="text-sm sm:text-base font-mono tracking-[0.38em] text-gray-700 font-bold uppercase mt-1.5">
-                WEB • DESIGN • DEVELOPMENT
-              </p>
             </div>
           </div>
         </div>
@@ -217,29 +204,53 @@ const DocumentCard = forwardRef(function DocumentCard(
                   </div>
 
                   {/* INVOICE META & DATES */}
-                  <div className="sm:text-right space-y-1 font-mono text-xs w-full sm:w-auto">
-                    <div className="space-y-0.5">
-                      <div className="flex justify-between gap-4">
-                        <span className="text-gray-500 font-bold text-gray-700">Doc Ref :</span>
-                        <span className="text-gray-950 font-bold font-mono text-[13px]">{docNumber || "DRAFT"}</span>
-                      </div>
-                      <div className="flex justify-between gap-4">
-                        <span className="text-gray-500">Date :</span>
-                        <span className="text-gray-900">{date || new Date().toISOString().split("T")[0]}</span>
-                      </div>
-                      {secondaryDate && (
-                        <div className="flex justify-between gap-4">
-                          <span className="text-gray-500">{secondaryDateLabel} :</span>
-                          <span className="text-gray-900 font-semibold">{secondaryDate}</span>
-                        </div>
-                      )}
-                      {status && (
-                        <div className="flex justify-between gap-4">
-                          <span className="text-gray-500">Status :</span>
-                          <span className="text-emerald-600 font-bold uppercase">{status}</span>
-                        </div>
-                      )}
-                    </div>
+                  <div className="font-mono text-xs w-full sm:w-auto">
+                    <table className="border-collapse p-0 m-0 border-0 text-left sm:text-left ml-auto">
+                      <tbody>
+                        <tr>
+                          <td className="py-0.5 pr-2 text-gray-500 font-bold text-gray-700 whitespace-nowrap">
+                            {docType === "INVOICE" ? "Inv No." : "Doc Ref"}
+                          </td>
+                          <td className="py-0.5 px-1.5 text-gray-400 font-bold">:</td>
+                          <td className="py-0.5 pl-2 text-right text-gray-950 font-bold font-mono text-[13px] whitespace-nowrap">
+                            {docNumber || "DRAFT"}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="py-0.5 pr-2 text-gray-500 whitespace-nowrap">Date</td>
+                          <td className="py-0.5 px-1.5 text-gray-400 font-bold">:</td>
+                          <td className="py-0.5 pl-2 text-right text-gray-900 whitespace-nowrap">
+                            {date || new Date().toISOString().split("T")[0]}
+                          </td>
+                        </tr>
+                        {secondaryDate && (
+                          <tr>
+                            <td className="py-0.5 pr-2 text-gray-500 whitespace-nowrap">{secondaryDateLabel}</td>
+                            <td className="py-0.5 px-1.5 text-gray-400 font-bold">:</td>
+                            <td className="py-0.5 pl-2 text-right text-gray-900 font-semibold whitespace-nowrap">
+                              {secondaryDate}
+                            </td>
+                          </tr>
+                        )}
+                        {status && (
+                          <tr>
+                            <td className="py-0.5 pr-2 text-gray-500 whitespace-nowrap">Status</td>
+                            <td className="py-0.5 px-1.5 text-gray-400 font-bold">:</td>
+                            <td
+                              className={`py-0.5 pl-2 text-right font-bold uppercase whitespace-nowrap ${
+                                String(status).toLowerCase().includes("pending")
+                                  ? "text-amber-500"
+                                  : String(status).toLowerCase().includes("overdue")
+                                  ? "text-rose-600"
+                                  : "text-emerald-600"
+                              }`}
+                            >
+                              {status}
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
 
@@ -250,7 +261,7 @@ const DocumentCard = forwardRef(function DocumentCard(
 
                 {/* NOTES & TERMS FOOTER */}
                 {notes && (
-                  <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 text-xs text-gray-600">
+                  <div className="bg-gray-50/20 backdrop-blur-[2px] p-4 rounded-xl border border-gray-200/60 text-xs text-gray-600">
                     <p className="font-mono uppercase text-[10px] text-gray-800 mb-1 font-bold">Notes & Terms</p>
                     <p className="leading-relaxed">{notes}</p>
                   </div>
@@ -314,9 +325,9 @@ const DocumentCard = forwardRef(function DocumentCard(
           preserveAspectRatio="none"
           className="w-full h-full block absolute inset-0 pointer-events-none"
         >
-          {/* Left: Golden Yellow Band */}
+          {/* Left: Golden Yellow Band (reduced height, starts at y=14) */}
           <polygon points="0,14 510,14 455,48 0,48" fill="#f5b842" />
-          {/* Right: Deep Charcoal Slate (#1a1c23) Block */}
+          {/* Right: Deep Charcoal Slate (#181a20) Block (full height, starts at y=0) */}
           <polygon points="435,48 495,0 1000,0 1000,48" fill="#181a20" />
         </svg>
 

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Mail, Phone, Calendar, Building, MessageSquare, Trash2, CheckCircle2, MessageCircle, ChevronDown, ChevronUp, Clock, Check, Sparkles } from "lucide-react";
 import api from "../../api/client.js";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
+import { useConfirm } from "../../context/ConfirmContext.jsx";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
 
 export default function ContactInquiries() {
+  const confirm = useConfirm();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
@@ -50,9 +52,13 @@ export default function ContactInquiries() {
 
   const handleDelete = async (id, name, e) => {
     if (e) e.stopPropagation();
-    if (!window.confirm(`Are you sure you want to delete inquiry from ${name || "this client"}?`)) {
-      return;
-    }
+    const ok = await confirm({
+      title: "Delete Inquiry",
+      message: `Are you sure you want to delete inquiry from ${name || "this client"}?`,
+      confirmText: "Delete Inquiry",
+      variant: "danger",
+    });
+    if (!ok) return;
     try {
       await api.delete(`/contact/${id}`);
       setMessages((prev) => prev.filter((m) => m.id !== id));
