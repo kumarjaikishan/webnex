@@ -69,13 +69,19 @@ input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="month"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
   filter: invert(1) brightness(2) !important;
-  opacity: 1 !important;
-  display: block !important;
+  opacity: 0.8;
 }
 input[type="date"]::-webkit-calendar-picker-indicator:hover,
 input[type="month"]::-webkit-calendar-picker-indicator:hover {
   filter: invert(1) brightness(2.5) !important;
-  opacity: 1 !important;
+  opacity: 1;
+}
+
+/* Hide native indicator on custom date inputs to prevent duplicate icons and let the custom button handle clicks */
+.date-input-custom::-webkit-calendar-picker-indicator {
+  display: none !important;
+  opacity: 0 !important;
+  -webkit-appearance: none;
 }
 
 /* ==========================================================

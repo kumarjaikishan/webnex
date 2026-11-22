@@ -3,7 +3,7 @@ import api from "../../api/client.js";
 import { toast } from "sonner";
 import { useConfirm } from "../../context/ConfirmContext.jsx";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
-import { InvoiceCard, CreateInvoiceModal } from "../../components/invoices";
+import { InvoiceCard, CreateInvoiceModal, PaymentModal } from "../../components/invoices";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
 export default function Invoices() {
@@ -12,6 +12,7 @@ export default function Invoices() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingInvoice, setEditingInvoice] = useState(null);
+  const [paymentInvoice, setPaymentInvoice] = useState(null);
   const [sortOrder, setSortOrder] = useState("desc"); // "desc" | "asc"
   const [defaultPaymentDetails, setDefaultPaymentDetails] = useState({
     beneficiaryName: "Jai Kishan Kumar (Webnex Labs)",
@@ -128,7 +129,7 @@ export default function Invoices() {
       ) : (
         <div className="space-y-2">
           {/* Column Header Bar for Desktop */}
-          <div className="hidden md:grid md:grid-cols-[40px_110px_1fr_120px_130px_130px] items-center gap-4 px-5 py-1 text-xs font-mono uppercase tracking-wider text-mist">
+          <div className="hidden md:grid md:grid-cols-[40px_110px_1fr_120px_130px_110px] items-center gap-4 px-5 py-1 text-xs font-mono uppercase tracking-wider text-mist">
             <span>#</span>
             <button
               type="button"
@@ -162,6 +163,9 @@ export default function Invoices() {
                   setEditingInvoice(invoice);
                   setShowModal(true);
                 }}
+                onOpenPayments={(invoice) => {
+                  setPaymentInvoice(invoice);
+                }}
                 onDelete={handleDelete}
               />
             ))}
@@ -180,6 +184,19 @@ export default function Invoices() {
         editingInvoice={editingInvoice}
         defaultPaymentDetails={defaultPaymentDetails}
       />
+
+      {/* Payment & Installment Ledger Modal */}
+      {paymentInvoice && (
+        <PaymentModal
+          isOpen={Boolean(paymentInvoice)}
+          invoice={paymentInvoice}
+          onClose={() => setPaymentInvoice(null)}
+          onPaymentUpdated={(updated) => {
+            setPaymentInvoice(updated);
+            fetchInvoices();
+          }}
+        />
+      )}
     </div>
   );
 }

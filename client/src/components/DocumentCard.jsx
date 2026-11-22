@@ -238,7 +238,9 @@ const DocumentCard = forwardRef(function DocumentCard(
                             <td className="py-0.5 px-1.5 text-gray-400 font-bold">:</td>
                             <td
                               className={`py-0.5 pl-2 text-right font-bold uppercase whitespace-nowrap ${
-                                String(status).toLowerCase().includes("pending")
+                                String(status).toLowerCase().includes("partial")
+                                  ? "text-cyan-700"
+                                  : String(status).toLowerCase().includes("pending")
                                   ? "text-amber-500"
                                   : String(status).toLowerCase().includes("overdue")
                                   ? "text-rose-600"

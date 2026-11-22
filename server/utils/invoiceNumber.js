@@ -35,22 +35,27 @@ export function generateNextInvoiceNumber(existingInvoices = [], prefix = "INV")
   const fyCode = getFinancialYearCode();
   const patternPrefix = `${prefix}-${fyCode}-`;
 
-  // Find all existing invoices matching this pattern
-  let maxSeq = 0;
+  // Find all used sequence numbers in this pattern
+  const usedSeqs = new Set();
   for (const inv of existingInvoices) {
     if (inv && typeof inv.invoiceNumber === "string") {
       const numStr = inv.invoiceNumber.trim();
       if (numStr.startsWith(patternPrefix)) {
         const seqPart = numStr.slice(patternPrefix.length);
         const parsed = parseInt(seqPart, 10);
-        if (!isNaN(parsed) && parsed > maxSeq) {
-          maxSeq = parsed;
+        if (!isNaN(parsed) && parsed > 0) {
+          usedSeqs.add(parsed);
         }
       }
     }
   }
 
-  const nextSeq = maxSeq + 1;
-  const paddedSeq = String(nextSeq).padStart(4, "0");
+  // Find the smallest available sequence number (fills gaps when an invoice is deleted)
+  let nextSeq = 1;
+  while (usedSeqs.has(nextSeq)) {
+    nextSeq++;
+  }
+
+  const paddedSeq = String(nextSeq).padStart(3, "0");
   return `${patternPrefix}${paddedSeq}`;
 }

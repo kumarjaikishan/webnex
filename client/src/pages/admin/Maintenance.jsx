@@ -310,7 +310,12 @@ export default function Maintenance() {
             {sortedPlans.map((m) => {
               const client = clients.find((c) => c.id === m.clientId);
               const dueSoon = new Date(m.nextDueDate) - new Date() < 7 * 86400000;
-              const isAlreadyInvoicedThisMonth = m.lastInvoicedMonth === currentMonthStr;
+              const currentMonthInvoice = invoices.find(
+                (inv) =>
+                  inv.maintenancePlanId === m.id &&
+                  (inv.periodMonth === currentMonthStr || inv.issueDate?.substring(0, 7) === currentMonthStr)
+              );
+              const isAlreadyInvoicedThisMonth = Boolean(currentMonthInvoice);
               const isAuto = m.billingMode !== "manual";
 
               return (
@@ -376,11 +381,11 @@ export default function Maintenance() {
                           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
                             <Check size={13} className="shrink-0" />
                             <span>
-                              Invoice <strong>{m.lastInvoiceNumber || ""}</strong> generated for this month
+                              Invoice <strong>{currentMonthInvoice?.invoiceNumber || m.lastInvoiceNumber || ""}</strong> generated for this month
                             </span>
-                            {m.lastInvoiceId && (
+                            {(currentMonthInvoice?.id || m.lastInvoiceId) && (
                               <Link
-                                to={`/admin/invoices/${m.lastInvoiceId}`}
+                                to={`/admin/invoices/${currentMonthInvoice?.id || m.lastInvoiceId}`}
                                 className="text-cyan underline hover:text-cyan/80 ml-1 inline-flex items-center gap-0.5"
                               >
                                 <span>View</span>
@@ -513,6 +518,8 @@ export default function Maintenance() {
                       className={`px-2 py-0.5 rounded-full font-mono text-[10px] ${
                         inv.status === "Paid"
                           ? "bg-emerald-500/20 text-emerald-400"
+                          : inv.status === "Partially Paid"
+                          ? "bg-cyan/20 text-cyan"
                           : "bg-amber-500/20 text-amber-400"
                       }`}
                     >
@@ -524,9 +531,14 @@ export default function Maintenance() {
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="font-mono text-sm font-bold text-paper">₹{inv.totalAmount?.toLocaleString()}</span>
+                  <div className="text-right">
+                    <span className="font-mono text-sm font-bold text-paper block">₹{inv.totalAmount?.toLocaleString()}</span>
+                    {inv.status === "Partially Paid" && (
+                      <span className="text-[10px] font-mono text-cyan block">Paid: ₹{inv.amountPaid?.toLocaleString()}</span>
+                    )}
+                  </div>
                   <span className="text-mist text-[11px] font-mono">
-                    {inv.status === "Paid" ? "✅ Paid" : "⏳ Pending Payment"}
+                    {inv.status === "Paid" ? "✅ Paid" : inv.status === "Partially Paid" ? `⏳ Due: ₹${inv.balanceDue?.toLocaleString()}` : "⏳ Pending Payment"}
                   </span>
                 </div>
               </div>
@@ -654,21 +666,24 @@ export default function Maintenance() {
 
                 <div>
                   <label className="block text-xs font-mono text-mist uppercase mb-1">First Due Date *</label>
-                  <div
-                    onClick={() => createDueDateRef.current?.showPicker ? createDueDateRef.current.showPicker() : createDueDateRef.current?.focus()}
-                    className="relative flex items-center cursor-pointer"
-                  >
+                  <div className="relative flex items-center">
                     <input
                       ref={createDueDateRef}
                       type="date"
                       required
                       value={nextDueDate}
                       onChange={(e) => setNextDueDate(e.target.value)}
-                      className="w-full rounded-xl bg-void border border-edge pl-3 pr-8 py-2 text-sm focus-ring outline-none font-mono text-paper [color-scheme:dark] cursor-pointer"
+                      className="date-input-custom w-full rounded-xl bg-void border border-edge pl-3 pr-9 py-2 text-sm focus-ring outline-none font-mono text-paper [color-scheme:dark]"
                     />
-                    <div className="absolute right-3 pointer-events-none text-white">
+                    <button
+                      type="button"
+                      onClick={() => createDueDateRef.current?.showPicker ? createDueDateRef.current.showPicker() : createDueDateRef.current?.focus()}
+                      className="absolute right-2.5 p-1 text-mist hover:text-cyan transition-colors rounded-lg cursor-pointer"
+                      title="Choose from calendar"
+                      tabIndex={-1}
+                    >
                       <Calendar className="w-4 h-4" />
-                    </div>
+                    </button>
                   </div>
                 </div>
 
@@ -729,21 +744,24 @@ export default function Maintenance() {
                   <label className="block text-xs font-mono text-mist uppercase mb-1">
                     Billing Period (Month & Year) *
                   </label>
-                  <div
-                    onClick={() => customPeriodRef.current?.showPicker ? customPeriodRef.current.showPicker() : customPeriodRef.current?.focus()}
-                    className="relative flex items-center cursor-pointer"
-                  >
+                  <div className="relative flex items-center">
                     <input
                       ref={customPeriodRef}
                       type="month"
                       required
                       value={customPeriod}
                       onChange={(e) => setCustomPeriod(e.target.value)}
-                      className="w-full rounded-xl bg-void border border-edge pl-3 pr-8 py-2 text-xs focus-ring outline-none font-mono text-paper [color-scheme:dark] cursor-pointer"
+                      className="date-input-custom w-full rounded-xl bg-void border border-edge pl-3 pr-9 py-2 text-xs focus-ring outline-none font-mono text-paper [color-scheme:dark]"
                     />
-                    <div className="absolute right-2.5 pointer-events-none text-white">
+                    <button
+                      type="button"
+                      onClick={() => customPeriodRef.current?.showPicker ? customPeriodRef.current.showPicker() : customPeriodRef.current?.focus()}
+                      className="absolute right-2 p-1 text-mist hover:text-cyan transition-colors rounded-lg cursor-pointer"
+                      title="Choose from calendar"
+                      tabIndex={-1}
+                    >
                       <Calendar className="w-3.5 h-3.5" />
-                    </div>
+                    </button>
                   </div>
                   <p className="text-[11px] text-mist/70 mt-1">
                     Select any past month (e.g. Oct 2026, Sept 2026) or future period.
@@ -753,40 +771,46 @@ export default function Maintenance() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-mono text-mist uppercase mb-1">Invoice / Issue Date</label>
-                    <div
-                      onClick={() => customIssueDateRef.current?.showPicker ? customIssueDateRef.current.showPicker() : customIssueDateRef.current?.focus()}
-                      className="relative flex items-center cursor-pointer"
-                    >
+                    <div className="relative flex items-center">
                       <input
                         ref={customIssueDateRef}
                         type="date"
                         required
                         value={customIssueDate}
                         onChange={(e) => setCustomIssueDate(e.target.value)}
-                        className="w-full rounded-xl bg-void border border-edge pl-3 pr-8 py-2 text-xs focus-ring outline-none font-mono text-paper [color-scheme:dark] cursor-pointer"
+                        className="date-input-custom w-full rounded-xl bg-void border border-edge pl-3 pr-9 py-2 text-xs focus-ring outline-none font-mono text-paper [color-scheme:dark]"
                       />
-                      <div className="absolute right-2.5 pointer-events-none text-white">
+                      <button
+                        type="button"
+                        onClick={() => customIssueDateRef.current?.showPicker ? customIssueDateRef.current.showPicker() : customIssueDateRef.current?.focus()}
+                        className="absolute right-2 p-1 text-mist hover:text-cyan transition-colors rounded-lg cursor-pointer"
+                        title="Choose from calendar"
+                        tabIndex={-1}
+                      >
                         <Calendar className="w-3.5 h-3.5" />
-                      </div>
+                      </button>
                     </div>
                   </div>
                   <div>
                     <label className="block text-xs font-mono text-mist uppercase mb-1">Due Date</label>
-                    <div
-                      onClick={() => customDueDateRef.current?.showPicker ? customDueDateRef.current.showPicker() : customDueDateRef.current?.focus()}
-                      className="relative flex items-center cursor-pointer"
-                    >
+                    <div className="relative flex items-center">
                       <input
                         ref={customDueDateRef}
                         type="date"
                         required
                         value={customDueDate}
                         onChange={(e) => setCustomDueDate(e.target.value)}
-                        className="w-full rounded-xl bg-void border border-edge pl-3 pr-8 py-2 text-xs focus-ring outline-none font-mono text-paper [color-scheme:dark] cursor-pointer"
+                        className="date-input-custom w-full rounded-xl bg-void border border-edge pl-3 pr-9 py-2 text-xs focus-ring outline-none font-mono text-paper [color-scheme:dark]"
                       />
-                      <div className="absolute right-2.5 pointer-events-none text-white">
+                      <button
+                        type="button"
+                        onClick={() => customDueDateRef.current?.showPicker ? customDueDateRef.current.showPicker() : customDueDateRef.current?.focus()}
+                        className="absolute right-2 p-1 text-mist hover:text-cyan transition-colors rounded-lg cursor-pointer"
+                        title="Choose from calendar"
+                        tabIndex={-1}
+                      >
                         <Calendar className="w-3.5 h-3.5" />
-                      </div>
+                      </button>
                     </div>
                   </div>
                 </div>

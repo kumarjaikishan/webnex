@@ -128,21 +128,23 @@ export default function Reminders() {
       )}
 
       {/* PENDING INVOICES QUICK REMINDER BAR */}
-      {invoices.filter((i) => i.status === "Pending" || i.status === "Overdue").length > 0 && (
+      {invoices.filter((i) => i.status === "Pending" || i.status === "Overdue" || i.status === "Partially Paid").length > 0 && (
         <div className="bg-panel border border-amber-500/30 rounded-2xl p-4 bg-amber-500/5 space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="font-mono text-xs text-amber-400 uppercase tracking-wider font-semibold">
-              ⚠️ Invoices Pending Action ({invoices.filter((i) => i.status === "Pending" || i.status === "Overdue").length})
+              ⚠️ Invoices Pending Action ({invoices.filter((i) => i.status === "Pending" || i.status === "Overdue" || i.status === "Partially Paid").length})
             </h3>
           </div>
           <div className="grid sm:grid-cols-2 gap-3">
             {invoices
-              .filter((i) => i.status === "Pending" || i.status === "Overdue")
+              .filter((i) => i.status === "Pending" || i.status === "Overdue" || i.status === "Partially Paid")
               .map((inv) => (
                 <div key={inv.id} className="bg-void p-3 rounded-xl border border-edge flex items-center justify-between text-xs">
                   <div>
                     <p className="font-semibold text-paper">{inv.clientName}</p>
-                    <p className="text-mist font-mono">${inv.totalAmount?.toLocaleString()} • Due: {inv.dueDate}</p>
+                    <p className="text-mist font-mono">
+                      {inv.status === "Partially Paid" ? `₹${inv.balanceDue?.toLocaleString()} Due (Total: ₹${inv.totalAmount?.toLocaleString()})` : `₹${inv.totalAmount?.toLocaleString()}`} • Due: {inv.dueDate}
+                    </p>
                   </div>
                   <button
                     onClick={() =>

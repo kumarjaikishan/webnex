@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { Landmark, Edit2 } from "lucide-react";
+import { Landmark, Edit2, CreditCard, CheckCircle } from "lucide-react";
 import api from "../../api/client.js";
 import DocumentCard from "../../components/DocumentCard.jsx";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
-import { CreateInvoiceModal } from "../../components/invoices";
+import { CreateInvoiceModal, PaymentModal } from "../../components/invoices";
 
 export default function InvoiceViewPage() {
   const { id } = useParams();
@@ -14,6 +14,7 @@ export default function InvoiceViewPage() {
   const [error, setError] = useState(null);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const docCardRef = React.useRef(null);
 
   // Bank & settlement details fallback from settings
@@ -99,6 +100,9 @@ export default function InvoiceViewPage() {
     ...(invoice.paymentDetails || {}),
   };
 
+  const isFullySettled = invoice.status === "Paid" || (Number(invoice.balanceDue) <= 0 && (Number(invoice.amountPaid) > 0 || Number(invoice.discount) > 0));
+  const remainingDue = Number(invoice.balanceDue) !== undefined ? Number(invoice.balanceDue) : (invoice.status === "Paid" ? 0 : Number(invoice.totalAmount));
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-6 print:p-0 print:m-0 print:max-w-full print:w-full print:space-y-0">
       {/* Top Breadcrumb & Action Bar (Hidden during Print) */}
@@ -109,10 +113,18 @@ export default function InvoiceViewPage() {
         >
           <span>←</span> Back to Invoices
         </button>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <span className="text-xs font-mono text-mist">
-            Status: <strong className="text-paper uppercase">{invoice.status}</strong>
+            Status: <strong className={`uppercase ${invoice.status === "Paid" ? "text-emerald-400" : invoice.status === "Partially Paid" ? "text-cyan" : "text-amber-400"}`}>{invoice.status}</strong>
           </span>
+          <button
+            type="button"
+            onClick={() => setShowPaymentModal(true)}
+            className="px-4 py-2 rounded-xl bg-cyan/15 border border-cyan/40 text-cyan hover:bg-cyan/25 font-semibold text-xs transition flex items-center gap-1.5 shadow-sm"
+          >
+            <CreditCard size={13} />
+            <span>Record Payment / Settle</span>
+          </button>
           <button
             type="button"
             onClick={() => setShowEditModal(true)}
@@ -225,11 +237,11 @@ export default function InvoiceViewPage() {
             <p className="font-bold uppercase text-gray-900 tracking-wider text-[11px]">PAYMENT INFO</p>
             <p className="text-gray-500">Method: Direct UPI / IMPS Settlement</p>
             <p className="text-gray-500">
-              Status: {invoice.status === "Paid" ? "Payment Received" : "Payment Due Upon Receipt"}
+              Status: {isFullySettled ? "Payment Received (Settled)" : invoice.status === "Partially Paid" ? "Partially Paid (Installments Active)" : "Payment Due Upon Receipt"}
             </p>
           </div>
 
-          <div className="w-full sm:w-72 text-right text-xs">
+          <div className="w-full sm:w-80 text-right text-xs">
             <div className="space-y-1.5 pb-2">
               <div className="flex justify-between px-2">
                 <span className="font-mono text-gray-500">Sub Total</span>
@@ -251,7 +263,7 @@ export default function InvoiceViewPage() {
             <div
               className="bg-[#f5b842] text-gray-950 rounded font-mono font-black shadow-sm"
               style={{
-                marginTop: "14px",
+                marginTop: "6px",
                 marginBottom: "0px",
                 padding: "0 16px",
                 height: "44px",
@@ -285,8 +297,81 @@ export default function InvoiceViewPage() {
                 ₹{invoice.totalAmount?.toLocaleString()}
               </span>
             </div>
+
+            {/* Settlement Concession, Payments Received & Remaining Balance breakdown */}
+            <div className="space-y-1.5 pt-3 border-t border-gray-200 mt-2">
+              {Number(invoice.discount) > 0 && (
+                <div className="flex justify-between px-2 text-xs font-mono">
+                  <span className="text-gray-600">
+                    Settlement Concession / Off
+                    {invoice.discountReason ? ` (${invoice.discountReason})` : ""}
+                  </span>
+                  <span className="font-semibold text-cyan-700">
+                    -₹{Number(invoice.discount).toLocaleString()}
+                  </span>
+                </div>
+              )}
+
+              {(Number(invoice.amountPaid) > 0 || (invoice.payments && invoice.payments.length > 0)) && (
+                <div className="flex justify-between px-2 text-xs font-mono">
+                  <span className="text-gray-600">
+                    Amount Received ({invoice.payments?.length || 1} payment{(invoice.payments?.length || 1) === 1 ? "" : "s"})
+                  </span>
+                  <span className="font-semibold text-emerald-700">
+                    ₹{Number(invoice.amountPaid || 0).toLocaleString()}
+                  </span>
+                </div>
+              )}
+
+              <div className={`flex justify-between px-2 pt-2 border-t border-dashed border-gray-300 font-mono font-bold text-xs ${
+                isFullySettled ? "text-emerald-700" : "text-amber-700"
+              }`}>
+                <span className="uppercase tracking-wider">
+                  {isFullySettled ? "Balance Due" : "Remaining Balance Due"}
+                </span>
+                <span className="text-sm">
+                  {isFullySettled ? "₹0.00 (PAID IN FULL)" : `₹${remainingDue.toLocaleString()}`}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* PAYMENT INSTALLMENTS RECEIVED TABLE */}
+        {Array.isArray(invoice.payments) && invoice.payments.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <p className="font-mono text-[11px] font-bold text-gray-800 uppercase tracking-wider mb-2">
+              PAYMENT INSTALLMENTS RECEIVED
+            </p>
+            <div className="overflow-hidden rounded-lg border border-gray-200">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-gray-100 font-mono text-[10px] text-gray-700 uppercase">
+                    <th className="py-2 px-3">Date</th>
+                    <th className="py-2 px-3">Payment Method</th>
+                    <th className="py-2 px-3">Transaction Ref / Note</th>
+                    <th className="py-2 px-3 text-right">Amount Received</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 font-mono text-xs">
+                  {invoice.payments.map((p, idx) => (
+                    <tr key={p.id || idx} className="bg-white">
+                      <td className="py-2.5 px-3 text-gray-800">{p.date}</td>
+                      <td className="py-2.5 px-3 text-gray-600">{p.method || "UPI"}</td>
+                      <td className="py-2.5 px-3 text-gray-500 font-sans text-[11px]">
+                        {p.reference && <strong className="font-mono text-gray-800">{p.reference} </strong>}
+                        {p.note && <span>({p.note})</span>}
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-bold text-emerald-700">
+                        +₹{Number(p.amount).toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         {/* BANK SETTLEMENT & DYNAMIC SCAN-TO-PAY UPI QR CODE */}
         <div className="mt-6 pt-4 border-t border-gray-200 bg-gray-50/20 backdrop-blur-[2px] p-4 rounded-xl border border-gray-200/60">
@@ -339,15 +424,32 @@ export default function InvoiceViewPage() {
               </table>
             </div>
 
-            {/* UPI QR Code Container */}
-            {pd.upiId && (
+            {/* UPI QR Code Container or PAID IN FULL Stamp */}
+            {isFullySettled ? (
+              <div className="flex flex-col items-center justify-center text-center bg-emerald-50/80 p-4 rounded-2xl shadow-sm border border-emerald-300 shrink-0 w-[190px] h-[190px]">
+                <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mb-2 shadow-inner">
+                  <CheckCircle size={28} />
+                </div>
+                <span className="font-mono text-xs text-emerald-900 font-black tracking-wider uppercase">
+                  PAID IN FULL
+                </span>
+                <span className="font-mono text-[11px] text-emerald-700 font-bold mt-1">
+                  ₹{Number(invoice.totalAmount).toLocaleString()} Settled
+                </span>
+                {Number(invoice.discount) > 0 && (
+                  <span className="font-mono text-[9px] text-cyan-800 mt-1">
+                    (₹{Number(invoice.discount).toLocaleString()} concession discount)
+                  </span>
+                )}
+              </div>
+            ) : pd.upiId ? (
               <div className="flex flex-col items-center text-center bg-white p-3 rounded-2xl shadow-md border border-gray-200 shrink-0 max-w-[190px]">
                 <div className="relative">
                   <img
                     src={getUpiQrUrl(
                       pd.upiId,
                       pd.beneficiaryName,
-                      invoice.totalAmount,
+                      remainingDue,
                       invoice.invoiceNumber
                     )}
                     alt="Scan to Pay via UPI"
@@ -358,16 +460,16 @@ export default function InvoiceViewPage() {
                 </div>
 
                 <span className="font-mono text-xs text-gray-900 font-bold mt-2 block w-full">
-                  ₹{invoice.totalAmount?.toLocaleString()}
+                  ₹{remainingDue.toLocaleString()} Due
                 </span>
                 <span className="font-mono text-[10px] text-gray-700 font-medium block w-full">
-                  Scan with Any UPI App
+                  Scan to Pay Balance
                 </span>
                 <span className="font-mono text-[8px] text-gray-500 mt-0.5 block w-full whitespace-nowrap">
                   GPay • PhonePe • Paytm • BHIM
                 </span>
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </DocumentCard>
@@ -380,6 +482,18 @@ export default function InvoiceViewPage() {
           onInvoiceCreated={fetchInvoice}
           editingInvoice={invoice}
           defaultPaymentDetails={pd}
+        />
+      )}
+
+      {/* Payment & Installment Ledger Modal */}
+      {invoice && (
+        <PaymentModal
+          isOpen={showPaymentModal}
+          invoice={invoice}
+          onClose={() => setShowPaymentModal(false)}
+          onPaymentUpdated={(updated) => {
+            setInvoice(updated);
+          }}
         />
       )}
     </div>

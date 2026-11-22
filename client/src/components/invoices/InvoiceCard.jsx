@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FileText, Trash2, Check, Clock, Edit2, MoreVertical, Calendar } from "lucide-react";
+import { FileText, Trash2, Check, Clock, Edit2, MoreVertical, Calendar, CreditCard } from "lucide-react";
 
 export default function InvoiceCard({
   invoice,
   onStatusChange,
   onEdit,
   onDelete,
+  onOpenPayments,
   serialNumber,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -31,17 +32,18 @@ export default function InvoiceCard({
     switch (status) {
       case "Paid":
         return "bg-emerald-500/10 text-emerald-400 border-emerald-500/25";
+      case "Partially Paid":
+        return "bg-cyan/10 text-cyan border-cyan/30";
       case "Overdue":
         return "bg-rose-500/10 text-rose-400 border-rose-500/25";
       case "Pending":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/25";
       default:
-        return "bg-slate-500/10 text-slate-400 border-slate-500/25";
+        return "bg-amber-500/10 text-amber-400 border-amber-500/25";
     }
   };
 
   return (
-    <div className="bg-panel/75 backdrop-blur-xl border border-edge rounded-2xl p-4 sm:p-5 flex flex-col md:grid md:grid-cols-[40px_110px_1fr_120px_130px_130px] md:items-center gap-4 hover:border-cyan/30 hover:bg-panel transition-all shadow-lg group">
+    <div className={`bg-panel/75 backdrop-blur-xl border border-edge rounded-2xl p-4 sm:p-5 flex flex-col md:grid md:grid-cols-[40px_110px_1fr_120px_130px_110px] md:items-center gap-4 hover:border-cyan/30 hover:bg-panel transition-all shadow-lg group relative ${menuOpen ? "z-30" : "z-0"}`}>
       {/* 1. Serial Number */}
       <div className="flex items-center shrink-0">
         {serialNumber !== undefined && (
@@ -80,7 +82,7 @@ export default function InvoiceCard({
         </p>
       </div>
 
-      {/* 4. Dedicated Status Column (Different Column) */}
+      {/* 4. Dedicated Status Column */}
       <div className="flex items-center md:justify-center shrink-0">
         <span
           className={`text-[11px] px-3 py-1 rounded-full border font-mono font-semibold flex items-center gap-1.5 ${getStatusColor(
@@ -88,12 +90,15 @@ export default function InvoiceCard({
           )}`}
         >
           <span
-            className={`w-1.5 h-1.5 rounded-full ${invoice.status === "Paid"
-              ? "bg-emerald-400"
-              : invoice.status === "Pending"
+            className={`w-1.5 h-1.5 rounded-full ${
+              invoice.status === "Paid"
+                ? "bg-emerald-400"
+                : invoice.status === "Partially Paid"
+                ? "bg-cyan animate-pulse"
+                : invoice.status === "Pending"
                 ? "bg-amber-400 animate-pulse"
                 : "bg-rose-400"
-              }`}
+            }`}
           />
           <span>{invoice.status}</span>
         </span>
@@ -104,6 +109,18 @@ export default function InvoiceCard({
         <p className="font-mono text-base font-bold text-paper">
           ₹{invoice.totalAmount?.toLocaleString()}
         </p>
+        {invoice.status === "Partially Paid" && (
+          <div className="text-[10px] font-mono text-mist mt-0.5">
+            <span className="text-emerald-400">Paid: ₹{invoice.amountPaid?.toLocaleString()}</span>
+            <span className="text-mist mx-1">•</span>
+            <span className="text-amber-400 font-semibold">Due: ₹{invoice.balanceDue?.toLocaleString()}</span>
+          </div>
+        )}
+        {invoice.status === "Paid" && Number(invoice.discount) > 0 && (
+          <p className="text-[10px] font-mono text-cyan mt-0.5">
+            ₹{invoice.discount?.toLocaleString()} waived concession
+          </p>
+        )}
       </div>
 
       {/* 6. Actions Column */}
@@ -133,9 +150,22 @@ export default function InvoiceCard({
 
           {/* Dropdown Menu */}
           {menuOpen && (
-            <div className="absolute right-0 top-full mt-1.5 w-48 rounded-xl bg-[#0c0d15] border border-white/10 shadow-2xl py-1.5 z-50 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100 divide-y divide-white/5">
+            <div className="absolute right-0 top-full mt-1.5 w-52 rounded-xl bg-[#0c0d15] border border-white/10 shadow-2xl py-1.5 z-50 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100 divide-y divide-white/5">
               <div className="py-1">
-                {/* Option 1: Mark Paid / Pending */}
+                {/* Option 1: Record / Manage Payments */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    if (onOpenPayments) onOpenPayments(invoice);
+                  }}
+                  className="w-full px-3 py-2 text-left text-xs font-mono text-cyan hover:bg-cyan/10 flex items-center gap-2.5 transition"
+                >
+                  <CreditCard size={14} className="shrink-0" />
+                  <span>Payments & Installments</span>
+                </button>
+
+                {/* Option 2: Quick Mark Paid / Pending */}
                 <button
                   type="button"
                   onClick={() => {
@@ -155,12 +185,14 @@ export default function InvoiceCard({
                   ) : (
                     <>
                       <Check size={14} className="shrink-0" />
-                      <span>Mark as Paid</span>
+                      <span>Quick Mark Full Paid</span>
                     </>
                   )}
                 </button>
+              </div>
 
-                {/* Option 2: Edit Invoice */}
+              <div className="py-1">
+                {/* Option 3: Edit Invoice */}
                 <button
                   type="button"
                   onClick={() => {
@@ -172,10 +204,8 @@ export default function InvoiceCard({
                   <Edit2 size={14} className="shrink-0" />
                   <span>Edit Invoice</span>
                 </button>
-              </div>
 
-              {/* Option 3: Delete Invoice */}
-              <div className="py-1">
+                {/* Option 4: Delete Invoice */}
                 <button
                   type="button"
                   onClick={() => {

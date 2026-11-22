@@ -251,39 +251,45 @@ export default function CreateInvoiceModal({
                   <span>Invoice Date</span>
                   <span className="text-[10px] text-cyan normal-case font-mono">Today</span>
                 </label>
-                <div 
-                  onClick={() => issueDateInputRef.current?.showPicker ? issueDateInputRef.current.showPicker() : issueDateInputRef.current?.focus()}
-                  className="relative flex items-center cursor-pointer"
-                >
+                <div className="relative flex items-center">
                   <input
                     ref={issueDateInputRef}
                     type="date"
                     required
                     value={issueDate}
                     onChange={(e) => setIssueDate(e.target.value)}
-                    className="w-full rounded-xl bg-void border border-edge pl-3 pr-9 py-2 text-xs focus-ring outline-none text-paper font-mono [color-scheme:dark] cursor-pointer"
+                    className="date-input-custom w-full rounded-xl bg-void border border-edge pl-3 pr-9 py-2 text-xs focus-ring outline-none text-paper font-mono [color-scheme:dark]"
                   />
-                  <div className="absolute right-3 pointer-events-none text-white">
+                  <button
+                    type="button"
+                    onClick={() => issueDateInputRef.current?.showPicker ? issueDateInputRef.current.showPicker() : issueDateInputRef.current?.focus()}
+                    className="absolute right-2.5 p-1 text-mist hover:text-cyan transition-colors rounded-lg cursor-pointer"
+                    title="Choose from calendar"
+                    tabIndex={-1}
+                  >
                     <Calendar className="w-4 h-4" />
-                  </div>
+                  </button>
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-mono text-mist uppercase mb-1">Due Date</label>
-                <div 
-                  onClick={() => dueDateInputRef.current?.showPicker ? dueDateInputRef.current.showPicker() : dueDateInputRef.current?.focus()}
-                  className="relative flex items-center cursor-pointer"
-                >
+                <div className="relative flex items-center">
                   <input
                     ref={dueDateInputRef}
                     type="date"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
-                    className="w-full rounded-xl bg-void border border-edge pl-3 pr-9 py-2 text-xs focus-ring outline-none text-paper font-mono [color-scheme:dark] cursor-pointer"
+                    className="date-input-custom w-full rounded-xl bg-void border border-edge pl-3 pr-9 py-2 text-xs focus-ring outline-none text-paper font-mono [color-scheme:dark]"
                   />
-                  <div className="absolute right-3 pointer-events-none text-white">
+                  <button
+                    type="button"
+                    onClick={() => dueDateInputRef.current?.showPicker ? dueDateInputRef.current.showPicker() : dueDateInputRef.current?.focus()}
+                    className="absolute right-2.5 p-1 text-mist hover:text-cyan transition-colors rounded-lg cursor-pointer"
+                    title="Choose from calendar"
+                    tabIndex={-1}
+                  >
                     <Calendar className="w-4 h-4" />
-                  </div>
+                  </button>
                 </div>
               </div>
             </div>

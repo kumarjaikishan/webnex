@@ -1,0 +1,1 @@
+import{r as e}from"./utils-vendor-CTkCwYwk.js";var t=e.create({baseURL:`/api`});t.interceptors.request.use(e=>{let t=localStorage.getItem(`devfolio_token`);return t&&(e.headers.Authorization=`Bearer ${t}`),e});export{t};

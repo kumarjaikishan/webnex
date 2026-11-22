@@ -44,12 +44,18 @@ export function generateInvoiceForPlan(plan, force = false, customOptions = {}) 
   const issueDate = customOptions.issueDate || todayStr;
   const targetPeriodMonth = customOptions.periodMonth || issueDate.substring(0, 7); // e.g. "2026-11"
 
-  // Check if invoice for this plan has already been generated for this periodMonth
-  if (!force && plan.lastInvoicedMonth === targetPeriodMonth) {
+  // Check if an active (non-deleted) invoice exists for this plan and period
+  const activeExistingInvoice = existingInvoices.find(
+    (inv) =>
+      inv.maintenancePlanId === plan.id &&
+      (inv.periodMonth === targetPeriodMonth || inv.issueDate?.substring(0, 7) === targetPeriodMonth)
+  );
+
+  if (!force && activeExistingInvoice) {
     return {
       success: false,
       alreadyInvoiced: true,
-      message: `Invoice for this period (${targetPeriodMonth}) has already been generated (${plan.lastInvoiceNumber || "INV"}).`,
+      message: `Invoice for this period (${targetPeriodMonth}) currently exists (${activeExistingInvoice.invoiceNumber}).`,
     };
   }
 
