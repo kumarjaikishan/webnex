@@ -333,16 +333,17 @@ export default function Notes() {
       {/* MODAL: SEND NOTE / CARD */}
       {showModal &&
         createPortal(
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-void/80 backdrop-blur-sm overflow-y-auto">
-            <div className="relative w-full max-w-lg bg-panel border border-edge rounded-2xl shadow-2xl p-6 space-y-4 my-8">
-              <div className="flex items-center justify-between border-b border-edge pb-3">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-void/85 backdrop-blur-md overflow-y-auto">
+            <div className="relative w-full max-w-lg max-h-[calc(100vh-2rem)] overflow-y-auto overflow-x-hidden rounded-2xl bg-panel border border-edge border-t-2 border-t-cyan shadow-2xl p-6 space-y-4 my-8">
+              <div className="flex items-center justify-between border-b border-edge/80 pb-3">
                 <div className="flex items-center gap-2">
                   <span className="text-xl">💌</span>
                   <h2 className="font-display font-bold text-lg text-paper">Send Note / Courtesy Card</h2>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setShowModal(false)}
-                  className="text-mist hover:text-paper p-1 rounded-lg hover:bg-white/5 transition"
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-mist hover:text-paper hover:bg-white/5 transition"
                 >
                   ✕
                 </button>

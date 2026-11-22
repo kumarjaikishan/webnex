@@ -161,7 +161,7 @@ export default function AdminSettings() {
   ];
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 w-full">
       <div>
         <h1 className="font-display text-3xl font-bold text-paper mb-1">Admin Settings</h1>
         <p className="text-xs font-mono text-mist">Manage studio configurations, visual experiences, settlements, and security.</p>

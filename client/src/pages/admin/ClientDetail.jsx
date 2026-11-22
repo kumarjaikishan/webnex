@@ -4,7 +4,7 @@ import api from "../../api/client.js";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
 import { useConfirm } from "../../context/ConfirmContext.jsx";
 import { toast } from "sonner";
-import { Edit2, Trash2, X, ArrowLeft, Send, Check } from "lucide-react";
+import { Edit2, Trash2, X, ArrowLeft, Send, Check, Play, Pause, Zap, ArrowUpRight } from "lucide-react";
 
 const noteTypes = [
   { value: "welcome", label: "Welcome note" },
@@ -28,10 +28,13 @@ export default function ClientDetail() {
     amount: "",
     cycle: "monthly",
     nextDueDate: "",
+    status: "active",
+    billingMode: "auto",
     planTitle: "Monthly Website Care & Maintenance",
     notes: "",
   });
   const [editingMaint, setEditingMaint] = useState(null);
+  const [generatingMaintId, setGeneratingMaintId] = useState(null);
 
   const [reminderForm, setReminderForm] = useState({ title: "", dueDate: "", type: "general" });
   const [noteForm, setNoteForm] = useState({ type: "welcome", message: "" });
@@ -85,6 +88,8 @@ export default function ClientDetail() {
       amount: m.amount || "",
       cycle: m.cycle || "monthly",
       nextDueDate: m.nextDueDate || "",
+      status: m.status || "active",
+      billingMode: m.billingMode || "auto",
       planTitle: m.planTitle || "Monthly Website Care & Maintenance",
       notes: m.notes || "",
     });
@@ -96,9 +101,60 @@ export default function ClientDetail() {
       amount: "",
       cycle: "monthly",
       nextDueDate: "",
+      status: "active",
+      billingMode: "auto",
       planTitle: "Monthly Website Care & Maintenance",
       notes: "",
     });
+  }
+
+  async function toggleMaintenanceStatus(m) {
+    const nextStatus = m.status === "active" ? "paused" : "active";
+    try {
+      await api.put(`/maintenance/${m.id}`, { status: nextStatus });
+      toast.success(
+        nextStatus === "active"
+          ? "Maintenance plan started / activated!"
+          : "Maintenance plan paused."
+      );
+      if (editingMaint?.id === m.id) {
+        setMaintForm((prev) => ({ ...prev, status: nextStatus }));
+      }
+      load();
+    } catch (err) {
+      toast.error("Failed to update maintenance plan status.");
+    }
+  }
+
+  async function handleToggleBillingMode(m) {
+    const nextMode = m.billingMode === "manual" ? "auto" : "manual";
+    try {
+      await api.put(`/maintenance/${m.id}`, { billingMode: nextMode });
+      toast.success(
+        nextMode === "auto"
+          ? "Switched to Auto-Billing (Auto-generates on due date)"
+          : "Switched to Manual Billing (Click to generate)"
+      );
+      if (editingMaint?.id === m.id) {
+        setMaintForm((prev) => ({ ...prev, billingMode: nextMode }));
+      }
+      load();
+    } catch (err) {
+      toast.error("Failed to update billing mode.");
+    }
+  }
+
+  async function handleGenerateSingleInvoice(m) {
+    setGeneratingMaintId(m.id);
+    try {
+      const res = await api.post(`/maintenance/${m.id}/generate-invoice`);
+      toast.success(res.data.message || "Invoice generated with status Pending!");
+      load();
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Failed to generate invoice.");
+    } finally {
+      setGeneratingMaintId(null);
+    }
   }
 
   async function handleMaintenanceSubmit(e) {
@@ -109,6 +165,8 @@ export default function ClientDetail() {
           amount: Number(maintForm.amount),
           cycle: maintForm.cycle,
           nextDueDate: maintForm.nextDueDate,
+          status: maintForm.status || "active",
+          billingMode: maintForm.billingMode || "auto",
           planTitle: maintForm.planTitle,
           notes: maintForm.notes,
         });
@@ -118,6 +176,8 @@ export default function ClientDetail() {
         await api.post("/maintenance", {
           ...maintForm,
           amount: Number(maintForm.amount),
+          status: maintForm.status || "active",
+          billingMode: maintForm.billingMode || "auto",
           clientId: id,
         });
         toast.success("Maintenance plan created successfully!");
@@ -126,6 +186,8 @@ export default function ClientDetail() {
         amount: "",
         cycle: "monthly",
         nextDueDate: "",
+        status: "active",
+        billingMode: "auto",
         planTitle: "Monthly Website Care & Maintenance",
         notes: "",
       });
@@ -356,6 +418,32 @@ export default function ClientDetail() {
                 onChange={(e) => setMaintForm({ ...maintForm, nextDueDate: e.target.value })}
               />
             </div>
+            <div>
+              <label className="block text-[11px] font-mono text-mist uppercase tracking-wider mb-1">
+                Plan Status
+              </label>
+              <select
+                className={input}
+                value={maintForm.status}
+                onChange={(e) => setMaintForm({ ...maintForm, status: e.target.value })}
+              >
+                <option value="active">Active (Started / Running)</option>
+                <option value="paused">Paused</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-[11px] font-mono text-mist uppercase tracking-wider mb-1">
+                Invoice Generation Mode
+              </label>
+              <select
+                className={input}
+                value={maintForm.billingMode || "auto"}
+                onChange={(e) => setMaintForm({ ...maintForm, billingMode: e.target.value })}
+              >
+                <option value="auto">Auto-Generate (Auto on due date / 1st of month)</option>
+                <option value="manual">Manual Billing (Click to generate on demand)</option>
+              </select>
+            </div>
             <div className="flex items-center gap-2 pt-1">
               <button className={btn}>
                 {editingMaint ? "Update Plan" : "Save Plan"}
@@ -400,25 +488,114 @@ export default function ClientDetail() {
                         <span className="font-semibold text-sm text-paper font-mono">
                           ₹{m.amount} / {m.cycle}
                         </span>
-                        {m.status && (
+                        {/* Interactive Clickable Status Pill */}
+                        <button
+                          type="button"
+                          onClick={() => toggleMaintenanceStatus(m)}
+                          title={`Click to switch status to ${m.status === "active" ? "Paused" : "Active"}`}
+                          className={`text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full font-semibold transition flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95 ${
+                            m.status === "active"
+                              ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25"
+                              : "bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25"
+                          }`}
+                        >
                           <span
-                            className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded-full font-semibold ${
-                              m.status === "active"
-                                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
-                                : "bg-amber-500/10 text-amber-400 border border-amber-500/30"
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              m.status === "active" ? "bg-emerald-400 animate-pulse" : "bg-amber-400"
                             }`}
-                          >
-                            {m.status}
-                          </span>
-                        )}
+                          />
+                          <span>{m.status || "active"}</span>
+                        </button>
+
+                        {/* Interactive Mode Pill */}
+                        <button
+                          type="button"
+                          onClick={() => handleToggleBillingMode(m)}
+                          title="Click to toggle between Auto and Manual billing mode"
+                          className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded-full font-semibold transition flex items-center gap-1 cursor-pointer hover:scale-105 active:scale-95 ${
+                            m.billingMode !== "manual"
+                              ? "bg-cyan/15 text-cyan border border-cyan/30"
+                              : "bg-void/80 text-mist border border-edge hover:text-paper"
+                          }`}
+                        >
+                          {m.billingMode !== "manual" ? "⚡ Auto" : "✋ Manual"}
+                        </button>
                       </div>
+
                       <span className="font-mono text-xs text-mist block mt-0.5">
                         next due: {m.nextDueDate || "N/A"}
                       </span>
+
+                      {/* Current Month Invoicing Status & Action */}
+                      <div className="mt-1.5 flex items-center gap-2 flex-wrap">
+                        {m.lastInvoicedMonth === new Date().toISOString().substring(0, 7) ? (
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono">
+                            <Check size={11} className="shrink-0" />
+                            <span>{m.lastInvoiceNumber || "Invoice"} generated (Pending)</span>
+                            {m.lastInvoiceId && (
+                              <Link
+                                to={`/admin/invoices/${m.lastInvoiceId}`}
+                                className="text-cyan underline ml-0.5 inline-flex items-center gap-0.5"
+                              >
+                                <span>View</span>
+                                <ArrowUpRight size={10} />
+                              </Link>
+                            )}
+                          </span>
+                        ) : (
+                          <div className="inline-flex items-center gap-2 flex-wrap">
+                            {m.status === "active" && (
+                              <button
+                                type="button"
+                                disabled={generatingMaintId === m.id}
+                                onClick={() => handleGenerateSingleInvoice(m)}
+                                className="px-2.5 py-1 rounded-lg bg-grad-primary text-void font-bold text-xs flex items-center gap-1 hover:brightness-110 active:scale-95 transition shadow disabled:opacity-50"
+                                title="Generate this month's invoice immediately with status Pending"
+                              >
+                                <Zap size={11} />
+                                <span>
+                                  {generatingMaintId === m.id
+                                    ? "Generating..."
+                                    : `Generate ${new Date().toLocaleDateString("en-US", { month: "short" })} Invoice`}
+                                </span>
+                              </button>
+                            )}
+                            <span className="text-[10px] font-mono text-mist/60">
+                              {m.billingMode !== "manual"
+                                ? `Auto on ${m.nextDueDate}`
+                                : "Manual mode"}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Action buttons: Edit and Delete */}
+                    {/* Action buttons: Start/Pause, Edit, and Delete */}
                     <div className="flex items-center gap-1.5 shrink-0">
+                      {/* 1-Click Start / Pause Button */}
+                      <button
+                        type="button"
+                        onClick={() => toggleMaintenanceStatus(m)}
+                        title={m.status === "active" ? "Pause this plan" : "Start / Activate this plan"}
+                        className={`p-2 rounded-lg border text-xs font-mono transition flex items-center gap-1.5 ${
+                          m.status === "active"
+                            ? "border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300"
+                            : "border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300"
+                        }`}
+                      >
+                        {m.status === "active" ? (
+                          <>
+                            <Pause size={12} />
+                            <span className="text-[11px] font-semibold">Pause</span>
+                          </>
+                        ) : (
+                          <>
+                            <Play size={12} />
+                            <span className="text-[11px] font-semibold">Start</span>
+                          </>
+                        )}
+                      </button>
+
                       <button
                         type="button"
                         onClick={() => startEditMaint(m)}

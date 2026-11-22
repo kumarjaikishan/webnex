@@ -215,11 +215,17 @@ export default function Reminders() {
 
       {/* CREATE REMINDER MODAL VIA PORTAL */}
       {showModal && createPortal(
-        <div className="fixed inset-0 z-[9999] bg-void/90 backdrop-blur-md flex items-center justify-center p-4 m-0 top-0 left-0 right-0 bottom-0">
-          <div className="bg-panel border border-edge rounded-2xl max-w-md w-full p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-edge pb-3">
-              <h2 className="font-display text-lg font-bold">New Payment Reminder</h2>
-              <button onClick={() => setShowModal(false)} className="text-mist hover:text-paper">✕</button>
+        <div className="fixed inset-0 z-[9999] bg-void/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="relative w-full max-w-md max-h-[calc(100vh-2rem)] overflow-y-auto overflow-x-hidden rounded-2xl bg-panel border border-edge border-t-2 border-t-cyan shadow-2xl p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-edge/80 pb-3">
+              <h2 className="font-display text-lg font-bold text-paper">New Payment Reminder</h2>
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-mist hover:text-paper hover:bg-white/5 transition"
+              >
+                ✕
+              </button>
             </div>
 
             <form onSubmit={handleCreateReminder} className="space-y-4">

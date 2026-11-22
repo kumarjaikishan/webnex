@@ -60,6 +60,24 @@ body {
   .marquee-track { animation: none; }
 }
 
+/* Ensure native date & month picker calendar icon is visible in dark theme */
+input[type="date"],
+input[type="month"] {
+  color-scheme: dark;
+}
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="month"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(1) brightness(2) !important;
+  opacity: 1 !important;
+  display: block !important;
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="month"]::-webkit-calendar-picker-indicator:hover {
+  filter: invert(1) brightness(2.5) !important;
+  opacity: 1 !important;
+}
+
 /* ==========================================================
    PRINT MEDIA STYLES FOR WEBNEX LABS DOCUMENTS & PDF SAVING
    ========================================================== */

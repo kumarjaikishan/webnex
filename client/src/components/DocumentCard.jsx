@@ -263,7 +263,7 @@ const DocumentCard = forwardRef(function DocumentCard(
                 {notes && (
                   <div className="bg-gray-50/20 backdrop-blur-[2px] p-4 rounded-xl border border-gray-200/60 text-xs text-gray-600">
                     <p className="font-mono uppercase text-[10px] text-gray-800 mb-1 font-bold">Notes & Terms</p>
-                    <p className="leading-relaxed">{notes}</p>
+                    <div className="leading-relaxed whitespace-pre-line font-sans text-gray-700">{notes}</div>
                   </div>
                 )}
 

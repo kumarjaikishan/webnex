@@ -15,7 +15,7 @@ export default function Clients() {
   // Modal State
   const [showModal, setShowModal] = useState(false);
   const [editingClient, setEditingClient] = useState(null);
-  const [form, setForm] = useState({ name: "", email: "", company: "", password: "", maintenanceAmount: "" });
+  const [form, setForm] = useState({ name: "", email: "", company: "", password: "" });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -44,7 +44,7 @@ export default function Clients() {
 
   const openAddModal = () => {
     setEditingClient(null);
-    setForm({ name: "", email: "", company: "", password: "", maintenanceAmount: "" });
+    setForm({ name: "", email: "", company: "", password: "" });
     setError("");
     setShowModal(true);
   };
@@ -57,7 +57,6 @@ export default function Clients() {
       email: client.email || "",
       company: client.company || "",
       password: "",
-      maintenanceAmount: client.maintenancePlan?.amount != null ? String(client.maintenancePlan.amount) : "",
     });
     setError("");
     setShowModal(true);
@@ -66,7 +65,7 @@ export default function Clients() {
   const closeModal = () => {
     setShowModal(false);
     setEditingClient(null);
-    setForm({ name: "", email: "", company: "", password: "", maintenanceAmount: "" });
+    setForm({ name: "", email: "", company: "", password: "" });
     setError("");
   };
 
@@ -84,48 +83,15 @@ export default function Clients() {
           company: form.company,
         };
         await api.put(`/clients/${editingClient.id}`, payload);
-
-        // Update or Delete Maintenance Plan if modified
-        const oldPlan = editingClient.maintenancePlan;
-        const newAmount = form.maintenanceAmount.trim() !== "" ? Number(form.maintenanceAmount) : null;
-
-        if (oldPlan) {
-          if (!newAmount || newAmount <= 0) {
-            // Delete plan if cleared or set to 0
-            await api.delete(`/maintenance/${oldPlan.id}`);
-          } else if (newAmount !== oldPlan.amount) {
-            // Update plan amount
-            await api.put(`/maintenance/${oldPlan.id}`, { amount: newAmount });
-          }
-        } else if (newAmount && newAmount > 0) {
-          // Create new maintenance plan
-          await api.post("/maintenance", {
-            clientId: editingClient.id,
-            amount: newAmount,
-            cycle: "monthly",
-          });
-        }
-
         toast.success(`Client ${form.name} updated successfully`);
       } else {
         // Create New Client
-        const res = await api.post("/clients", {
+        await api.post("/clients", {
           name: form.name,
           email: form.email,
           company: form.company,
           password: form.password,
         });
-
-        // If maintenance amount specified on creation
-        const newAmount = form.maintenanceAmount.trim() !== "" ? Number(form.maintenanceAmount) : null;
-        if (newAmount && newAmount > 0 && res.data?.id) {
-          await api.post("/maintenance", {
-            clientId: res.data.id,
-            amount: newAmount,
-            cycle: "monthly",
-          });
-        }
-
         toast.success(`Client ${form.name} added successfully`);
       }
       closeModal();
@@ -274,10 +240,26 @@ export default function Clients() {
                     {c.maintenancePlan ? (
                       <Link
                         to="/admin/maintenance"
-                        title="Click to view & manage in Maintenance section"
-                        className="text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/20 transition px-2.5 py-1 rounded-lg inline-block"
+                        title={
+                          c.maintenancePlan.status === "paused"
+                            ? "Plan is paused - click to manage in Maintenance section"
+                            : "Plan is active - click to manage in Maintenance section"
+                        }
+                        className={`font-semibold border transition px-2.5 py-1 rounded-lg inline-flex items-center gap-1.5 ${
+                          c.maintenancePlan.status === "paused"
+                            ? "text-amber-400 bg-amber-500/10 border-amber-500/30 hover:border-amber-500/50 hover:bg-amber-500/20"
+                            : "text-emerald-400 bg-emerald-500/10 border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/20"
+                        }`}
                       >
-                        ₹{c.maintenancePlan.amount}/{c.maintenancePlan.cycle}
+                        {c.maintenancePlan.status === "paused" && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                        )}
+                        <span>₹{c.maintenancePlan.amount}/{c.maintenancePlan.cycle}</span>
+                        {c.maintenancePlan.status === "paused" && (
+                          <span className="text-[9px] uppercase font-mono px-1 py-0.5 rounded bg-amber-500/20 text-amber-300">
+                            paused
+                          </span>
+                        )}
                       </Link>
                     ) : (
                       <Link
@@ -336,11 +318,11 @@ export default function Clients() {
       {/* POPUP MODAL: ADD / EDIT CLIENT */}
       {showModal && (
         <div
-          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150"
+          className="fixed inset-0 z-50 bg-void/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto"
           onClick={closeModal}
         >
           <div
-            className="bg-[#0e0f17] border border-white/10 rounded-2xl p-6 sm:p-7 max-w-lg w-full shadow-2xl relative overflow-hidden animate-in zoom-in-95 duration-150"
+            className="relative w-full max-w-lg max-h-[calc(100vh-2rem)] overflow-y-auto overflow-x-hidden rounded-2xl bg-panel border border-edge border-t-2 border-t-cyan shadow-2xl p-6 sm:p-7"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top ambient glow */}
@@ -410,7 +392,7 @@ export default function Clients() {
 
               <div>
                 <label className="block text-xs font-mono uppercase tracking-wider text-mist mb-1.5">
-                  Company / Organization (Optional)
+                  Company / Organization
                 </label>
                 <div className="relative">
                   <Building size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-mist pointer-events-none" />
@@ -419,24 +401,6 @@ export default function Clients() {
                     placeholder="e.g. GoodFeel Wellness Ltd."
                     value={form.company}
                     onChange={(e) => setForm({ ...form, company: e.target.value })}
-                    className="w-full rounded-xl bg-void border border-edge pl-10 pr-4 py-2.5 text-sm text-paper focus-ring outline-none"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-mist mb-1.5 flex items-center justify-between">
-                  <span>Monthly Maintenance Fee (₹)</span>
-                  <span className="text-[10px] text-mist/60 normal-case">(Optional - set 0 or leave empty to delete)</span>
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-mist font-mono font-bold text-sm pointer-events-none">₹</span>
-                  <input
-                    type="number"
-                    min="0"
-                    placeholder="e.g. 4050"
-                    value={form.maintenanceAmount}
-                    onChange={(e) => setForm({ ...form, maintenanceAmount: e.target.value })}
                     className="w-full rounded-xl bg-void border border-edge pl-10 pr-4 py-2.5 text-sm text-paper focus-ring outline-none"
                   />
                 </div>

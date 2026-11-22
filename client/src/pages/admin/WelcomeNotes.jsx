@@ -280,13 +280,14 @@ Web & Digital Solutions`;
       {/* CREATE WELCOME LETTER MODAL */}
       {showCreateModal &&
         createPortal(
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-void/80 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-panel border border-edge rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-edge pb-3">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-void/85 backdrop-blur-md overflow-y-auto">
+            <div className="relative w-full max-w-2xl max-h-[calc(100vh-2rem)] overflow-y-auto overflow-x-hidden rounded-2xl bg-panel border border-edge border-t-2 border-t-cyan shadow-2xl p-6 space-y-4">
+              <div className="flex items-center justify-between border-b border-edge/80 pb-3">
                 <h2 className="font-display text-lg font-bold text-paper">Draft Client Welcome Letter</h2>
                 <button
+                  type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="text-mist hover:text-paper text-sm"
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-mist hover:text-paper hover:bg-white/5 transition"
                 >
                   ✕
                 </button>
@@ -424,13 +425,14 @@ Web & Digital Solutions`;
       {/* EDIT WELCOME LETTER MODAL */}
       {editingNote &&
         createPortal(
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-void/80 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-panel border border-edge rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-edge pb-3">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-void/85 backdrop-blur-md overflow-y-auto">
+            <div className="relative w-full max-w-2xl max-h-[calc(100vh-2rem)] overflow-y-auto overflow-x-hidden rounded-2xl bg-panel border border-edge border-t-2 border-t-cyan shadow-2xl p-6 space-y-4">
+              <div className="flex items-center justify-between border-b border-edge/80 pb-3">
                 <h2 className="font-display text-lg font-bold text-paper">Edit Welcome Letter</h2>
                 <button
+                  type="button"
                   onClick={() => setEditingNote(null)}
-                  className="text-mist hover:text-paper text-sm"
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-mist hover:text-paper hover:bg-white/5 transition"
                 >
                   ✕
                 </button>

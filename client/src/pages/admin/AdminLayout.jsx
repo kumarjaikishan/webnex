@@ -26,7 +26,7 @@ export default function AdminLayout() {
   ) || navItems[0];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 grid md:grid-cols-[230px_1fr] gap-6 sm:gap-8 print:m-0 print:p-0 print:w-full print:max-w-full print:block print:border-0">
+    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-6 sm:py-8 grid md:grid-cols-[240px_1fr] lg:grid-cols-[250px_1fr] gap-6 sm:gap-8 print:m-0 print:p-0 print:w-full print:max-w-full print:block print:border-0">
       {/* MOBILE ADMIN DROPDOWN & SCROLLABLE BAR */}
       <div className="md:hidden space-y-3 no-print">
         <div className="flex items-center justify-between bg-panel border border-edge p-3 rounded-xl">

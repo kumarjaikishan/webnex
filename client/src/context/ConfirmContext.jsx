@@ -68,14 +68,16 @@ export function ConfirmProvider({ children }) {
 
       {dialogState.isOpen && (
         <div
-          className="fixed inset-0 z-[9999] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150 select-none"
+          className="fixed inset-0 z-[9999] bg-void/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto select-none"
           onClick={handleCancel}
           role="dialog"
           aria-modal="true"
         >
           {/* Modal Card */}
           <div
-            className="bg-[#0e0f17] border border-white/10 rounded-2xl p-6 sm:p-7 max-w-md w-full shadow-2xl relative overflow-hidden animate-in zoom-in-95 duration-150 text-left"
+            className={`relative w-full max-w-md max-h-[calc(100vh-2rem)] overflow-y-auto overflow-x-hidden rounded-2xl bg-panel border border-edge shadow-2xl p-6 sm:p-7 text-left border-t-2 ${
+              isDanger ? "border-t-rose-500" : "border-t-cyan"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Subtle top ambient glow */}

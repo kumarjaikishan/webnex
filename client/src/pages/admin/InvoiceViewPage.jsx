@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { Landmark } from "lucide-react";
+import { Landmark, Edit2 } from "lucide-react";
 import api from "../../api/client.js";
 import DocumentCard from "../../components/DocumentCard.jsx";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
+import { CreateInvoiceModal } from "../../components/invoices";
 
 export default function InvoiceViewPage() {
   const { id } = useParams();
@@ -12,6 +13,7 @@ export default function InvoiceViewPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const docCardRef = React.useRef(null);
 
   // Bank & settlement details fallback from settings
@@ -23,8 +25,7 @@ export default function InvoiceViewPage() {
     ifscCode: "SBIN0001234",
   });
 
-  useEffect(() => {
-    // 1. Fetch invoice
+  function fetchInvoice() {
     api
       .get(`/invoices/${id}`)
       .then((res) => {
@@ -35,6 +36,11 @@ export default function InvoiceViewPage() {
         setError("Invoice not found or inaccessible.");
       })
       .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    // 1. Fetch invoice
+    fetchInvoice();
 
     // 2. Fetch admin settings for payment info
     api
@@ -109,6 +115,14 @@ export default function InvoiceViewPage() {
           </span>
           <button
             type="button"
+            onClick={() => setShowEditModal(true)}
+            className="px-4 py-2 rounded-xl bg-panel border border-edge text-paper hover:bg-white/5 hover:border-cyan/40 font-semibold text-xs transition flex items-center gap-1.5"
+          >
+            <Edit2 size={13} className="text-cyan" />
+            <span>Edit Invoice</span>
+          </button>
+          <button
+            type="button"
             disabled={downloadingPdf}
             onClick={() => {
               if (docCardRef.current?.downloadPdf) {
@@ -172,25 +186,35 @@ export default function InvoiceViewPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 font-sans">
-              {(invoice.items || []).map((it, idx) => (
-                <tr key={idx} className={idx % 2 === 1 ? "bg-gray-50/60" : "bg-white"}>
-                  <td className="py-3 px-4 text-gray-900 font-medium">
-                    <p className="font-semibold text-sm text-gray-900">{it.description}</p>
-                    <p className="text-[11px] text-gray-500 font-normal mt-0.5">
-                      Bespoke software engineering & digital implementation
-                    </p>
-                  </td>
-                  <td className="py-3 px-3 text-right text-gray-800 font-mono">
-                    ₹{Number(it.price || 0).toLocaleString()}
-                  </td>
-                  <td className="py-3 px-3 text-center text-gray-800 font-mono">
-                    {it.quantity || 1}
-                  </td>
-                  <td className="py-3 px-4 text-right font-mono font-bold text-gray-950">
-                    ₹{(Number(it.quantity || 1) * Number(it.price || 0)).toLocaleString()}
-                  </td>
-                </tr>
-              ))}
+              {(invoice.items || []).map((it, idx) => {
+                const subText =
+                  it.subDescription !== undefined
+                    ? it.subDescription
+                    : it.subtitle !== undefined
+                    ? it.subtitle
+                    : "Bespoke software engineering & digital implementation";
+                return (
+                  <tr key={idx} className={idx % 2 === 1 ? "bg-gray-50/60" : "bg-white"}>
+                    <td className="py-3 px-4 text-gray-900 font-medium">
+                      <p className="font-semibold text-sm text-gray-900">{it.description}</p>
+                      {subText && (
+                        <p className="text-[11px] text-gray-500 font-normal mt-0.5">
+                          {subText}
+                        </p>
+                      )}
+                    </td>
+                    <td className="py-3 px-3 text-right text-gray-800 font-mono">
+                      ₹{Number(it.price || 0).toLocaleString()}
+                    </td>
+                    <td className="py-3 px-3 text-center text-gray-800 font-mono">
+                      {it.quantity || 1}
+                    </td>
+                    <td className="py-3 px-4 text-right font-mono font-bold text-gray-950">
+                      ₹{(Number(it.quantity || 1) * Number(it.price || 0)).toLocaleString()}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -347,6 +371,17 @@ export default function InvoiceViewPage() {
           </div>
         </div>
       </DocumentCard>
+
+      {/* Edit Invoice Modal */}
+      {invoice && (
+        <CreateInvoiceModal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          onInvoiceCreated={fetchInvoice}
+          editingInvoice={invoice}
+          defaultPaymentDetails={pd}
+        />
+      )}
     </div>
   );
 }

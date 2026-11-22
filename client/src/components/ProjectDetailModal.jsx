@@ -40,7 +40,7 @@ export default function ProjectDetailModal({ project, isOpen, onClose }) {
       />
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl border border-edge bg-panel/95 backdrop-blur-xl shadow-2xl overflow-hidden z-10 my-auto animate-scale-up">
+      <div className="relative w-full max-w-4xl max-h-[calc(100vh-2rem)] overflow-y-auto overflow-x-hidden flex flex-col rounded-2xl border border-edge border-t-2 border-t-cyan bg-panel/95 backdrop-blur-xl shadow-2xl z-10 my-auto">
         {/* Header Ribbon / Banner */}
         <div
           className="relative px-6 sm:px-8 py-6 border-b border-edge/80 flex items-start justify-between gap-4"
