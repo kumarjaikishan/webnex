@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import api from "./api/client.js";
 import Navbar from "./components/Navbar.jsx";
@@ -7,43 +7,47 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import ParticleBackground from "./components/ParticleBackground.jsx";
 import ScrollRestoreManager from "./components/ScrollRestoreManager.jsx";
 import WebnexLoader from "./components/WebnexLoader.jsx";
+import GearboxLoader from "./components/GearboxLoader.jsx";
 import { Toaster } from "sonner";
 import { ConfirmProvider } from "./context/ConfirmContext.jsx";
 
+// Public Pages (Home loaded eagerly for immediate First Contentful Paint)
 import Home from "./pages/Home.jsx";
-import Work from "./pages/Work.jsx";
-import About from "./pages/About.jsx";
-import Contact from "./pages/Contact.jsx";
-import Login from "./pages/Login.jsx";
-import ServicesPage from "./pages/ServicesPage.jsx";
-import FAQsPage from "./pages/FAQsPage.jsx";
-import PortfolioPage from "./pages/PortfolioPage.jsx";
-import ProjectDetailPage from "./pages/ProjectDetailPage.jsx";
-import BlogPage from "./pages/BlogPage.jsx";
-import PricingPage from "./pages/PricingPage.jsx";
-import ExtensionsPage from "./pages/ExtensionsPage.jsx";
-import PrivacyPage from "./pages/PrivacyPage.jsx";
-import TermsPage from "./pages/TermsPage.jsx";
+const Work = lazy(() => import("./pages/Work.jsx"));
+const About = lazy(() => import("./pages/About.jsx"));
+const Contact = lazy(() => import("./pages/Contact.jsx"));
+const Login = lazy(() => import("./pages/Login.jsx"));
+const ServicesPage = lazy(() => import("./pages/ServicesPage.jsx"));
+const FAQsPage = lazy(() => import("./pages/FAQsPage.jsx"));
+const PortfolioPage = lazy(() => import("./pages/PortfolioPage.jsx"));
+const ProjectDetailPage = lazy(() => import("./pages/ProjectDetailPage.jsx"));
+const BlogPage = lazy(() => import("./pages/BlogPage.jsx"));
+const PricingPage = lazy(() => import("./pages/PricingPage.jsx"));
+const ExtensionsPage = lazy(() => import("./pages/ExtensionsPage.jsx"));
+const PrivacyPage = lazy(() => import("./pages/PrivacyPage.jsx"));
+const TermsPage = lazy(() => import("./pages/TermsPage.jsx"));
 
-import AdminLayout from "./pages/admin/AdminLayout.jsx";
-import Overview from "./pages/admin/Overview.jsx";
-import Clients from "./pages/admin/Clients.jsx";
-import ClientDetail from "./pages/admin/ClientDetail.jsx";
-import Invoices from "./pages/admin/Invoices.jsx";
-import InvoiceViewPage from "./pages/admin/InvoiceViewPage.jsx";
-import Contracts from "./pages/admin/Contracts.jsx";
-import ContractViewPage from "./pages/admin/ContractViewPage.jsx";
-import WelcomeNotes from "./pages/admin/WelcomeNotes.jsx";
-import WelcomeNoteViewPage from "./pages/admin/WelcomeNoteViewPage.jsx";
-import Maintenance from "./pages/admin/Maintenance.jsx";
-import Reminders from "./pages/admin/Reminders.jsx";
-import Notes from "./pages/admin/Notes.jsx";
-import AdminProjects from "./pages/admin/Projects.jsx";
-import ContactInquiries from "./pages/admin/ContactInquiries.jsx";
-import AdminSettings from "./pages/admin/AdminSettings.jsx";
+// Admin Protected Pages (Lazy loaded only when an admin authenticates & accesses)
+const AdminLayout = lazy(() => import("./pages/admin/AdminLayout.jsx"));
+const Overview = lazy(() => import("./pages/admin/Overview.jsx"));
+const Clients = lazy(() => import("./pages/admin/Clients.jsx"));
+const ClientDetail = lazy(() => import("./pages/admin/ClientDetail.jsx"));
+const Invoices = lazy(() => import("./pages/admin/Invoices.jsx"));
+const InvoiceViewPage = lazy(() => import("./pages/admin/InvoiceViewPage.jsx"));
+const Contracts = lazy(() => import("./pages/admin/Contracts.jsx"));
+const ContractViewPage = lazy(() => import("./pages/admin/ContractViewPage.jsx"));
+const WelcomeNotes = lazy(() => import("./pages/admin/WelcomeNotes.jsx"));
+const WelcomeNoteViewPage = lazy(() => import("./pages/admin/WelcomeNoteViewPage.jsx"));
+const Maintenance = lazy(() => import("./pages/admin/Maintenance.jsx"));
+const Reminders = lazy(() => import("./pages/admin/Reminders.jsx"));
+const Notes = lazy(() => import("./pages/admin/Notes.jsx"));
+const AdminProjects = lazy(() => import("./pages/admin/Projects.jsx"));
+const ContactInquiries = lazy(() => import("./pages/admin/ContactInquiries.jsx"));
+const AdminSettings = lazy(() => import("./pages/admin/AdminSettings.jsx"));
 
-import ClientLayout from "./pages/client/ClientLayout.jsx";
-import ClientOverview from "./pages/client/ClientOverview.jsx";
+// Client Protected Pages
+const ClientLayout = lazy(() => import("./pages/client/ClientLayout.jsx"));
+const ClientOverview = lazy(() => import("./pages/client/ClientOverview.jsx"));
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -105,59 +109,67 @@ export default function App() {
         <div className="relative z-10 flex flex-col min-h-screen">
           <Navbar />
           <div className="flex-1 pt-16">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/services" element={<ServicesPage />} />
-              <Route path="/extensions" element={<ExtensionsPage />} />
-              <Route path="/pricing" element={<PricingPage />} />
-              <Route path="/faqs" element={<FAQsPage />} />
-              <Route path="/work" element={<PortfolioPage />} />
-              <Route path="/work/:slug" element={<ProjectDetailPage />} />
-              <Route path="/blog" element={<BlogPage />} />
-              <Route path="/privacy-policy" element={<PrivacyPage />} />
-              <Route path="/terms" element={<TermsPage />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
+            <Suspense
+              fallback={
+                <div className="min-h-[60vh] flex items-center justify-center">
+                  <GearboxLoader label="Loading page..." />
+                </div>
+              }
+            >
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/services" element={<ServicesPage />} />
+                <Route path="/extensions" element={<ExtensionsPage />} />
+                <Route path="/pricing" element={<PricingPage />} />
+                <Route path="/faqs" element={<FAQsPage />} />
+                <Route path="/work" element={<PortfolioPage />} />
+                <Route path="/work/:slug" element={<ProjectDetailPage />} />
+                <Route path="/blog" element={<BlogPage />} />
+                <Route path="/privacy-policy" element={<PrivacyPage />} />
+                <Route path="/terms" element={<TermsPage />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/login" element={<Login />} />
 
-              {/* Admin Protected Routes */}
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute role="admin">
-                    <AdminLayout />
-                  </ProtectedRoute>
-                }
-              >
-                <Route index element={<Overview />} />
-                <Route path="clients" element={<Clients />} />
-                <Route path="clients/:id" element={<ClientDetail />} />
-                <Route path="invoices" element={<Invoices />} />
-                <Route path="invoices/:id" element={<InvoiceViewPage />} />
-                <Route path="contracts" element={<Contracts />} />
-                <Route path="contracts/:id" element={<ContractViewPage />} />
-                <Route path="welcome-notes" element={<WelcomeNotes />} />
-                <Route path="welcome-notes/:id" element={<WelcomeNoteViewPage />} />
-                <Route path="maintenance" element={<Maintenance />} />
-                <Route path="reminders" element={<Reminders />} />
-                <Route path="notes" element={<Notes />} />
-                <Route path="projects" element={<AdminProjects />} />
-                <Route path="inquiries" element={<ContactInquiries />} />
-                <Route path="settings" element={<AdminSettings />} />
-              </Route>
+                {/* Admin Protected Routes */}
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute role="admin">
+                      <AdminLayout />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route index element={<Overview />} />
+                  <Route path="clients" element={<Clients />} />
+                  <Route path="clients/:id" element={<ClientDetail />} />
+                  <Route path="invoices" element={<Invoices />} />
+                  <Route path="invoices/:id" element={<InvoiceViewPage />} />
+                  <Route path="contracts" element={<Contracts />} />
+                  <Route path="contracts/:id" element={<ContractViewPage />} />
+                  <Route path="welcome-notes" element={<WelcomeNotes />} />
+                  <Route path="welcome-notes/:id" element={<WelcomeNoteViewPage />} />
+                  <Route path="maintenance" element={<Maintenance />} />
+                  <Route path="reminders" element={<Reminders />} />
+                  <Route path="notes" element={<Notes />} />
+                  <Route path="projects" element={<AdminProjects />} />
+                  <Route path="inquiries" element={<ContactInquiries />} />
+                  <Route path="settings" element={<AdminSettings />} />
+                </Route>
 
-              {/* Client Protected Routes */}
-              <Route
-                path="/portal"
-                element={
-                  <ProtectedRoute role="client">
-                    <ClientLayout />
-                  </ProtectedRoute>
-                }
-              >
-                <Route index element={<ClientOverview />} />
-              </Route>
-            </Routes>
+                {/* Client Protected Routes */}
+                <Route
+                  path="/portal"
+                  element={
+                    <ProtectedRoute role="client">
+                      <ClientLayout />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route index element={<ClientOverview />} />
+                </Route>
+              </Routes>
+            </Suspense>
           </div>
           <Footer />
         </div>

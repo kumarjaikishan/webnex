@@ -1,5 +1,4 @@
 import React, { useState, useRef, forwardRef, useImperativeHandle } from "react";
-import { downloadElementAsPdf } from "../utils/pdfExport.js";
 import { toast } from "sonner";
 
 const DocumentCard = forwardRef(function DocumentCard(
@@ -55,6 +54,7 @@ const DocumentCard = forwardRef(function DocumentCard(
     if (onDownloadingChange) onDownloadingChange(true);
     const toastId = toast.loading("Generating high-resolution PDF...");
     try {
+      const { downloadElementAsPdf } = await import("../utils/pdfExport.js");
       await downloadElementAsPdf(cardRef.current, defaultPdfName);
       toast.success(`✓ PDF downloaded: ${defaultPdfName}`, { id: toastId });
     } catch (err) {
