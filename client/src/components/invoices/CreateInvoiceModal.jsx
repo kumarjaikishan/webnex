@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { Calendar } from "lucide-react";
+import { Calendar, Building, UserPlus } from "lucide-react";
 import api from "../../api/client.js";
 import { toast } from "sonner";
 import InvoiceFormLineItems from "./InvoiceFormLineItems.jsx";
@@ -18,6 +18,10 @@ export default function CreateInvoiceModal({
   defaultPaymentDetails = {},
 }) {
   const todayStr = new Date().toISOString().split("T")[0];
+  const [clients, setClients] = useState([]);
+  const [clientMode, setClientMode] = useState("saved"); // "saved" | "custom"
+  const [selectedClientId, setSelectedClientId] = useState("");
+  const [clientCompany, setClientCompany] = useState("");
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [projectTitle, setProjectTitle] = useState("");
@@ -45,11 +49,31 @@ export default function CreateInvoiceModal({
   const issueDateInputRef = useRef(null);
   const dueDateInputRef = useRef(null);
 
+  // Load clients when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      api
+        .get("/clients")
+        .then((res) => {
+          setClients(res.data || []);
+        })
+        .catch((err) => console.error("Failed to load clients in invoice modal", err));
+    }
+  }, [isOpen]);
+
   // Sync defaults or editing invoice data
   useEffect(() => {
     if (editingInvoice) {
       setClientName(editingInvoice.clientName || "");
       setClientEmail(editingInvoice.clientEmail || "");
+      setClientCompany(editingInvoice.clientCompany || "");
+      if (editingInvoice.clientId) {
+        setClientMode("saved");
+        setSelectedClientId(editingInvoice.clientId);
+      } else {
+        setClientMode("custom");
+        setSelectedClientId("");
+      }
       setProjectTitle(editingInvoice.projectTitle || "");
       setIssueDate(editingInvoice.issueDate || todayStr);
       setDueDate(editingInvoice.dueDate || "");
@@ -121,6 +145,9 @@ export default function CreateInvoiceModal({
   };
 
   function resetForm() {
+    setClientMode("saved");
+    setSelectedClientId("");
+    setClientCompany("");
     setClientName("");
     setClientEmail("");
     setProjectTitle("");
@@ -138,6 +165,22 @@ export default function CreateInvoiceModal({
     ]);
   }
 
+  function handleSelectSavedClient(clientId) {
+    setSelectedClientId(clientId);
+    if (!clientId) {
+      setClientName("");
+      setClientEmail("");
+      setClientCompany("");
+      return;
+    }
+    const found = clients.find((c) => String(c.id) === String(clientId));
+    if (found) {
+      setClientName(found.name || "");
+      setClientEmail(found.email || "");
+      setClientCompany(found.company || "");
+    }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitting(true);
@@ -151,6 +194,8 @@ export default function CreateInvoiceModal({
       const totalAmount = subtotal + subtotal * (taxRate / 100);
 
       const payload = {
+        clientId: clientMode === "saved" && selectedClientId ? selectedClientId : null,
+        clientCompany: clientCompany || "",
         clientName,
         clientEmail,
         projectTitle,
@@ -209,29 +254,132 @@ export default function CreateInvoiceModal({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-mono text-mist uppercase mb-1">Client Name</label>
-              <input
-                type="text"
-                required
-                placeholder="Acme Corp"
-                value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
-                className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
-              />
+          {/* CLIENT SELECTION: SAVED CLIENT VS NEW / CUSTOM ENTRY */}
+          <div className="bg-void/40 border border-edge/70 rounded-xl p-3.5 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-edge/60 pb-2.5">
+              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-mist">
+                Client Information
+              </span>
+
+              {/* Segmented Toggle: Saved vs Custom */}
+              <div className="flex items-center gap-1 bg-void p-1 rounded-xl border border-edge/80">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setClientMode("saved");
+                  }}
+                  className={`px-3 py-1 rounded-lg text-xs font-mono font-semibold transition cursor-pointer flex items-center gap-1.5 ${
+                    clientMode === "saved"
+                      ? "bg-cyan/20 text-cyan border border-cyan/40 shadow-sm"
+                      : "text-mist hover:text-paper"
+                  }`}
+                >
+                  <Building size={12} />
+                  <span>Saved Client</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setClientMode("custom");
+                    setSelectedClientId("");
+                  }}
+                  className={`px-3 py-1 rounded-lg text-xs font-mono font-semibold transition cursor-pointer flex items-center gap-1.5 ${
+                    clientMode === "custom"
+                      ? "bg-cyan/20 text-cyan border border-cyan/40 shadow-sm"
+                      : "text-mist hover:text-paper"
+                  }`}
+                >
+                  <UserPlus size={12} />
+                  <span>+ New / Custom Entry</span>
+                </button>
+              </div>
             </div>
-            <div>
-              <label className="block text-xs font-mono text-mist uppercase mb-1">Client Email</label>
-              <input
-                type="email"
-                required
-                placeholder="client@acme.com"
-                value={clientEmail}
-                onChange={(e) => setClientEmail(e.target.value)}
-                className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
-              />
-            </div>
+
+            {clientMode === "saved" ? (
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-[11px] font-mono text-mist uppercase mb-1">
+                    Choose from Saved Clients *
+                  </label>
+                  <div className="relative">
+                    <Building size={14} className="absolute left-3.5 top-3 text-cyan pointer-events-none" />
+                    <select
+                      value={selectedClientId}
+                      onChange={(e) => handleSelectSavedClient(e.target.value)}
+                      className="w-full rounded-xl bg-void border border-edge pl-9 pr-3 py-2 text-sm text-paper focus-ring outline-none transition cursor-pointer"
+                    >
+                      <option value="">-- Select Saved Client --</option>
+                      {clients.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name} {c.company ? `(${c.company})` : ""} — {c.email}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  {clients.length === 0 && (
+                    <p className="text-[10px] text-mist/60 font-mono mt-1">
+                      No saved clients found. Switch to "+ New / Custom Entry" above.
+                    </p>
+                  )}
+                </div>
+
+                {/* Auto-populated, yet editable client name & email */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-mono text-mist uppercase mb-1">Client Name *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Client Name"
+                      value={clientName}
+                      onChange={(e) => setClientName(e.target.value)}
+                      className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-mono text-mist uppercase mb-1">Client Email *</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="client@example.com"
+                      value={clientEmail}
+                      onChange={(e) => setClientEmail(e.target.value)}
+                      className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-mono text-mist uppercase mb-1">New Client / Business Name *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Acme Corp / John Doe"
+                      value={clientName}
+                      onChange={(e) => setClientName(e.target.value)}
+                      className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-mono text-mist uppercase mb-1">Client Email Address *</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="client@example.com"
+                      value={clientEmail}
+                      onChange={(e) => setClientEmail(e.target.value)}
+                      className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
+                    />
+                  </div>
+                </div>
+                <p className="text-[10px] text-mist/60 font-mono">
+                  Enter new or one-off client details directly without needing to save them in CRM beforehand.
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

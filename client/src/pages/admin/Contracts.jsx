@@ -5,6 +5,7 @@ import api from "../../api/client.js";
 import { toast } from "sonner";
 import { useConfirm } from "../../context/ConfirmContext.jsx";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
+import { Eye, Edit2, Trash2 } from "lucide-react";
 
 const DEFAULT_AGREEMENT_TERMS = `# SOFTWARE DEVELOPMENT AND MAINTENANCE AGREEMENT
 
@@ -84,13 +85,11 @@ export default function Contracts() {
   // Create Form State
   const [title, setTitle] = useState("Software Development and Maintenance Agreement");
   const [clientId, setClientId] = useState("");
-  const [amount, setAmount] = useState(60000);
   const [terms, setTerms] = useState(DEFAULT_AGREEMENT_TERMS);
 
   // Edit Form State
   const [editTitle, setEditTitle] = useState("");
   const [editClientId, setEditClientId] = useState("");
-  const [editAmount, setEditAmount] = useState("");
   const [editTerms, setEditTerms] = useState("");
   const [editStatus, setEditStatus] = useState("sent");
 
@@ -141,13 +140,12 @@ export default function Contracts() {
       await api.post("/contracts", {
         title,
         clientId,
-        amount: Number(amount),
+        amount: 0,
         terms,
         status: "sent",
       });
       setShowModal(false);
       setTitle("Software Development and Maintenance Agreement");
-      setAmount(60000);
       setTerms(DEFAULT_AGREEMENT_TERMS);
       fetchData();
     } catch (err) {
@@ -159,7 +157,6 @@ export default function Contracts() {
     setEditingContract(c);
     setEditTitle(c.title || "");
     setEditClientId(c.clientId || "");
-    setEditAmount(c.amount || "");
     setEditTerms(c.terms || c.scope || DEFAULT_AGREEMENT_TERMS);
     setEditStatus(c.status || "sent");
   }
@@ -171,7 +168,7 @@ export default function Contracts() {
       await api.put(`/contracts/${editingContract.id}`, {
         title: editTitle,
         clientId: editClientId,
-        amount: Number(editAmount),
+        amount: 0,
         terms: editTerms,
         status: editStatus,
       });
@@ -253,29 +250,33 @@ export default function Contracts() {
                     </span>
                   </div>
                   <p className="text-xs text-mist">
-                    Client: <span className="text-paper">{client ? `${client.name} (${client.company || client.email})` : "Unassigned Client"}</span> • Dev Cost: <span className="font-mono text-cyan">₹{c.amount?.toLocaleString()}</span> • Retainer: <span className="font-mono text-emerald-400">₹4,500/mo</span>
+                    Client: <span className="text-paper">{client ? `${client.name} (${client.company || client.email})` : "Unassigned Client"}</span>
                   </p>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <button
                     onClick={() => navigate(`/admin/contracts/${c.id}`)}
-                    className="px-3 py-1.5 rounded-lg border border-edge text-xs hover:bg-white/5 transition font-semibold text-paper"
+                    className="px-3 py-1.5 rounded-xl border border-edge bg-void/60 text-xs hover:bg-white/10 hover:border-cyan/40 transition font-mono font-semibold text-paper hover:text-cyan flex items-center gap-1.5"
+                    title="View Agreement"
                   >
-                    View Agreement
+                    <Eye size={13} className="text-mist" />
+                    <span>View</span>
                   </button>
 
                   <button
                     onClick={() => openEditModal(c)}
-                    className="px-3 py-1.5 rounded-lg bg-cyan/10 text-cyan border border-cyan/30 text-xs hover:bg-cyan/20 transition font-semibold"
+                    className="px-3 py-1.5 rounded-xl border border-edge bg-void/60 text-xs hover:bg-white/10 hover:border-cyan/40 transition font-mono font-semibold text-paper hover:text-cyan flex items-center gap-1.5"
+                    title="Edit Agreement Clauses"
                   >
-                    ✏️ Edit
+                    <Edit2 size={13} className="text-mist" />
+                    <span>Edit</span>
                   </button>
 
                   <select
                     value={c.status}
                     onChange={(e) => updateStatus(c, e.target.value)}
-                    className="font-mono text-xs bg-void border border-edge rounded-lg px-3 py-1.5 focus-ring text-paper outline-none uppercase"
+                    className="font-mono text-xs bg-void border border-edge rounded-xl px-2.5 py-1.5 focus-ring text-paper outline-none uppercase"
                   >
                     <option value="draft">draft</option>
                     <option value="sent">sent</option>
@@ -285,9 +286,10 @@ export default function Contracts() {
 
                   <button
                     onClick={() => handleDelete(c.id)}
-                    className="text-mist hover:text-rose-400 text-xs px-1"
+                    className="p-1.5 rounded-xl border border-edge bg-void/60 text-mist hover:text-rose-400 hover:border-rose-500/40 transition flex items-center justify-center"
+                    title="Delete Agreement"
                   >
-                    ✕
+                    <Trash2 size={13} />
                   </button>
                 </div>
               </div>
@@ -323,33 +325,21 @@ export default function Contracts() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-mono text-mist uppercase mb-1">Select Client</label>
-                  <select
-                    required
-                    value={clientId}
-                    onChange={(e) => handleClientSelect(e.target.value)}
-                    className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
-                  >
-                    <option value="">Select client...</option>
-                    {clients.map((cl) => (
-                      <option key={cl.id} value={cl.id}>
-                        {cl.name} ({cl.company || cl.email})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-mono text-mist uppercase mb-1">Total Development Cost (₹)</label>
-                  <input
-                    type="number"
-                    required
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none"
-                  />
-                </div>
+              <div>
+                <label className="block text-xs font-mono text-mist uppercase mb-1">Select Client</label>
+                <select
+                  required
+                  value={clientId}
+                  onChange={(e) => handleClientSelect(e.target.value)}
+                  className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
+                >
+                  <option value="">Select client...</option>
+                  {clients.map((cl) => (
+                    <option key={cl.id} value={cl.id}>
+                      {cl.name} ({cl.company || cl.email})
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
@@ -410,7 +400,7 @@ export default function Contracts() {
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-mono text-mist uppercase mb-1">Assigned Client</label>
                   <select
@@ -425,16 +415,6 @@ export default function Contracts() {
                       </option>
                     ))}
                   </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-mono text-mist uppercase mb-1">Development Cost (₹)</label>
-                  <input
-                    type="number"
-                    required
-                    value={editAmount}
-                    onChange={(e) => setEditAmount(e.target.value)}
-                    className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none"
-                  />
                 </div>
                 <div>
                   <label className="block text-xs font-mono text-mist uppercase mb-1">Status</label>

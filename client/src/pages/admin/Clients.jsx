@@ -4,7 +4,7 @@ import api from "../../api/client.js";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
 import { toast } from "sonner";
 import { useConfirm } from "../../context/ConfirmContext.jsx";
-import { Plus, Edit2, Trash2, ArrowUpRight, Search, X, Shield, Building, Mail, User } from "lucide-react";
+import { Plus, Eye, Trash2, Search, X, Shield, Building, Mail, User } from "lucide-react";
 
 export default function Clients() {
   const confirm = useConfirm();
@@ -175,144 +175,111 @@ export default function Clients() {
       </div>
 
       {/* CLIENTS LIST WITH SERIAL NUMBERS */}
-      <div className="rounded-2xl border border-edge bg-panel/70 backdrop-blur-xl overflow-hidden shadow-xl">
-        {loading ? (
-          <div className="p-8">
-            <GearboxLoader label="Loading clients directory..." />
-          </div>
-        ) : filteredClients.length === 0 ? (
-          <div className="p-10 text-center space-y-3">
-            <p className="text-mist text-sm">
-              {search ? "No clients match your search query." : "No clients in directory yet."}
-            </p>
-            {!search && (
-              <button
-                onClick={openAddModal}
-                className="px-4 py-2 rounded-xl border border-cyan/40 bg-cyan/10 text-cyan text-xs font-semibold hover:bg-cyan/20 transition"
-              >
-                + Add your first client
-              </button>
-            )}
-          </div>
-        ) : (
-          <div className="divide-y divide-white/5">
-            {filteredClients.map((c, index) => (
-              <div
-                key={c.id}
-                className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-white/[0.03] transition-all group"
-              >
-                {/* Left: Serial Number Badge & Client Details */}
-                <div className="flex items-start sm:items-center gap-3.5 sm:gap-4 min-w-0">
-                  {/* Serial Number Pill */}
-                  <div className="w-8 h-8 rounded-xl bg-void/80 border border-edge flex items-center justify-center font-mono text-xs font-bold text-cyan shrink-0 shadow-inner group-hover:border-cyan/40 transition-colors">
-                    {index + 1}
+      <div className="space-y-2">
+        {/* Column Header Bar for Desktop */}
+        <div className="hidden md:grid md:grid-cols-[40px_1fr_220px_110px_130px] items-center gap-4 px-5 py-1 text-xs font-mono uppercase tracking-wider text-mist">
+          <span>#</span>
+          <span>Company & Client</span>
+          <span>Email Address</span>
+          <span className="text-center">Status</span>
+          <span className="text-right">Actions</span>
+        </div>
+
+        <div className="rounded-2xl border border-edge bg-panel/70 backdrop-blur-xl overflow-hidden shadow-xl">
+          {loading ? (
+            <div className="p-8">
+              <GearboxLoader label="Loading clients directory..." />
+            </div>
+          ) : filteredClients.length === 0 ? (
+            <div className="p-10 text-center space-y-3">
+              <p className="text-mist text-sm">
+                {search ? "No clients match your search query." : "No clients in directory yet."}
+              </p>
+              {!search && (
+                <button
+                  onClick={openAddModal}
+                  className="px-4 py-2 rounded-xl border border-cyan/40 bg-cyan/10 text-cyan text-xs font-semibold hover:bg-cyan/20 transition"
+                >
+                  + Add your first client
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="divide-y divide-white/5">
+              {filteredClients.map((c, index) => (
+                <div
+                  key={c.id}
+                  className="p-4 sm:p-5 flex flex-col md:grid md:grid-cols-[40px_1fr_220px_110px_130px] md:items-center gap-4 hover:bg-white/[0.03] transition-all group"
+                >
+                  {/* 1. Serial Number */}
+                  <div className="flex items-center shrink-0">
+                    <span className="font-mono text-xs font-semibold text-mist/80 group-hover:text-cyan transition-colors">
+                      {index + 1}
+                    </span>
                   </div>
 
-                  {/* Name, Company & Email */}
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Link
-                        to={`/admin/clients/${c.id}`}
-                        className="text-sm sm:text-base font-semibold text-paper hover:text-cyan transition-colors truncate"
-                      >
-                        {c.name}
-                      </Link>
-                      {c.company && (
-                        <span className="text-xs font-mono text-mist bg-panel border border-edge px-2 py-0.5 rounded-md truncate">
-                          {c.company}
-                        </span>
-                      )}
-                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold">
-                        Active
-                      </span>
-                    </div>
-
-                    <p className="font-mono text-xs text-mist/80 truncate mt-0.5">
-                      {c.email}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right: CRM Stats & Action Buttons */}
-                <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 shrink-0 pl-11 sm:pl-0">
-                  {/* Maintenance Plan Status */}
-                  <div className="text-left sm:text-right font-mono text-xs">
-                    {c.maintenancePlan ? (
-                      <Link
-                        to="/admin/maintenance"
-                        title={
-                          c.maintenancePlan.status === "paused"
-                            ? "Plan is paused - click to manage in Maintenance section"
-                            : "Plan is active - click to manage in Maintenance section"
-                        }
-                        className={`font-semibold border transition px-2.5 py-1 rounded-lg inline-flex items-center gap-1.5 ${
-                          c.maintenancePlan.status === "paused"
-                            ? "text-amber-400 bg-amber-500/10 border-amber-500/30 hover:border-amber-500/50 hover:bg-amber-500/20"
-                            : "text-emerald-400 bg-emerald-500/10 border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/20"
-                        }`}
-                      >
-                        {c.maintenancePlan.status === "paused" && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                        )}
-                        <span>₹{c.maintenancePlan.amount}/{c.maintenancePlan.cycle}</span>
-                        {c.maintenancePlan.status === "paused" && (
-                          <span className="text-[9px] uppercase font-mono px-1 py-0.5 rounded bg-amber-500/20 text-amber-300">
-                            paused
-                          </span>
-                        )}
-                      </Link>
-                    ) : (
-                      <Link
-                        to="/admin/maintenance"
-                        title="Click to add a maintenance plan"
-                        className="text-mist/70 bg-void/50 border border-edge hover:border-cyan/30 hover:text-cyan transition px-2 py-1 rounded-lg text-[11px] inline-block"
-                      >
-                        no plan
-                      </Link>
-                    )}
-
-                    {c.openReminders > 0 && (
-                      <span className="ml-2 text-cyan font-bold">
-                        {c.openReminders} due
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Quick Action Icons */}
-                  <div className="flex items-center gap-1.5">
-                    {/* Edit Client Button */}
-                    <button
-                      onClick={(e) => openEditModal(c, e)}
-                      title="Edit Client Information"
-                      className="p-2 rounded-lg border border-edge bg-panel hover:bg-white/10 hover:text-cyan text-mist transition"
+                  {/* 2. Company / Firm Name & Full Business Name */}
+                  <div className="min-w-0 space-y-0.5">
+                    <Link
+                      to={`/admin/clients/${c.id}`}
+                      className="text-sm sm:text-base font-semibold text-paper hover:text-cyan transition-colors truncate block"
                     >
-                      <Edit2 size={14} />
-                    </button>
+                      {c.name}
+                    </Link>
+                    {c.company ? (
+                      <p className="text-xs text-mist font-mono truncate">
+                        {c.company}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-mist/60 font-mono italic truncate">
+                        No official business entity registered
+                      </p>
+                    )}
+                  </div>
+
+                  {/* 3. Email Address Column */}
+                  <div className="min-w-0">
+                    <span className="text-[10px] text-mist/60 uppercase font-mono block md:hidden mb-0.5">Email</span>
+                    <span className="font-mono text-xs text-paper/90 truncate block" title={c.email}>
+                      {c.email || "—"}
+                    </span>
+                  </div>
+
+                  {/* 4. Status Column */}
+                  <div className="flex md:justify-center items-center shrink-0">
+                    <span className="text-[10px] text-mist/60 uppercase font-mono mr-2 md:hidden">Status:</span>
+                    <span className="text-[11px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold inline-flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      <span>Active</span>
+                    </span>
+                  </div>
+
+                  {/* 5. Actions Column */}
+                  <div className="flex items-center justify-end gap-2 shrink-0">
+                    {/* View Client Details Button */}
+                    <Link
+                      to={`/admin/clients/${c.id}`}
+                      title="View Client Details"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-edge bg-void/60 text-xs font-mono font-semibold text-paper hover:text-cyan hover:border-cyan/40 hover:bg-white/10 transition"
+                    >
+                      <Eye size={13} className="text-mist group-hover:text-cyan transition-colors" />
+                      <span>View</span>
+                    </Link>
 
                     {/* Delete Client Button */}
                     <button
                       onClick={(e) => handleDeleteClient(c, e)}
                       title="Delete Client Record"
-                      className="p-2 rounded-lg border border-edge bg-panel hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 text-mist transition"
+                      className="p-1.5 rounded-xl border border-edge bg-void/60 hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 text-mist transition flex items-center justify-center"
                     >
-                      <Trash2 size={14} />
+                      <Trash2 size={13} />
                     </button>
-
-                    {/* View Details Link */}
-                    <Link
-                      to={`/admin/clients/${c.id}`}
-                      title="Open Client Detail CRM"
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-panel hover:bg-white/10 border border-edge text-xs font-mono text-paper hover:text-cyan transition"
-                    >
-                      <span>CRM</span>
-                      <ArrowUpRight size={13} />
-                    </Link>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* POPUP MODAL: ADD / EDIT CLIENT */}

@@ -617,6 +617,7 @@ export default function Maintenance() {
                     >
                       <option value="monthly">Monthly</option>
                       <option value="quarterly">Quarterly</option>
+                      <option value="semi-yearly">Semi-Yearly (6 Months)</option>
                       <option value="yearly">Yearly</option>
                     </select>
                   </div>

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FileText, Trash2, Check, Clock, Edit2, MoreVertical, Calendar, CreditCard } from "lucide-react";
+import { Eye, Trash2, Check, Clock, Edit2, MoreVertical, Calendar, CreditCard, Download, Loader2 } from "lucide-react";
 
 export default function InvoiceCard({
   invoice,
@@ -8,6 +8,8 @@ export default function InvoiceCard({
   onEdit,
   onDelete,
   onOpenPayments,
+  onDownloadPdf,
+  isDownloadingPdf = false,
   serialNumber,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -43,7 +45,7 @@ export default function InvoiceCard({
   };
 
   return (
-    <div className={`bg-panel/75 backdrop-blur-xl border border-edge rounded-2xl p-4 sm:p-5 flex flex-col md:grid md:grid-cols-[40px_110px_1fr_120px_130px_110px] md:items-center gap-4 hover:border-cyan/30 hover:bg-panel transition-all shadow-lg group relative ${menuOpen ? "z-30" : "z-0"}`}>
+    <div className={`bg-panel/75 backdrop-blur-xl border border-edge rounded-2xl p-4 sm:p-5 flex flex-col md:grid md:grid-cols-[36px_105px_1fr_110px_100px_150px] md:items-center gap-3 lg:gap-4 hover:border-cyan/30 hover:bg-panel transition-all shadow-lg group relative ${menuOpen ? "z-30" : "z-0"}`}>
       {/* 1. Serial Number */}
       <div className="flex items-center shrink-0">
         {serialNumber !== undefined && (
@@ -124,15 +126,32 @@ export default function InvoiceCard({
       </div>
 
       {/* 6. Actions Column */}
-      <div className="flex items-center justify-end gap-2 shrink-0 relative">
-        {/* View Invoice Button */}
+      <div className="flex items-center justify-end gap-1.5 sm:gap-2 shrink-0 relative">
+        {/* View Invoice Icon Button */}
         <Link
           to={`/admin/invoices/${invoice.id}`}
-          className="px-3 py-1.5 rounded-xl border border-edge bg-void/60 text-xs hover:bg-white/10 hover:border-cyan/40 transition font-mono font-semibold text-cyan flex items-center gap-1.5"
+          className="p-2 rounded-xl border border-edge bg-void/60 text-mist hover:text-cyan hover:border-cyan/40 hover:bg-cyan/10 transition flex items-center justify-center shrink-0 active:scale-95"
+          title="View full invoice"
         >
-          <FileText size={13} />
-          <span>View</span>
+          <Eye size={14} className="text-cyan" />
         </Link>
+
+        {/* Dedicated PDF Download Icon Button */}
+        {onDownloadPdf && (
+          <button
+            type="button"
+            disabled={isDownloadingPdf}
+            onClick={() => onDownloadPdf(invoice)}
+            title="Download Invoice PDF"
+            className="p-2 rounded-xl border border-edge bg-void/60 text-mist hover:text-cyan hover:border-cyan/40 hover:bg-cyan/10 transition flex items-center justify-center disabled:opacity-50 active:scale-95"
+          >
+            {isDownloadingPdf ? (
+              <Loader2 size={14} className="animate-spin text-cyan" />
+            ) : (
+              <Download size={14} className="text-mist hover:text-cyan transition-colors" />
+            )}
+          </button>
+        )}
 
         {/* 3 Vertical Dots Menu Button */}
         <div className="relative" ref={menuRef}>
@@ -150,7 +169,7 @@ export default function InvoiceCard({
 
           {/* Dropdown Menu */}
           {menuOpen && (
-            <div className="absolute right-0 top-full mt-1.5 w-52 rounded-xl bg-[#0c0d15] border border-white/10 shadow-2xl py-1.5 z-50 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100 divide-y divide-white/5">
+            <div className="absolute right-0 top-full mt-1.5 w-48 rounded-xl bg-[#0c0d15] border border-white/10 shadow-2xl py-1.5 z-50 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100 divide-y divide-white/5">
               <div className="py-1">
                 {/* Option 1: Record / Manage Payments */}
                 <button
@@ -159,20 +178,20 @@ export default function InvoiceCard({
                     setMenuOpen(false);
                     if (onOpenPayments) onOpenPayments(invoice);
                   }}
-                  className="w-full px-3 py-2 text-left text-xs font-mono text-cyan hover:bg-cyan/10 flex items-center gap-2.5 transition"
+                  className="w-full px-3 py-2 text-left text-xs font-mono text-cyan hover:bg-cyan/10 flex items-center gap-2.5 transition whitespace-nowrap"
                 >
                   <CreditCard size={14} className="shrink-0" />
-                  <span>Payments & Installments</span>
+                  <span>Installments</span>
                 </button>
 
-                {/* Option 2: Quick Mark Paid / Pending */}
+                {/* Option 2: Mark Full Paid / Pending */}
                 <button
                   type="button"
                   onClick={() => {
                     setMenuOpen(false);
                     onStatusChange(invoice.id, invoice.status === "Paid" ? "Pending" : "Paid");
                   }}
-                  className={`w-full px-3 py-2 text-left text-xs font-mono flex items-center gap-2.5 transition ${invoice.status === "Paid"
+                  className={`w-full px-3 py-2 text-left text-xs font-mono flex items-center gap-2.5 transition whitespace-nowrap ${invoice.status === "Paid"
                     ? "text-amber-400 hover:bg-amber-500/10"
                     : "text-emerald-400 hover:bg-emerald-500/10"
                     }`}
@@ -185,7 +204,7 @@ export default function InvoiceCard({
                   ) : (
                     <>
                       <Check size={14} className="shrink-0" />
-                      <span>Quick Mark Full Paid</span>
+                      <span>Mark Full Paid</span>
                     </>
                   )}
                 </button>

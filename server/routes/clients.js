@@ -64,8 +64,40 @@ router.get("/:id", (req, res) => {
 });
 
 router.put("/:id", requireRole("admin"), (req, res) => {
-  const updated = db.update("clients", req.params.id, req.body);
-  if (!updated) return res.status(404).json({ error: "Client not found." });
+  const { name, email, company, password, status, notes } = req.body;
+  const client = db.findOne("clients", (c) => c.id === req.params.id);
+  if (!client) return res.status(404).json({ error: "Client not found." });
+
+  // If email is changing, verify no collision with another user
+  if (email && email.toLowerCase() !== (client.email || "").toLowerCase()) {
+    const existingUser = db.findOne(
+      "users",
+      (u) => u.email.toLowerCase() === email.toLowerCase() && u.id !== client.id
+    );
+    if (existingUser) {
+      return res.status(409).json({ error: "A user with this email already exists." });
+    }
+  }
+
+  const clientPatch = {
+    ...(name !== undefined && { name }),
+    ...(email !== undefined && { email }),
+    ...(company !== undefined && { company }),
+    ...(status !== undefined && { status }),
+    ...(notes !== undefined && { notes }),
+  };
+  const updated = db.update("clients", req.params.id, clientPatch);
+
+  // Sync to users collection for portal login authentication
+  const userPatch = {
+    ...(name !== undefined && { name }),
+    ...(email !== undefined && { email }),
+  };
+  if (password && typeof password === "string" && password.trim().length > 0) {
+    userPatch.passwordHash = bcrypt.hashSync(password.trim(), 10);
+  }
+  db.update("users", req.params.id, userPatch);
+
   res.json(updated);
 });
 

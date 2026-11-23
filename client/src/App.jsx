@@ -26,6 +26,7 @@ const PricingPage = lazy(() => import("./pages/PricingPage.jsx"));
 const ExtensionsPage = lazy(() => import("./pages/ExtensionsPage.jsx"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage.jsx"));
 const TermsPage = lazy(() => import("./pages/TermsPage.jsx"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage.jsx"));
 
 // Admin Protected Pages (Lazy loaded only when an admin authenticates & accesses)
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout.jsx"));
@@ -79,7 +80,7 @@ export default function App() {
 
   return (
     <ConfirmProvider>
-      <div className="min-h-screen flex flex-col relative overflow-x-hidden">
+      <div className="min-h-screen flex flex-col relative [overflow-x:clip]">
         {isLoading && <WebnexLoader onFinish={() => setIsLoading(false)} />}
         <ScrollRestoreManager />
         <Toaster
@@ -168,6 +169,9 @@ export default function App() {
                 >
                   <Route index element={<ClientOverview />} />
                 </Route>
+
+                {/* 404 Catch-All Route */}
+                <Route path="*" element={<NotFoundPage />} />
               </Routes>
             </Suspense>
           </div>

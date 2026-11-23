@@ -139,10 +139,17 @@ const DocumentCard = forwardRef(function DocumentCard(
                       <p className="text-[10px] font-mono tracking-widest text-gray-400 uppercase">WEB • DESIGN • DEVELOPMENT</p>
                     </div>
                   </div>
-                  {/* Top Right Header Coordinates */}
-                  <div className="text-right">
-                    {/* Clean Header */}
-                  </div>
+                  {/* Top Right Header Document Type Label */}
+                  {docType ? (
+                    <div className="text-left sm:text-right sm:self-center">
+                      <div className="inline-block text-left">
+                        <span className="font-display text-2xl sm:text-3xl font-medium tracking-[2px] text-white/90 uppercase drop-shadow-sm block">
+                          {docType}
+                        </span>
+                        <div className="h-[2px] w-3/4 bg-[#f5b842] rounded-full mt-1" />
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
 
                 {/* 100% Exact Layered Smooth Waves (Bottom SVG) */}
@@ -237,15 +244,14 @@ const DocumentCard = forwardRef(function DocumentCard(
                             <td className="py-0.5 pr-2 text-gray-500 whitespace-nowrap">Status</td>
                             <td className="py-0.5 px-1.5 text-gray-400 font-bold">:</td>
                             <td
-                              className={`py-0.5 pl-2 text-right font-bold uppercase whitespace-nowrap ${
-                                String(status).toLowerCase().includes("partial")
-                                  ? "text-cyan-700"
-                                  : String(status).toLowerCase().includes("pending")
+                              className={`py-0.5 pl-2 text-right font-bold uppercase whitespace-nowrap ${String(status).toLowerCase().includes("partial")
+                                ? "text-cyan-700"
+                                : String(status).toLowerCase().includes("pending")
                                   ? "text-amber-500"
                                   : String(status).toLowerCase().includes("overdue")
-                                  ? "text-rose-600"
-                                  : "text-emerald-600"
-                              }`}
+                                    ? "text-rose-600"
+                                    : "text-emerald-600"
+                                }`}
                             >
                               {status}
                             </td>

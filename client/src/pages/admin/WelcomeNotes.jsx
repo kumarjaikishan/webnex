@@ -89,12 +89,13 @@ Web & Digital Solutions`;
   };
 
   const openCreateModal = () => {
-    setClientId(clients[0]?.id || "");
     const initialClient = clients[0];
-    const cName = initialClient?.name || "Alex Rivers";
-    const cEmail = initialClient?.email || "alex@acmestudio.com";
-    const compName = initialClient?.company || "Acme Studio";
-    const pTitle = initialClient?.projectTitle || "E-commerce Storefront & Mobile API";
+    const initialId = initialClient?.id || "";
+    setClientId(initialId);
+    const cName = initialClient?.name || "";
+    const cEmail = initialClient?.email || "";
+    const compName = initialClient?.company || initialClient?.name || "";
+    const pTitle = initialClient?.projectTitle || "Custom Web Application";
     const kDate = new Date().toISOString().split("T")[0];
     const pUrl = "https://webnex.battlefiesta.in/login";
 
@@ -110,14 +111,22 @@ Web & Digital Solutions`;
 
   const openEditModal = (note) => {
     setEditingNote(note);
+    const matchedClient = clients.find((c) => c.id === note.clientId);
     setClientId(note.clientId || "");
-    setClientName(note.clientName || "");
-    setClientEmail(note.clientEmail || "");
-    setCompanyName(note.companyName || "");
-    setProjectTitle(note.projectTitle || "");
-    setKickoffDate(note.kickoffDate || note.sentAt?.split("T")[0] || new Date().toISOString().split("T")[0]);
-    setPortalUrl(note.portalUrl || "https://webnex.battlefiesta.in/login");
-    setMessage(note.message || "");
+    const cName = matchedClient?.name || note.clientName || "";
+    const cEmail = matchedClient?.email || note.clientEmail || "";
+    const compName = matchedClient?.company || note.companyName || matchedClient?.name || "";
+    const pTitle = matchedClient?.projectTitle || note.projectTitle || "Custom Web Application";
+    const kDate = note.kickoffDate || note.sentAt?.split("T")[0] || new Date().toISOString().split("T")[0];
+    const pUrl = note.portalUrl || "https://webnex.battlefiesta.in/login";
+
+    setClientName(cName);
+    setClientEmail(cEmail);
+    setCompanyName(compName);
+    setProjectTitle(pTitle);
+    setKickoffDate(kDate);
+    setPortalUrl(pUrl);
+    setMessage(note.message || generateWelcomeText(cName, compName, pTitle, kDate, pUrl));
   };
 
   const handleCreateSubmit = async (e) => {
@@ -295,72 +304,42 @@ Web & Digital Solutions`;
 
               <form onSubmit={handleCreateSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-mono text-mist uppercase mb-1">Select Client (Autofill)</label>
+                  <label className="block text-xs font-mono text-mist uppercase mb-1">Select Client</label>
                   <select
                     value={clientId}
                     onChange={(e) => handleClientSelect(e.target.value)}
-                    className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
+                    className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper font-mono"
                   >
                     <option value="">Select client...</option>
                     {clients.map((cl) => (
                       <option key={cl.id} value={cl.id}>
-                        {cl.name} ({cl.company || cl.email})
+                        {cl.name} {cl.company ? `(${cl.company})` : cl.email ? `(${cl.email})` : ""}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-mono text-mist uppercase mb-1">Client Contact Name</label>
-                    <input
-                      type="text"
-                      required
-                      value={clientName}
-                      onChange={(e) => {
-                        setClientName(e.target.value);
-                        setMessage(generateWelcomeText(e.target.value, companyName, projectTitle, kickoffDate, portalUrl));
-                      }}
-                      className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
-                    />
+                {/* Auto-detected client info badge */}
+                {clientId && (
+                  <div className="bg-void/60 border border-edge/80 rounded-xl p-3 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+                    <div>
+                      <span className="text-[10px] text-mist/60 uppercase block">Contact</span>
+                      <span className="text-paper font-semibold truncate block">{clientName || "—"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-mist/60 uppercase block">Email</span>
+                      <span className="text-paper truncate block">{clientEmail || "—"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-mist/60 uppercase block">Company</span>
+                      <span className="text-paper truncate block">{companyName || "—"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-mist/60 uppercase block">Project</span>
+                      <span className="text-cyan font-semibold truncate block">{projectTitle || "Custom Web Application"}</span>
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-xs font-mono text-mist uppercase mb-1">Client Email</label>
-                    <input
-                      type="email"
-                      value={clientEmail}
-                      onChange={(e) => setClientEmail(e.target.value)}
-                      className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-mono text-mist uppercase mb-1">Company Name</label>
-                    <input
-                      type="text"
-                      value={companyName}
-                      onChange={(e) => {
-                        setCompanyName(e.target.value);
-                        setMessage(generateWelcomeText(clientName, e.target.value, projectTitle, kickoffDate, portalUrl));
-                      }}
-                      className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-mono text-mist uppercase mb-1">Project Name</label>
-                    <input
-                      type="text"
-                      value={projectTitle}
-                      onChange={(e) => {
-                        setProjectTitle(e.target.value);
-                        setMessage(generateWelcomeText(clientName, companyName, e.target.value, kickoffDate, portalUrl));
-                      }}
-                      className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
-                    />
-                  </div>
-                </div>
+                )}
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -444,59 +423,38 @@ Web & Digital Solutions`;
                   <select
                     value={clientId}
                     onChange={(e) => handleClientSelect(e.target.value)}
-                    className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
+                    className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper font-mono"
                   >
                     <option value="">Select client...</option>
                     {clients.map((cl) => (
                       <option key={cl.id} value={cl.id}>
-                        {cl.name} ({cl.company || cl.email})
+                        {cl.name} {cl.company ? `(${cl.company})` : cl.email ? `(${cl.email})` : ""}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-mono text-mist uppercase mb-1">Client Contact Name</label>
-                    <input
-                      type="text"
-                      required
-                      value={clientName}
-                      onChange={(e) => setClientName(e.target.value)}
-                      className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
-                    />
+                {/* Auto-detected client info badge */}
+                {clientId && (
+                  <div className="bg-void/60 border border-edge/80 rounded-xl p-3 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+                    <div>
+                      <span className="text-[10px] text-mist/60 uppercase block">Contact</span>
+                      <span className="text-paper font-semibold truncate block">{clientName || "—"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-mist/60 uppercase block">Email</span>
+                      <span className="text-paper truncate block">{clientEmail || "—"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-mist/60 uppercase block">Company</span>
+                      <span className="text-paper truncate block">{companyName || "—"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-mist/60 uppercase block">Project</span>
+                      <span className="text-cyan font-semibold truncate block">{projectTitle || "Custom Web Application"}</span>
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-xs font-mono text-mist uppercase mb-1">Client Email</label>
-                    <input
-                      type="email"
-                      value={clientEmail}
-                      onChange={(e) => setClientEmail(e.target.value)}
-                      className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-mono text-mist uppercase mb-1">Company Name</label>
-                    <input
-                      type="text"
-                      value={companyName}
-                      onChange={(e) => setCompanyName(e.target.value)}
-                      className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-mono text-mist uppercase mb-1">Project Name</label>
-                    <input
-                      type="text"
-                      value={projectTitle}
-                      onChange={(e) => setProjectTitle(e.target.value)}
-                      className="w-full rounded-xl bg-void border border-edge px-3 py-2 text-sm focus-ring outline-none text-paper"
-                    />
-                  </div>
-                </div>
+                )}
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>

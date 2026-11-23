@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { Landmark, Edit2, CreditCard, CheckCircle } from "lucide-react";
+import { Landmark, Edit2, CreditCard, CheckCircle, ArrowLeft, Printer, Download } from "lucide-react";
 import api from "../../api/client.js";
 import DocumentCard from "../../components/DocumentCard.jsx";
 import GearboxLoader from "../../components/GearboxLoader.jsx";
@@ -106,32 +106,57 @@ export default function InvoiceViewPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-6 print:p-0 print:m-0 print:max-w-full print:w-full print:space-y-0">
       {/* Top Breadcrumb & Action Bar (Hidden during Print) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
-        <button
-          onClick={() => navigate("/admin/invoices")}
-          className="flex items-center gap-2 text-sm text-mist hover:text-paper font-mono transition"
-        >
-          <span>←</span> Back to Invoices
-        </button>
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-xs font-mono text-mist">
-            Status: <strong className={`uppercase ${invoice.status === "Paid" ? "text-emerald-400" : invoice.status === "Partially Paid" ? "text-cyan" : "text-amber-400"}`}>{invoice.status}</strong>
-          </span>
+      <div className="bg-panel/80 border border-edge/80 rounded-2xl p-3 sm:px-4 sm:py-3 shadow-lg backdrop-blur-md flex flex-wrap items-center justify-between gap-3 no-print">
+        {/* Left: Back Link & Invoice Number / Status */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate("/admin/invoices")}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-void/60 border border-edge text-xs font-mono text-mist hover:text-paper hover:border-cyan/40 transition"
+          >
+            <ArrowLeft size={13} />
+            <span className="whitespace-nowrap">Invoices</span>
+          </button>
+          <div className="h-4 w-px bg-edge hidden sm:block" />
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-mono text-mist hidden sm:inline">Status:</span>
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider ${
+              invoice.status === "Paid"
+                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
+                : invoice.status === "Partially Paid"
+                ? "bg-cyan/10 text-cyan border border-cyan/30"
+                : "bg-amber-500/10 text-amber-400 border border-amber-500/30"
+            }`}>
+              {invoice.status}
+            </span>
+          </div>
+        </div>
+
+        {/* Right: Actions */}
+        <div className="flex items-center gap-2 flex-wrap ml-auto">
           <button
             type="button"
             onClick={() => setShowPaymentModal(true)}
-            className="px-4 py-2 rounded-xl bg-cyan/15 border border-cyan/40 text-cyan hover:bg-cyan/25 font-semibold text-xs transition flex items-center gap-1.5 shadow-sm"
+            className="px-3 sm:px-3.5 py-1.5 rounded-xl bg-cyan/15 border border-cyan/40 text-cyan hover:bg-cyan/25 font-semibold text-xs transition flex items-center gap-1.5 shadow-sm active:scale-[0.98]"
           >
             <CreditCard size={13} />
-            <span>Record Payment / Settle</span>
+            <span>Record Payment</span>
           </button>
           <button
             type="button"
             onClick={() => setShowEditModal(true)}
-            className="px-4 py-2 rounded-xl bg-panel border border-edge text-paper hover:bg-white/5 hover:border-cyan/40 font-semibold text-xs transition flex items-center gap-1.5"
+            className="px-3 sm:px-3.5 py-1.5 rounded-xl bg-void/60 border border-edge text-paper hover:bg-white/5 hover:border-cyan/40 font-semibold text-xs transition flex items-center gap-1.5 active:scale-[0.98]"
           >
-            <Edit2 size={13} className="text-cyan" />
-            <span>Edit Invoice</span>
+            <Edit2 size={13} className="text-mist" />
+            <span>Edit</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="px-3 sm:px-3.5 py-1.5 rounded-xl bg-void/60 border border-edge text-paper hover:bg-white/5 hover:border-cyan/40 font-semibold text-xs transition flex items-center gap-1.5 active:scale-[0.98]"
+            title="Print invoice"
+          >
+            <Printer size={13} className="text-mist" />
+            <span className="hidden sm:inline">Print</span>
           </button>
           <button
             type="button"
@@ -144,17 +169,10 @@ export default function InvoiceViewPage() {
                 if (directBtn) directBtn.click();
               }
             }}
-            className="px-4 py-2 rounded-xl bg-grad-primary text-void font-bold text-xs shadow hover:brightness-110 transition flex items-center gap-1.5 disabled:opacity-50"
+            className="px-3.5 sm:px-4 py-1.5 rounded-xl bg-grad-primary text-void font-bold text-xs shadow hover:brightness-110 transition flex items-center gap-1.5 disabled:opacity-50 active:scale-[0.98]"
           >
-            <span>{downloadingPdf ? "⏳" : "📥"}</span>
-            <span>{downloadingPdf ? "Generating PDF..." : "Download PDF"}</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="px-4 py-2 rounded-xl bg-panel border border-edge text-paper hover:bg-white/5 font-semibold text-xs transition flex items-center gap-1.5"
-          >
-            <span>🖨️</span> Print
+            <Download size={13} />
+            <span>{downloadingPdf ? "Generating..." : "Download PDF"}</span>
           </button>
         </div>
       </div>
@@ -237,7 +255,7 @@ export default function InvoiceViewPage() {
             <p className="font-bold uppercase text-gray-900 tracking-wider text-[11px]">PAYMENT INFO</p>
             <p className="text-gray-500">Method: Direct UPI / IMPS Settlement</p>
             <p className="text-gray-500">
-              Status: {isFullySettled ? "Payment Received (Settled)" : invoice.status === "Partially Paid" ? "Partially Paid (Installments Active)" : "Payment Due Upon Receipt"}
+              Status: {isFullySettled ? "Payment Received (Settled)" : invoice.status === "Partially Paid" ? "Partially Paid" : "Payment Due Upon Receipt"}
             </p>
           </div>
 
@@ -359,8 +377,16 @@ export default function InvoiceViewPage() {
                       <td className="py-2.5 px-3 text-gray-800">{p.date}</td>
                       <td className="py-2.5 px-3 text-gray-600">{p.method || "UPI"}</td>
                       <td className="py-2.5 px-3 text-gray-500 font-sans text-[11px]">
-                        {p.reference && <strong className="font-mono text-gray-800">{p.reference} </strong>}
-                        {p.note && <span>({p.note})</span>}
+                        {p.reference || p.note ? (
+                          <>
+                            {p.reference && <strong className="font-mono text-gray-800">{p.reference} </strong>}
+                            {p.note && <span>({p.note})</span>}
+                          </>
+                        ) : (
+                          <span className="font-mono text-gray-400">
+                            {String(p.method || "").toLowerCase().includes("cash") ? "-" : "N/A"}
+                          </span>
+                        )}
                       </td>
                       <td className="py-2.5 px-3 text-right font-bold text-emerald-700">
                         +₹{Number(p.amount).toLocaleString()}

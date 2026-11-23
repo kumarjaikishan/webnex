@@ -87,6 +87,8 @@ router.get("/:id", requireAuth, (req, res) => {
 router.post("/", requireAuth, requireAdmin, (req, res) => {
   const {
     invoiceNumber,
+    clientId,
+    clientCompany,
     clientName,
     clientEmail,
     projectTitle,
@@ -119,6 +121,8 @@ router.post("/", requireAuth, requireAdmin, (req, res) => {
   const newInvoice = {
     id: uuid(),
     invoiceNumber: assignedInvoiceNumber,
+    clientId: clientId || null,
+    clientCompany: clientCompany || "",
     clientName,
     clientEmail,
     projectTitle: projectTitle || "Web Development & Services",

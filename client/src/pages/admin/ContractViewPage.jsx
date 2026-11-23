@@ -166,8 +166,6 @@ export default function ContractViewPage() {
         docType="AGREEMENT"
         docNumber={`AGR-${contract.id.slice(0, 6).toUpperCase()}`}
         date={contract.issuedAt?.split("T")[0] || new Date().toISOString().split("T")[0]}
-        secondaryDate={`₹${Number(contract.amount || 0).toLocaleString()}`}
-        secondaryDateLabel="Dev Cost"
         clientName={clientName}
         clientEmail={clientEmail}
         projectTitle={contract.title}

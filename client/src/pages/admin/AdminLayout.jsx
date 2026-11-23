@@ -26,7 +26,7 @@ export default function AdminLayout() {
   ) || navItems[0];
 
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-6 sm:py-8 grid md:grid-cols-[240px_1fr] lg:grid-cols-[250px_1fr] gap-6 sm:gap-8 print:m-0 print:p-0 print:w-full print:max-w-full print:block print:border-0">
+    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-6 sm:py-8 grid md:grid-cols-[240px_1fr] lg:grid-cols-[250px_1fr] gap-6 sm:gap-8 items-start print:m-0 print:p-0 print:w-full print:max-w-full print:block print:border-0">
       {/* MOBILE ADMIN DROPDOWN & SCROLLABLE BAR */}
       <div className="md:hidden space-y-3 no-print">
         <div className="flex items-center justify-between bg-panel border border-edge p-3 rounded-xl">
@@ -96,7 +96,7 @@ export default function AdminLayout() {
       </div>
 
       {/* DESKTOP SIDEBAR */}
-      <aside className="hidden md:block space-y-1.5 bg-panel border border-edge p-4 rounded-2xl h-fit sticky top-24 no-print">
+      <aside className="hidden md:block space-y-1.5 bg-panel border border-edge p-4 rounded-2xl sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] no-print">
         <div className="px-3 pb-3 mb-2 border-b border-edge/60 flex items-center gap-2.5">
           <WebnexLogoIcon className="w-5 h-6.5 drop-shadow-[0_0_8px_rgba(245,184,66,0.3)]" />
           <div>

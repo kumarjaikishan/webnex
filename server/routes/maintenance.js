@@ -19,9 +19,12 @@ export function getNextCycleDate(baseDateStr, cycle = "monthly") {
   if (isNaN(date.getTime())) {
     date = new Date();
   }
-  if (cycle === "quarterly") {
+  const c = (cycle || "").toLowerCase();
+  if (c === "quarterly") {
     date.setMonth(date.getMonth() + 3);
-  } else if (cycle === "yearly") {
+  } else if (c === "semi-yearly" || c === "semi-annually" || c === "half-yearly") {
+    date.setMonth(date.getMonth() + 6);
+  } else if (c === "yearly" || c === "annually") {
     date.setFullYear(date.getFullYear() + 1);
   } else {
     // monthly default
